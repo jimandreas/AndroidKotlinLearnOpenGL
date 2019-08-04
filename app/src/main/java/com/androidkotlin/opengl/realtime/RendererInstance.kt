@@ -100,8 +100,8 @@ class RendererInstance(
 
         lightingShader.shaderReadCompileLink(
                 context,
-                "4.2.lighting.maps.vs",
-                "4.2.lightin.maps.fs")
+                "4.2.lighting_maps.vs",
+                "4.2.lighting_maps.fs")
         lampShader.shaderReadCompileLink(
                 context,
                 "4.2.lamp.vs",
