@@ -6,7 +6,7 @@ import timber.log.Timber
 
 // initialize the Timber logger.
 // FMI: see  https://github.com/JakeWharton/timber
-class Learn3D : Application() {
+class LOGL : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())

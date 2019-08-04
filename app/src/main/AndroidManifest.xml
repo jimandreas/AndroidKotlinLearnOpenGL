@@ -23,8 +23,8 @@
         android:required="true" />
 
     <application
-        android:name="com.androidkotlin.opengl.Learn3D"
-        android:icon="@mipmap/ic_launcher"
+        android:name="com.androidkotlin.opengl.LOGL"
+        android:icon="@mipmap/ic_launcher_logl"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"

@@ -93,15 +93,15 @@ class SurfaceViewInstance : GLSurfaceView {
         viewModel = viewModelIn
 
 
-        viewModel.wireFrameModeOn.observe(viewModel.owner, Observer {
-            renderer.wireFrameRenderingFlag = it
-            requestRender()
-        })
-
-        viewModel.shaderToggle.observe(viewModel.owner, Observer {
-            renderer.shaderProgramToggle = it
-            requestRender()
-        })
+//        viewModel.wireFrameModeOn.observe(viewModel.owner, Observer {
+//            renderer.wireFrameRenderingFlag = it
+//            requestRender()
+//        })
+//
+//        viewModel.shaderToggle.observe(viewModel.owner, Observer {
+//            renderer.shaderProgramToggle = it
+//            requestRender()
+//        })
     }
 
     // with h/t to :

@@ -16,8 +16,8 @@
 -->
 <resources>
 
-    <string name="hello">Learn3D</string>
-    <string name="app_name">Learn3D</string>
+    <string name="hello">LOGL</string>
+    <string name="app_name">LOGL</string>
     <string name="red">Red</string>
     <string name="yellow">Yellow</string>
     <string name="green">Green</string>

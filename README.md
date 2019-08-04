@@ -4,9 +4,14 @@ AndroidKotlinLearnOpenGL
 history
 ---------
 
-Repo following the exercises at:
+Implementing some of the excercises from:
 
 https://learnopengl.com/Getting-started/OpenGL
+
+reference:
+-----------------
+
+https://github.com/JoeyDeVries/LearnOpenGL
 
 Android Framework
 -----------------
@@ -31,3 +36,10 @@ testing
 ---------
 
 One sample Junit test added as placeholder
+
+Other references:
+------------------
+
+Twitter handle for Joey de Vries
+<br>
+https://twitter.com/JoeyDeVriez

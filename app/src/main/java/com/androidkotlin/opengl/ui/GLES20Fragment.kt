@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.androidkotlin.opengl.realtime.RendererInstance
 import com.androidkotlin.opengl.realtime.SurfaceViewInstance
-import com.androidkotlin.opengl.ui.databinding.FragmentOpenglBinding
+import com.androidkotlin.opengl.ui.databinding.FragmentGettingStartedBinding
 
 class OverviewFragment : Fragment() {
 
@@ -37,12 +37,12 @@ class OverviewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val binding = FragmentOpenglBinding.inflate(inflater)
+        val binding = FragmentGettingStartedBinding.inflate(inflater)
         binding.lifecycleOwner = this
         viewModel.setLocalLifecycleOwner(this)
         binding.viewModel1 = viewModel
         glSurfaceView = binding.myGLSurfaceView
-        val renderer = RendererInstance(viewModel)
+        val renderer = RendererInstance(this.context!!, viewModel)
         glSurfaceView.setEGLContextClientVersion(2)
         glSurfaceView.setRenderer(renderer)
 

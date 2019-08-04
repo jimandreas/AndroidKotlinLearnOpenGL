@@ -24,7 +24,7 @@
         android:id="@+id/titleFragment"
         android:name="com.androidkotlin.opengl.ui.OverviewFragment"
         android:label="asdf"
-        tools:layout="@layout/fragment_opengl">
+        tools:layout="@layout/fragment_getting_started">
 
     </fragment>
 
