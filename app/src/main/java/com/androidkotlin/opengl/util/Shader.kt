@@ -1,10 +1,13 @@
 package com.androidkotlin.opengl.util
 
 import android.content.Context
-import android.opengl.GLES20
-import android.opengl.GLES20.GL_FRAGMENT_SHADER
-import android.opengl.GLES20.GL_VERTEX_SHADER
+import android.opengl.GLES20.*
 import timber.log.Timber
+import glm_.Java.Companion.glm
+import glm_.mat2x2.Mat2
+import glm_.mat4x4.Mat4
+import glm_.vec2.Vec2
+import glm_.vec3.Vector3
 
 /*
  * A rough translation of "shader.h" into Kotlin:
@@ -18,9 +21,9 @@ import timber.log.Timber
 
 class Shader {
 
-    var vertexShaderHandle = 0
-    var fragmentShaderHandle = 0
-    var programHandle = 0
+    private var vertexShaderHandle = 0
+    private var fragmentShaderHandle = 0
+    private var programHandle = 0
 
     fun shaderReadCompileLink(context: Context,
                               vertexShaderName: String,
@@ -59,21 +62,21 @@ class Shader {
         val verbose = true
         var shaderHandle = 0
         try {
-            shaderHandle = GLES20.glCreateShader(shaderType)
+            shaderHandle = glCreateShader(shaderType)
 
             if (shaderHandle != 0) {
                 // Pass in the shader string
-                GLES20.glShaderSource(shaderHandle, shaderString)
+                glShaderSource(shaderHandle, shaderString)
                 if (verbose) Timber.i("attempting to compile %s", shaderName)
-                GLES20.glCompileShader(shaderHandle)
+                glCompileShader(shaderHandle)
                 val compileStatus = IntArray(1)
-                GLES20.glGetShaderiv(shaderHandle, GLES20.GL_COMPILE_STATUS, compileStatus, 0)
+                glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, compileStatus, 0)
 
                 // If the compilation failed, quit
                 if (compileStatus[0] == 0) {
                     Timber.e("Error compiling shader (%s): %s",
                             shaderName,
-                            GLES20.glGetShaderInfoLog(shaderHandle))
+                            glGetShaderInfoLog(shaderHandle))
                     Thread.currentThread().join()
                     throw RuntimeException("Error creating shader.")
 
@@ -105,32 +108,32 @@ class Shader {
             fragmentShaderHandle: Int,
             attributes: Array<String>?): Int {
 
-        val programHandle = GLES20.glCreateProgram()
-        if (programHandle == 0) {
+        val progHandl = glCreateProgram()
+        if (progHandl == 0) {
             Thread.currentThread().join()
             throw RuntimeException("Error creating program.")
         }
 
         // Bind the vertex, fragment and optional geometry shader to the program.
-        GLES20.glAttachShader(programHandle, vertexShaderHandle)
-        GLES20.glAttachShader(programHandle, fragmentShaderHandle)
+        glAttachShader(progHandl, vertexShaderHandle)
+        glAttachShader(progHandl, fragmentShaderHandle)
 //        if (geometryShaderHandle != null) {
-//            GLES20.glAttachShader(programHandle, geometryShaderHandle)
+//            glAttachShader(programHandle, geometryShaderHandle)
 //        }
 
         // Bind attributes
         if (attributes != null) {
             for (i in 0 until attributes.size) {
-                GLES20.glBindAttribLocation(programHandle, i, attributes[i])
+                glBindAttribLocation(progHandl, i, attributes[i])
             }
         }
 
         // Link the two/three shaders together into a program.
-        GLES20.glLinkProgram(programHandle)
+        glLinkProgram(progHandl)
 
         // Get the link status.
         val linkStatus = IntArray(1)
-        GLES20.glGetProgramiv(programHandle, GLES20.GL_LINK_STATUS, linkStatus, 0)
+        glGetProgramiv(progHandl, GL_LINK_STATUS, linkStatus, 0)
 
         // If the link failed, delete the program.
         if (linkStatus[0] == 0) {
@@ -138,12 +141,67 @@ class Shader {
             throw RuntimeException("the glLinkProgram call failed.")
         }
 
-        GLES20.glDeleteShader(vertexShaderHandle)
-        GLES20.glDeleteShader(fragmentShaderHandle)
+        glDeleteShader(vertexShaderHandle)
+        glDeleteShader(fragmentShaderHandle)
 //        if (geometryShaderHandle != null) {
-//            GLES20.glDeleteShader(geometryShaderHandle)
+//            glDeleteShader(geometryShaderHandle)
 //        }
-        return programHandle
+        return progHandl
     }
+
+    // utility functions
+    //  translations from:
+    //  https://github.com/JoeyDeVries/LearnOpenGL/blob/master/includes/learnopengl/shader.h
+
+    fun use() {
+        glUseProgram(programHandle)
+    }
+    fun setInt(name: String, value: Int) {
+        glUniform1i(glGetUniformLocation(programHandle, name), value)
+    }
+    fun setFloat(name: String, value: Float) {
+        glUniform1f(glGetUniformLocation(programHandle, name), value)
+    }
+    fun setVec3(name: String, value: FloatArray) {
+        glUniform3fv(glGetUniformLocation(programHandle, name), 1, value, 0)
+    }
+    fun setMat2(name: String, value: FloatArray) {
+        glUniformMatrix2fv(
+                glGetUniformLocation(programHandle, name),
+                1,
+                false,
+                value,
+                0)
+    }
+    fun setMat3(name: String, value: FloatArray) {
+        glUniformMatrix3fv(
+                glGetUniformLocation(programHandle, name),
+                1,
+                false,
+                value,
+                0)
+    }
+    fun setMat4(name: String, value: FloatArray) {
+        glUniformMatrix4fv(
+                glGetUniformLocation(programHandle, name),
+                1,
+                false,
+                value,
+                0)
+    }
+
+
+
+    /*public static native void glUniformMatrix2fv(
+        int location,
+        int count,
+        boolean transpose,
+        float[] value,
+        int offset
+    );*/
+
+
+
+
 
 }

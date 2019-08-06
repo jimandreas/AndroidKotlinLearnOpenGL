@@ -1,7 +1,6 @@
 /*
  * Copyright 2013 Dennis Ippel
  * Copyright 2018 Jim Andreas kotlin conversion
- * Copyright 2019 Jim Andreas further edits
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,8 +12,8 @@
  * specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
-package com.androidkotlin.opengl.util
+@file:Suppress("unused")
+package com.androidkotlin.opengl.math
 
 import kotlin.math.*
 
