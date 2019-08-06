@@ -378,7 +378,7 @@ object MatrixDoublePrecision {
         m[offset + 15] = 0.0
     }
 
-    /*
+    /**
      * Define a projection matrix in terms of a field of view angle, an
      * aspect ratio, and z clip planes
      * @param m the double array that holds the perspective matrix

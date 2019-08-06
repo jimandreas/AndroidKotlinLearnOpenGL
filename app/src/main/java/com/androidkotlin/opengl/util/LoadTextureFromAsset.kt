@@ -43,8 +43,10 @@ package com.androidkotlin.opengl.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.opengl.GLES20
 import android.opengl.GLES30
 import android.opengl.GLUtils
+import timber.log.Timber
 
 import java.io.IOException
 import java.io.InputStream
@@ -57,20 +59,11 @@ import java.io.InputStream
 //
 fun loadTextureFromAsset(context: Context, fileName: String): Int {
     val textureId = IntArray(1)
-    var bitmap: Bitmap? = null
-    var `is`: InputStream? = null
+    val inputStream = context.assets.open(fileName)
 
-    try {
-        `is` = context.assets.open(fileName)
-    } catch (ioe: IOException) {
-        `is` = null
-    }
+    val bitmap = BitmapFactory.decodeStream(inputStream)
 
-    if (`is` == null) {
-        return 0
-    }
-
-    bitmap = BitmapFactory.decodeStream(`is`)
+    checkGLerr("lTFA01")
 
     GLES30.glGenTextures(1, textureId, 0)
     GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId[0])
@@ -81,6 +74,8 @@ fun loadTextureFromAsset(context: Context, fileName: String): Int {
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
+
+    checkGLerr("lTFA02")
 
     return textureId[0]
 }

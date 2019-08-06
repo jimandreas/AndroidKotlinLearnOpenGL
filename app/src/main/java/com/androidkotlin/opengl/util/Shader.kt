@@ -1,6 +1,7 @@
 package com.androidkotlin.opengl.util
 
 import android.content.Context
+import android.opengl.GLES20
 import android.opengl.GLES20.*
 import timber.log.Timber
 
@@ -76,6 +77,12 @@ class Shader {
                     throw RuntimeException("Error creating shader.")
 
                 }
+
+                val glError = glGetError()
+                if (glError != GL_NO_ERROR) {
+                    Timber.e("compileShader, GLERROR: $glError  (0x%X)", glError)
+                }
+
             }
         } catch (e: Exception) {
             Timber.e(e, "Exception in compile Shader")
@@ -126,6 +133,7 @@ class Shader {
         // Link the two/three shaders together into a program.
         glLinkProgram(progHandl)
 
+        checkGLerr("cALP01")
         // Get the link status.
         val linkStatus = IntArray(1)
         glGetProgramiv(progHandl, GL_LINK_STATUS, linkStatus, 0)
@@ -141,6 +149,7 @@ class Shader {
 //        if (geometryShaderHandle != null) {
 //            glDeleteShader(geometryShaderHandle)
 //        }
+        checkGLerr("cALP02")
         return progHandl
     }
 
@@ -158,7 +167,10 @@ class Shader {
         glUniform1f(glGetUniformLocation(programHandle, name), value)
     }
     fun setVec3(name: String, value: FloatArray) {
-        glUniform3fv(glGetUniformLocation(programHandle, name), 1, value, 0)
+        val loc = glGetUniformLocation(programHandle, name)
+        Timber.i("*** Loc is $loc")
+        glUniform3fv(loc, 1, value, 0)
+        checkGLerr("setVec3")
     }
     fun setMat2(name: String, value: FloatArray) {
         glUniformMatrix2fv(

@@ -15,12 +15,17 @@ package com.androidkotlin.opengl.realtime
 
 import android.content.Context
 import android.opengl.GLES20
+import android.opengl.GLES30
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import com.androidkotlin.opengl.math.Matrix4
 import com.androidkotlin.opengl.ui.GLES20ViewModel
 import com.androidkotlin.opengl.util.*
 import com.androidkotlin.opengl.math.Vector3
+import timber.log.Timber
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -49,17 +54,19 @@ class RendererInstance(
 
     private val lightPos = floatArrayOf(1.2f, 1.0f, 2.0f)
 
+    private val m4 = Matrix4()
+
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
         // Set the background clear color to black.
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
 
         // Use culling to remove back faces.
-        GLES20.glEnable(GLES20.GL_CULL_FACE)
+        //GLES20.glEnable(GLES20.GL_CULL_FACE)
 
         // Enable depth testing
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
 
-        // temporary code
+      /*  // temporary code
         // Position the eye in front of the origin.
         val eyeX = 0.0f
         val eyeY = 0.0f
@@ -79,8 +86,9 @@ class RendererInstance(
         // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
         // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
         Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ)
-        // end temporary code
+        // end temporary code*/
 
+        checkGLerr("R01")
 
         lightingShader.shaderReadCompileLink(
                 context,
@@ -91,15 +99,21 @@ class RendererInstance(
                 "4.2.lamp.vs",
                 "4.2.lamp.fs")
 
+        checkGLerr("R02")
+
         glGenVertexArrays(1, cubevao, 0)
+
+        val nativeFloatBuffer = ByteBuffer
+                .allocateDirect(vertices.size * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+        nativeFloatBuffer!!.put(vertices).position(0)
         glGenBuffers(1, vbo, 0)
-
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
-        glBufferData(GL_ARRAY_BUFFER,  vertices.size * 4,
-                null, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, vertices.size * 4,
+                nativeFloatBuffer, GLES20.GL_STATIC_DRAW)
 
-        // Unamp the buffer
-        glUnmapBuffer(GL_ARRAY_BUFFER)
+        checkGLerr("R03")
 
         glBindVertexArray(cubevao[0])
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0)
@@ -108,6 +122,8 @@ class RendererInstance(
         glEnableVertexAttribArray(1)
         glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4)
         glEnableVertexAttribArray(2)
+
+        checkGLerr("R04")
 
         // second, configure the light's VAO (VBO stays the same;
         // the vertices are the same for the light object which is also a 3D cube)
@@ -120,6 +136,8 @@ class RendererInstance(
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0)
         glEnableVertexAttribArray(0)
 
+        checkGLerr("R05")
+
         // load textures
         // -----------------------------------------------------------------------------
         diffuseMap = loadTextureFromAsset(context,"container2.png")
@@ -130,6 +148,8 @@ class RendererInstance(
         lightingShader.use()
         lightingShader.setInt("material.diffuse", 0)
         lightingShader.setInt("material.specular", 1)
+
+        checkGLerr("R06")
     }
 
     override fun onSurfaceChanged(glUnused: GL10?, width: Int, height: Int) {
@@ -153,7 +173,7 @@ class RendererInstance(
     }
 
     override fun onDrawFrame(glUnused: GL10) {
-        // Timber.i("OnDrawFrame")
+        Timber.i("OnDrawFrame")
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
@@ -170,14 +190,17 @@ class RendererInstance(
         // material properties
         lightingShader.setFloat("material.shininess", 64.0f)
 
-/*        // view/projection transformations
-        val projection = glm.perspective(glm.radians(camera.zoom),
-                screenWidth * 1.0f / screenHeight * 1.0f, 0.1f, 100.0f)
+        // view/projection transformations
+        val projection = m4.setToPerspective(
+                0.1,
+                100.0,
+                camera.zoom,
+                screenWidth * 1.0 / screenHeight * 1.0)
         val view = camera.getViewMatrix()
         lightingShader.setMat4("projection", toFloatArray16(projection))
         lightingShader.setMat4("view", toFloatArray16(view))
 
-        var model = Mat4(1.0f)
+        var model = Matrix4() // identity matrix
         lightingShader.setMat4("model", toFloatArray16(model))
 
         // bind diffuse map
@@ -196,13 +219,15 @@ class RendererInstance(
 
         lampShader.setMat4("projection", toFloatArray16(projection))
         lampShader.setMat4("view", toFloatArray16(view))
-        model = Mat4(1.0f)
-        model = glm.translate(model, toVec3(lightPos))
-        model = glm.scale(model, Vector3(0.2f)) // a smaller cube
-        lampShader.setMat4("model", toFloatArray16(model))*/
+        model = Matrix4() // identity matrix
+        model = model.translate(toVec3(lightPos))
+        model = model.scale(Vector3(0.2)) // a smaller cube
+        lampShader.setMat4("model", toFloatArray16(model))
 
         glBindVertexArray(lightvao[0])
         glDrawArrays(GL_TRIANGLES, 0, 36)
+
+        checkGLerr("ODF01")
 
     }
 

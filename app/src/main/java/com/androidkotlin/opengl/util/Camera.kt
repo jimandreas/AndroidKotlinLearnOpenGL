@@ -9,6 +9,7 @@
         "PropertyName")
 package com.androidkotlin.opengl.util
 
+import com.androidkotlin.opengl.math.Matrix4
 import com.androidkotlin.opengl.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
@@ -35,6 +36,16 @@ class Camera {
     var mouseSensitivity = SENSITIVITY
     var zoom = ZOOM
 
+    val m = Matrix4()
+
+    fun getViewMatrix(): Matrix4 {
+        val viewMatrix = m.setToLookAt(
+                position,
+                front,
+                up
+        )
+        return viewMatrix
+    }
     constructor(positionIn: Vector3) {
         position = positionIn
         up = Vector3(0.0, 1.0, 0.0)
