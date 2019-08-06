@@ -1,9 +1,9 @@
 package com.androidkotlin.opengl.util
 
-import glm_.mat4x4.Mat4
-import glm_.vec3.Vector3
+import com.androidkotlin.opengl.math.Matrix4
+import com.androidkotlin.opengl.math.Vector3
 
-fun toFloatArray16(someMatrix: Mat4) : FloatArray {
+fun toFloatArray16(someMatrix: Matrix4) : FloatArray {
     val floatA= floatArrayOf(
             0f, 0f, 0f, 0f,
             0f, 0f, 0f, 0f,
@@ -15,7 +15,7 @@ fun toFloatArray16(someMatrix: Mat4) : FloatArray {
 }
 
 fun toVec3(someFloatArray: FloatArray): Vector3 {
-    val vec3 = Vector3(0f, 0f, 0f)
+    val vec3 = Vector3(0.0, 0.0, 0.0)
     someFloatArray to vec3
     return vec3
 }

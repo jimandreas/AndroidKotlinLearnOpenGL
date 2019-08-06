@@ -3,11 +3,6 @@ package com.androidkotlin.opengl.util
 import android.content.Context
 import android.opengl.GLES20.*
 import timber.log.Timber
-import glm_.Java.Companion.glm
-import glm_.mat2x2.Mat2
-import glm_.mat4x4.Mat4
-import glm_.vec2.Vec2
-import glm_.vec3.Vector3
 
 /*
  * A rough translation of "shader.h" into Kotlin:

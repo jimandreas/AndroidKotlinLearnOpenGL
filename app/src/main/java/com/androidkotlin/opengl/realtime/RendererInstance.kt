@@ -17,6 +17,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
+import android.opengl.Matrix
 import com.androidkotlin.opengl.ui.GLES20ViewModel
 import com.androidkotlin.opengl.util.*
 import com.androidkotlin.opengl.math.Vector3
@@ -28,6 +29,8 @@ class RendererInstance(
         private val viewModel: GLES20ViewModel
 ) : GLSurfaceView.Renderer {
 
+    // use this until new code is worked out
+    private val mViewMatrix = FloatArray(16)
 
     // VertexBufferObject Ids
     private var vbo = IntArray(1)
@@ -55,6 +58,29 @@ class RendererInstance(
 
         // Enable depth testing
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
+
+        // temporary code
+        // Position the eye in front of the origin.
+        val eyeX = 0.0f
+        val eyeY = 0.0f
+        val eyeZ = -0.5f
+
+        // We are looking toward the distance
+        val lookX = 0.0f
+        val lookY = 0.0f
+        val lookZ = -5.0f
+
+        // Set our up vector. This is where our head would be pointing were we holding the camera.
+        val upX = 0.0f
+        val upY = 1.0f
+        val upZ = 0.0f
+
+        // Set the view matrix. This matrix can be said to represent the camera position.
+        // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
+        // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
+        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ)
+        // end temporary code
+
 
         lightingShader.shaderReadCompileLink(
                 context,
@@ -144,7 +170,7 @@ class RendererInstance(
         // material properties
         lightingShader.setFloat("material.shininess", 64.0f)
 
-        // view/projection transformations
+/*        // view/projection transformations
         val projection = glm.perspective(glm.radians(camera.zoom),
                 screenWidth * 1.0f / screenHeight * 1.0f, 0.1f, 100.0f)
         val view = camera.getViewMatrix()
@@ -173,18 +199,10 @@ class RendererInstance(
         model = Mat4(1.0f)
         model = glm.translate(model, toVec3(lightPos))
         model = glm.scale(model, Vector3(0.2f)) // a smaller cube
-        lampShader.setMat4("model", toFloatArray16(model))
+        lampShader.setMat4("model", toFloatArray16(model))*/
 
         glBindVertexArray(lightvao[0])
         glDrawArrays(GL_TRIANGLES, 0, 36)
-
-
-
-//        if (scaleCurrentF != scalePrevious) {
-//            onSurfaceChanged(null, screenWidth, screenHeight)  // adjusts view
-//            scalePrevious = scaleCurrentF
-//        }
-
 
     }
 

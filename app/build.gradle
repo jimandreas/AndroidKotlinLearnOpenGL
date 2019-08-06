@@ -19,8 +19,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlinx-serialization'
-apply plugin: "androidx.navigation.safeargs"
+//apply plugin: 'kotlinx-serialization'
+//apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdkVersion 28
@@ -69,9 +69,6 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:glide:4.9.0'
-
-    // glm
-    implementation 'com.github.kotlin-graphics.glm:glm:v0.9.9.0-build-13'
 
     // Timber : https://github.com/JakeWharton/timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
