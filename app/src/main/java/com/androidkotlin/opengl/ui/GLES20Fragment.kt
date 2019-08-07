@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.androidkotlin.opengl.realtime.Renderer242LightingMapsSpecular
+import com.androidkotlin.opengl.googlesample.GoogleSampleRenderer
 import com.androidkotlin.opengl.realtime.SurfaceViewInstance
 import com.androidkotlin.opengl.ui.databinding.FragmentGettingStartedBinding
 
@@ -42,7 +42,10 @@ class OverviewFragment : Fragment() {
         viewModel.setLocalLifecycleOwner(this)
         binding.viewModel1 = viewModel
         glSurfaceView = binding.myGLSurfaceView
-        val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
+
+        // val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
+        val renderer = GoogleSampleRenderer(this.context!!, viewModel)
+
         glSurfaceView.setEGLContextClientVersion(2)
         glSurfaceView.setRenderer(renderer)
 
