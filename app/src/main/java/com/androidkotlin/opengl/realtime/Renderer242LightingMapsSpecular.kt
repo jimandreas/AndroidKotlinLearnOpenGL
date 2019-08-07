@@ -27,7 +27,7 @@ import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class RendererInstance(
+class Renderer242LightingMapsSpecular(
         private val context: Context,
         private val viewModel: ViewModel
 ) : GLSurfaceView.Renderer {

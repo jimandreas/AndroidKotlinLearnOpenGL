@@ -24,9 +24,6 @@ class MainActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_main)
 
         binding.lifecycleOwner = this
-        binding.activityViewModelXML = viewModel
-
-
-
+//        binding.activityViewModelXML = viewModel
     }
 }

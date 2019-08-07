@@ -33,7 +33,7 @@ class SurfaceViewInstance : GLSurfaceView {
     var mSelectMode = false
     private var mLastTouchState = NO_FINGER_DOWN
 
-    private lateinit var renderer: RendererInstance
+    private lateinit var renderer: Renderer242LightingMapsSpecular
 
     private lateinit var scroller: Scroller
     private lateinit var gestureDetector: GestureDetector
@@ -84,7 +84,7 @@ class SurfaceViewInstance : GLSurfaceView {
     }
 
     fun setRendererInInstance(
-            rendererIn: RendererInstance,
+            rendererIn: Renderer242LightingMapsSpecular,
             densityIn: Float,
             viewModelIn: ViewModel) {
         renderer = rendererIn
