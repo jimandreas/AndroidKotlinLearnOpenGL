@@ -36,9 +36,6 @@ class Renderer242LightingMapsSpecular(
        viewModel: ViewModel
 ) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
 
-    // use this until new code is worked out
-    private val mViewMatrix = FloatArray(16)
-
     // VertexBufferObject Ids
     private var vbo = IntArray(1)
     private var cubevao = IntArray(1)

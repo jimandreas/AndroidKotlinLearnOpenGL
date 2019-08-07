@@ -28,11 +28,10 @@ import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
-import java.nio.IntBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class Renderer122HelloTriangle(
+class Renderer121HelloTriangle(
         val context: Context,
         viewModel: ViewModel
 ) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
@@ -41,11 +40,16 @@ class Renderer122HelloTriangle(
 
     private var vbo = IntArray(1)
     private var vao = IntArray(1)
-    private var ebo = IntArray(1)
+    //private var ebo = IntArray(1)
 
     private val vertexBuffer: FloatBuffer
-    private val indicesBuffer: IntBuffer
+    // private val indicesBuffer: IntBuffer
 
+    private val vertices = floatArrayOf(
+            -0.5f, -0.5f, 0.0f, // left
+            0.5f, -0.5f, 0.0f, // right
+            0.0f,  0.5f, 0.0f  // top
+    )
     init {
         // initialize vertex byte buffer for shape coordinates
         val bb = ByteBuffer.allocateDirect(
@@ -53,7 +57,6 @@ class Renderer122HelloTriangle(
                 vertices.size * 4)
         // use the device hardware's native byte order
         bb.order(ByteOrder.nativeOrder())
-
         // create a floating point buffer from the ByteBuffer
         vertexBuffer = bb.asFloatBuffer()
         // add the coordinates to the FloatBuffer
@@ -62,13 +65,13 @@ class Renderer122HelloTriangle(
         vertexBuffer.position(0)
 
         // initialize byte buffer for the draw list
-        val dlb = ByteBuffer.allocateDirect(
-                // (# of coordinate values * 4 bytes per Int)
-                indices.size * 4)
-        dlb.order(ByteOrder.nativeOrder())
-        indicesBuffer = dlb.asIntBuffer()
-        indicesBuffer.put(indices)
-        indicesBuffer.position(0)
+//        val dlb = ByteBuffer.allocateDirect(
+//                // (# of coordinate values * 4 bytes per Int)
+//                indices.size * 4)
+//        dlb.order(ByteOrder.nativeOrder())
+//        indicesBuffer = dlb.asIntBuffer()
+//        indicesBuffer.put(indices)
+//        indicesBuffer.position(0)
 
     }
 
@@ -90,17 +93,13 @@ class Renderer122HelloTriangle(
 
         glGenVertexArrays(1, vao, 0)
         glGenBuffers(1, vbo, 0)
-        glGenBuffers(1, ebo, 0)
+        //glGenBuffers(1, ebo, 0)
 
         glBindVertexArray(vao[0])
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
-        glBufferData(GL_ARRAY_BUFFER, vertices.size, vertexBuffer, GL_STATIC_DRAW)
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0])
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size, indicesBuffer, GL_STATIC_DRAW)
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0)
-        glEnableVertexAttribArray(0)
+        GLES30.glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
+        GLES30.glBufferData(GL_ARRAY_BUFFER, vertices.size * 4, vertexBuffer, GL_STATIC_DRAW)
+        GLES30.glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0)
+        GLES30.glEnableVertexAttribArray(0)
 
         // note that this is allowed, the call to glVertexAttribPointer
         // registered VBO as the vertex attribute's bound vertex buffer object
@@ -131,7 +130,8 @@ class Renderer122HelloTriangle(
         // to bind it every time, but we'll bind it anyway so to keep things a bit more organized
         glBindVertexArray(vao[0])
         checkGLerr("ODF3")
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
+        glDrawArrays(GL_TRIANGLES, 0, 3)
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
         checkGLerr("ODF4")
     }
 
@@ -177,17 +177,8 @@ class Renderer122HelloTriangle(
             }
         """.trimIndent()
 
-        private val vertices = floatArrayOf(
-                0.5f,  0.5f, 0.0f,  // top right
-                0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left
-        )
 
-        private val indices = intArrayOf(
-                0, 1, 3,  // first Triangle
-                1, 2, 3   // second Triangle
-        )
+
         private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
 
         private var screenWidth = 0
