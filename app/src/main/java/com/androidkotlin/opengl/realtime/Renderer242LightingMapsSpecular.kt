@@ -28,9 +28,9 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class Renderer242LightingMapsSpecular(
-        private val context: Context,
-        private val viewModel: ViewModel
-) : GLSurfaceView.Renderer {
+       val context: Context,
+       viewModel: ViewModel
+) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
 
     // use this until new code is worked out
     private val mViewMatrix = FloatArray(16)
@@ -276,30 +276,6 @@ class Renderer242LightingMapsSpecular(
     }
 
     private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
-    var touchCoordX = 300f
-    var touchCoordY = 300f
-    val scaleF = 0.1f
-    private val INITIAL_SCALE = 0.5f
-    @Volatile
-    var scaleCurrentF = INITIAL_SCALE
-
-
-    // update to add touch control - these are set by the SurfaceView class
-    // These still work without volatile, but refreshes are not guaranteed to happen.
-    @Volatile
-    var deltaX: Float = 0.toFloat()
-    @Volatile
-    var deltaY: Float = 0.toFloat()
-    @Volatile
-    var deltaTranslateX: Float = 0.toFloat()
-    @Volatile
-    var deltaTranslateY: Float = 0.toFloat()
-    // public volatile float scaleCurrentF = 1.0f;
-    // use scale to zoom in initially
-//    @Volatile
-//    var scaleCurrentF = INITIAL_SCALE
-    @Volatile
-    var scalePrevious = 0f
 
     private var screenWidth = 0
     private var screenHeight = 0
