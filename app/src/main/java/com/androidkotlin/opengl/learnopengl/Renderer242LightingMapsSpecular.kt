@@ -1,14 +1,17 @@
-@file:Suppress(
-        "unused",
-        "unused_variable",
-        "unused_parameter",
-        "unused_property",
-        "deprecation",
-        "ConstantConditionIf",
-        "LocalVariableName",
-        "PropertyName")
-
-package com.androidkotlin.opengl.realtime
+/*
+ * All code samples, unless explicitly stated otherwise,
+ * are licensed under the terms of the CC BY-NC 4.0 license
+ * as published by Creative Commons, either version 4 of the License,
+ * or (at your option) any later version. You can find a human-readable
+ * format of the license here:
+ * https://creativecommons.org/licenses/by-nc/4.0/
+ * and the full license here:
+ * https://creativecommons.org/licenses/by-nc/4.0/legalcode
+ *
+ * Translation to kotlin and adaptation to android architecture:
+ * Jim Andreas  jim@jimandreas.com
+ */
+package com.androidkotlin.opengl.learnopengl
 
 // translation of
 //   LearnOpenGL-master\src\2.lighting\4.2.lighting_maps_specular_map
@@ -21,6 +24,7 @@ import com.androidkotlin.opengl.math.Matrix4
 import com.androidkotlin.opengl.ui.ViewModel
 import com.androidkotlin.opengl.util.*
 import com.androidkotlin.opengl.math.Vector3
+import com.androidkotlin.opengl.realtime.RendererBaseClass
 import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -47,8 +51,7 @@ class Renderer242LightingMapsSpecular(
     private var specularMap = 0
 
     private val camera = Camera(Vector3(0.0, 0.0, 3.0))
-    private var lastX = 0f
-    private var lastY = 0f
+
 
     private val lightPos = floatArrayOf(1.2f, 1.0f, 2.0f)
 
@@ -90,10 +93,12 @@ class Renderer242LightingMapsSpecular(
 
         lightingShader.shaderReadCompileLink(
                 context,
+                Shader.ShaderSource.FROM_ASSETS,
                 "4.2.lighting_maps.vs",
                 "4.2.lighting_maps.fs")
         lampShader.shaderReadCompileLink(
                 context,
+                Shader.ShaderSource.FROM_ASSETS,
                 "4.2.lamp.vs",
                 "4.2.lamp.fs")
 
@@ -291,5 +296,8 @@ class Renderer242LightingMapsSpecular(
      * Store the current rotation.
      */
     private val incrementalRotation = FloatArray(16)
+
+    private var lastX = 0f
+    private var lastY = 0f
 
 }

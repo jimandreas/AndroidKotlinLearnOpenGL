@@ -1,7 +1,6 @@
 package com.androidkotlin.opengl.util
 
 import android.content.Context
-import android.opengl.GLES20
 import android.opengl.GLES20.*
 import timber.log.Timber
 
@@ -20,21 +19,32 @@ class Shader {
     private var vertexShaderHandle = 0
     private var fragmentShaderHandle = 0
     private var programHandle = 0
+    enum class ShaderSource { FROM_STRING, FROM_ASSETS }
 
     fun shaderReadCompileLink(context: Context,
+                              sourceFrom: ShaderSource,
                               vertexShaderName: String,
                               fragmentShaderName: String
-                      ) {
+    ) {
 
-        val vertexShaderString = context.assets.open(vertexShaderName)
-                .bufferedReader().use {
-                    it.readText()
-                }
+        lateinit var vertexShaderString : String
+        lateinit var fragmentShaderString: String
+        if (sourceFrom == ShaderSource.FROM_ASSETS) {
+            vertexShaderString = context.assets.open(vertexShaderName)
+                    .bufferedReader().use {
+                        it.readText()
+                    }
+            fragmentShaderString = context.assets.open(fragmentShaderName)
+                    .bufferedReader().use {
+                        it.readText()
+                    }
+        } else {
+            vertexShaderString = vertexShaderName
+            fragmentShaderString = fragmentShaderName
+        }
+
         vertexShaderHandle = compileShader(GL_VERTEX_SHADER, vertexShaderString, vertexShaderName)
-        val fragmentShaderString = context.assets.open(fragmentShaderName)
-                .bufferedReader().use {
-                    it.readText()
-                }
+
         fragmentShaderHandle = compileShader(GL_FRAGMENT_SHADER, fragmentShaderString, fragmentShaderName)
 
         programHandle = createAndLinkProgram(
@@ -112,8 +122,9 @@ class Shader {
 
         val progHandl = glCreateProgram()
         if (progHandl == 0) {
-            Thread.currentThread().join()
-            throw RuntimeException("Error creating program.")
+            Timber.e("*****************************************************")
+            Timber.e("createAndLinkProgram: Error on Shader glCreateProgram")
+            throw RuntimeException("Error creating shader program.")
         }
 
         // Bind the vertex, fragment and optional geometry shader to the program.
@@ -138,9 +149,11 @@ class Shader {
         val linkStatus = IntArray(1)
         glGetProgramiv(progHandl, GL_LINK_STATUS, linkStatus, 0)
 
-        // If the link failed, delete the program.
         if (linkStatus[0] == 0) {
-            Thread.currentThread().join()
+            val infoLog = glGetProgramInfoLog(progHandl)
+            Timber.e("*****************************************************")
+            Timber.e("createAndLinkProgram: Error on Shader glLinkProgram")
+            Timber.e("Info log string is: %s", infoLog)
             throw RuntimeException("the glLinkProgram call failed.")
         }
 

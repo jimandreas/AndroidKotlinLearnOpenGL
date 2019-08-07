@@ -56,7 +56,7 @@ class GoogleSampleRenderer(
     /**
      * Sets the rotation angle of the triangle shape (mTriangle).
      */
-    var angle: Float = 0.toFloat()
+    private var angle: Float = 0.toFloat()
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
 

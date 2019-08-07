@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.androidkotlin.opengl.googlesample.GoogleSampleRenderer
+import com.androidkotlin.opengl.learnopengl.Renderer122HelloTriangle
 import com.androidkotlin.opengl.realtime.SurfaceViewInstance
 import com.androidkotlin.opengl.ui.databinding.FragmentGettingStartedBinding
 
@@ -43,8 +44,12 @@ class OverviewFragment : Fragment() {
         binding.viewModel1 = viewModel
         glSurfaceView = binding.myGLSurfaceView
 
+        // *****************
+        // SELECT HERE now for the hack
+        // *****************
         // val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
-        val renderer = GoogleSampleRenderer(this.context!!, viewModel)
+        //val renderer3 = GoogleSampleRenderer(this.context!!, viewModel)
+        val renderer = Renderer122HelloTriangle(this.context!!, viewModel)
 
         glSurfaceView.setEGLContextClientVersion(2)
         glSurfaceView.setRenderer(renderer)
