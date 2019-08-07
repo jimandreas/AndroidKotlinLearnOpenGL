@@ -15,12 +15,10 @@ package com.androidkotlin.opengl.realtime
 
 import android.content.Context
 import android.opengl.GLES20
-import android.opengl.GLES30
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
-import android.opengl.Matrix
 import com.androidkotlin.opengl.math.Matrix4
-import com.androidkotlin.opengl.ui.GLES20ViewModel
+import com.androidkotlin.opengl.ui.ViewModel
 import com.androidkotlin.opengl.util.*
 import com.androidkotlin.opengl.math.Vector3
 import timber.log.Timber
@@ -31,7 +29,7 @@ import javax.microedition.khronos.opengles.GL10
 
 class RendererInstance(
         private val context: Context,
-        private val viewModel: GLES20ViewModel
+        private val viewModel: ViewModel
 ) : GLSurfaceView.Renderer {
 
     // use this until new code is worked out

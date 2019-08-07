@@ -29,8 +29,8 @@ import com.androidkotlin.opengl.ui.databinding.FragmentGettingStartedBinding
 
 class OverviewFragment : Fragment() {
 
-    private val viewModel: GLES20ViewModel by lazy {
-        ViewModelProviders.of(this).get(GLES20ViewModel::class.java)
+    private val viewModel: ViewModel by lazy {
+        ViewModelProviders.of(this).get(ViewModel::class.java)
     }
     private lateinit var glSurfaceView: SurfaceViewInstance
 

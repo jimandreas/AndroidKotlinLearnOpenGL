@@ -19,8 +19,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Scroller
-import androidx.lifecycle.Observer
-import com.androidkotlin.opengl.ui.GLES20ViewModel
+import com.androidkotlin.opengl.ui.ViewModel
 import timber.log.Timber
 import kotlin.math.atan2
 import kotlin.math.sqrt
@@ -38,7 +37,7 @@ class SurfaceViewInstance : GLSurfaceView {
 
     private lateinit var scroller: Scroller
     private lateinit var gestureDetector: GestureDetector
-    private lateinit var viewModel: GLES20ViewModel
+    private lateinit var viewModel: ViewModel
     private lateinit var contextLocal: Context
 
     // Offsets for touch events
@@ -87,7 +86,7 @@ class SurfaceViewInstance : GLSurfaceView {
     fun setRendererInInstance(
             rendererIn: RendererInstance,
             densityIn: Float,
-            viewModelIn: GLES20ViewModel) {
+            viewModelIn: ViewModel) {
         renderer = rendererIn
         density = densityIn
         viewModel = viewModelIn

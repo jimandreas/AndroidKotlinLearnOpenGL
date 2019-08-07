@@ -6,7 +6,7 @@
 
         <variable
             name="activityViewModelXML"
-            type="com.androidkotlin.opengl.ui.GLES20ViewModel" />
+            type="com.androidkotlin.opengl.ui.ViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

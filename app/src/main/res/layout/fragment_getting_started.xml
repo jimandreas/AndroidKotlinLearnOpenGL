@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel1"
-            type="com.androidkotlin.opengl.ui.GLES20ViewModel"
+            type="com.androidkotlin.opengl.ui.ViewModel"
             />
         <import type="android.view.View"/>
         <import type="android.widget.SeekBar"/>

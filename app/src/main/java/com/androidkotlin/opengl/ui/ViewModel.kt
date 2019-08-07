@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
 
-class GLES20ViewModel : ViewModel() {
+class ViewModel : ViewModel() {
     lateinit var owner: LifecycleOwner
     fun setLocalLifecycleOwner(ownerIn: LifecycleOwner) {
         owner = ownerIn

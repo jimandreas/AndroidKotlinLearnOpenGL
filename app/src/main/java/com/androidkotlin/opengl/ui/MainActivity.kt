@@ -10,8 +10,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
-    private val viewModel: GLES20ViewModel by lazy {
-        ViewModelProviders.of(this).get(GLES20ViewModel::class.java)
+    private val viewModel: ViewModel by lazy {
+        ViewModelProviders.of(this).get(ViewModel::class.java)
     }
 
     /**
