@@ -44,6 +44,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.GLES20
+import android.opengl.GLES20.GL_TEXTURE_2D
+import android.opengl.GLES20.glGenerateMipmap
 import android.opengl.GLES30
 import android.opengl.GLUtils
 import timber.log.Timber
@@ -80,4 +82,31 @@ fun loadTextureFromAsset(context: Context, fileName: String): Int {
     return textureId[0]
 }
 
+//
+//  Load texture from asset
+//
+fun loadTextureFromAsset163(context: Context, fileName: String): Int {
+    val textureId = IntArray(1)
+    val inputStream = context.assets.open(fileName)
 
+    val bitmap = BitmapFactory.decodeStream(inputStream)
+
+    checkGLerr("lTFA01")
+
+    GLES30.glGenTextures(1, textureId, 0)
+    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId[0])
+    // wrapping parms
+    GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
+    GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+    // texture filtering parms
+    GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
+    GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
+    // load image, create texture and generate mipmaps
+    GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
+    glGenerateMipmap(GL_TEXTURE_2D)
+    checkGLerr("lTFA02")
+
+    inputStream.close()
+    Timber.i("texture bitmap file: %s w: %d h: %d", fileName, bitmap.width, bitmap.height)
+    return textureId[0]
+}
