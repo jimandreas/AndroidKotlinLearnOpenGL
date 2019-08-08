@@ -20,13 +20,11 @@ import android.opengl.GLES30
 import android.opengl.GLES30.glBindVertexArray
 import android.opengl.GLES30.glGenVertexArrays
 import android.opengl.GLSurfaceView
+import com.androidkotlin.opengl.math.Matrix4
 import com.androidkotlin.opengl.math.Vector3
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
-import com.androidkotlin.opengl.util.Shader
-import com.androidkotlin.opengl.util.checkGLerr
-import com.androidkotlin.opengl.util.loadTextureFromAsset
-import com.androidkotlin.opengl.util.loadTextureFromAsset163
+import com.androidkotlin.opengl.util.*
 import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -191,13 +189,35 @@ class Renderer163CoordinateSystems(
         shaderObject.use()
 
         checkGLerr("ODF2")
-        // seeing as we only have a single VAO there's no need
-        // to bind it every time, but we'll bind it anyway so to keep things a bit more organized
+
+        var viewM4 = Matrix4()
+        var projectionM4 = Matrix4()
+
+        projectionM4 = viewM4.setToPerspective(
+                0.1,
+                100.0,
+                45.0,
+                screenWidth.toDouble() / screenHeight.toDouble())
+        viewM4 = viewM4.translate(Vector3(0.0, 0.0, -3.0))
+
+        shaderObject.setMat4("projection", projectionM4.floatValues)
+        shaderObject.setMat4("view", viewM4.floatValues)
+
         glBindVertexArray(vao[0])
-        checkGLerr("ODF3")
-        glDrawArrays(GL_TRIANGLES, 0, 36)
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
-        checkGLerr("ODF4")
+
+        var i = 0
+        while (i < 10) {
+            var modelM4 = Matrix4()
+            modelM4 = modelM4.translate(cubePositions[i])
+            val angle = 20.0 * i
+            modelM4 = modelM4.rotate(Vector3(1.0, 0.3, 0.5), angle)
+            shaderObject.setMat4("model", modelM4.floatValues)
+
+            glDrawArrays(GL_TRIANGLES, 0, 36)
+
+            checkGLerr("ODF3")
+            i++
+        }
     }
 
     override fun onSurfaceChanged(glUnused: GL10?, width: Int, height: Int) {
