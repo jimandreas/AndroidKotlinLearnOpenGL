@@ -193,7 +193,7 @@ class Renderer163CoordinateSystems(
         var viewM4 = Matrix4()
         var projectionM4 = Matrix4()
 
-        projectionM4 = viewM4.setToPerspective(
+        projectionM4 = projectionM4.setToPerspective(
                 0.1,
                 100.0,
                 45.0,
