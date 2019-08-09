@@ -110,14 +110,17 @@ class Camera {
         newfront.x = cos(Math.toRadians(yaw) * cos(Math.toRadians(pitch)))
         newfront.y = sin(Math.toRadians(pitch))
         newfront.z = sin(Math.toRadians(yaw) * cos(Math.toRadians(pitch)))
-        front = normalize(front)
+        front = normalize(newfront)
+        val tempFront1 = front.clone()
+        val tempFront2 = front.clone()
 
         // Also re-calculate the Right and Up vector
         // Normalize the vectors, because their length gets closer to 0
         // the more you look up or down which results in slower movement.
 
-        right = normalize(front.cross(worldUp))
-        up = normalize(right.cross(right))
+        right = normalize(tempFront1.cross(worldUp))
+        val tempRight = right.clone()
+        up = normalize(tempRight.cross(tempFront2))
 
     }
 
@@ -131,6 +134,17 @@ class Camera {
         return T
     }
 
+    fun zoomHack(yoffset: Double) {
+//        if (zoom in 1.0..90.0)
+//            zoom -= yoffset
+//        if (zoom <= 1.0)
+//            zoom = 1.0
+//        if (zoom >= 85.0)
+//            zoom = 85.0
+        yaw += yoffset
+        pitch += yoffset
+        updateCameraVectors()
+    }
 
     companion object {
 

@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.androidkotlin.opengl.learnopengl.Renderer121HelloTriangle
 import com.androidkotlin.opengl.learnopengl.Renderer163CoordinateSystems
+import com.androidkotlin.opengl.learnopengl.Renderer174Camera
 import com.androidkotlin.opengl.learnopengl.Renderer242LightingMapsSpecular
 import com.androidkotlin.opengl.realtime.SurfaceViewInstance
 import com.androidkotlin.opengl.ui.databinding.FragmentGettingStartedBinding
@@ -52,6 +53,7 @@ class OverviewFragment : Fragment() {
         //val renderer3 = GoogleSampleRenderer(this.context!!, viewModel)
         //val renderer = Renderer121HelloTriangle(this.context!!, viewModel)
         //val renderer = Renderer163CoordinateSystems(this.context!!, viewModel)
+        //val renderer = Renderer174Camera(this.context!!, viewModel)
         val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
 
         glSurfaceView.setEGLContextClientVersion(2)
