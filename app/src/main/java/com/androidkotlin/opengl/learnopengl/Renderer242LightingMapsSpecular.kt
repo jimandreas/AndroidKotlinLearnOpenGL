@@ -20,11 +20,13 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
-import com.androidkotlin.opengl.math.Matrix4
+
 import com.androidkotlin.opengl.ui.ViewModel
 import com.androidkotlin.opengl.util.*
-import com.androidkotlin.opengl.math.Vector3
+
 import com.androidkotlin.opengl.realtime.RendererBaseClass
+import org.rajawali3d.math.Matrix4
+import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

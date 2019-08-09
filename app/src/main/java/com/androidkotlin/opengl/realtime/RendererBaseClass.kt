@@ -14,18 +14,8 @@ package com.androidkotlin.opengl.realtime
 //   LearnOpenGL-master\src\2.lighting\4.2.lighting_maps_specular_map
 
 import android.content.Context
-import android.opengl.GLES20
-import android.opengl.GLES30.*
-import android.opengl.GLSurfaceView
-import com.androidkotlin.opengl.math.Matrix4
 import com.androidkotlin.opengl.ui.ViewModel
-import com.androidkotlin.opengl.util.*
-import com.androidkotlin.opengl.math.Vector3
-import timber.log.Timber
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import javax.microedition.khronos.egl.EGLConfig
-import javax.microedition.khronos.opengles.GL10
+
 
 open class RendererBaseClass(
         context: Context,

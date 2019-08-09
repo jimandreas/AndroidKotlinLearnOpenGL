@@ -24,8 +24,8 @@
         "PropertyName")
 package com.androidkotlin.opengl.util
 
-import com.androidkotlin.opengl.math.Matrix4
-import com.androidkotlin.opengl.math.Vector3
+import org.rajawali3d.math.Matrix4
+import org.rajawali3d.math.vector.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt

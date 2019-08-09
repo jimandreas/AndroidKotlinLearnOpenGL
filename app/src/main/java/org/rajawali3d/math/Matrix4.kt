@@ -13,10 +13,13 @@
 @file:Suppress("unused")
 package org.rajawali3d.math
 
-import android.support.annotation.Size
+
+import androidx.annotation.NonNull
+import androidx.annotation.Size
+import org.jetbrains.annotations.Nullable
+import org.rajawali3d.math.util.ArrayUtils
 import org.rajawali3d.math.vector.Vector3
 import org.rajawali3d.math.vector.Vector3.Axis
-import org.rajawali3d.util.ArrayUtils
 
 import java.util.Arrays
 import kotlin.math.sqrt
@@ -142,7 +145,9 @@ class Matrix4 : Cloneable {
      * @param matrix float array containing the values for the matrix in column major order.
      * The array is not modified or referenced after this constructor completes.
      */
-    constructor(@NonNull @Size(min = 16) matrix: FloatArray) : this(ArrayUtils.convertFloatsToDoubles(matrix)) {}
+    constructor(@NonNull @Size(min = 16) matrix: FloatArray) {
+        setAll(ArrayUtils.convertFloatsToDoubles(matrix)!!)
+    }
 
     /**
      * Constructs a [Matrix4] based on the rotation represented by the provided [Quaternion].
@@ -1234,22 +1239,22 @@ class Matrix4 : Cloneable {
 	M20 M21 M22 M23
 	M30 M31 M32 M33
 	 */
-        val M00 = 0
-        val M01 = 4
-        val M02 = 8
-        val M03 = 12
-        val M10 = 1
-        val M11 = 5
-        val M12 = 9
-        val M13 = 13
-        val M20 = 2
-        val M21 = 6
-        val M22 = 10
-        val M23 = 14
-        val M30 = 3
-        val M31 = 7
-        val M32 = 11
-        val M33 = 15
+        const val M00 = 0
+        const val M01 = 4
+        const val M02 = 8
+        const val M03 = 12
+        const val M10 = 1
+        const val M11 = 5
+        const val M12 = 9
+        const val M13 = 13
+        const val M20 = 2
+        const val M21 = 6
+        const val M22 = 10
+        const val M23 = 14
+        const val M30 = 3
+        const val M31 = 7
+        const val M32 = 11
+        const val M33 = 15
 
         /**
          * Creates a new [Matrix4] representing a rotation.
