@@ -49,10 +49,7 @@ class Renderer242LightingMapsSpecular(
 
     private val camera = Camera(Vector3(0.0, 0.0, 3.0))
 
-
     private val lightPos = floatArrayOf(1.2f, 1.0f, 2.0f)
-
-    private val m4 = Matrix4()
 
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
         // Set the background clear color to black.
@@ -191,7 +188,8 @@ class Renderer242LightingMapsSpecular(
         lightingShader.setFloat("material.shininess", 64.0f)
 
         // view/projection transformations
-        val projection = m4.setToPerspective(
+        var projection = Matrix4()
+        projection = projection.setToPerspective(
                 0.1,
                 100.0,
                 camera.zoom,

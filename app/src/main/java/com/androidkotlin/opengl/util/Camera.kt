@@ -1,3 +1,18 @@
+/*
+ * All code samples, unless explicitly stated otherwise,
+ * are licensed under the terms of the CC BY-NC 4.0 license
+ * as published by Creative Commons, either version 4 of the License,
+ * or (at your option) any later version. You can find a human-readable
+ * format of the license here:
+ * https://creativecommons.org/licenses/by-nc/4.0/
+ * and the full license here:
+ * https://creativecommons.org/licenses/by-nc/4.0/legalcode
+ *
+ * Adaptation of:  https://learnopengl.com/Getting-started/Camera
+ * Translation to kotlin and adaptation to android architecture:
+ * Jim Andreas  jim@jimandreas.com
+ */
+
 @file:Suppress(
         "unused",
         "unused_variable",
@@ -15,6 +30,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+// adaptation of camera code here:
+// https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 
 /*
  *  basically a straight translation of "camera.h" into kotlin
@@ -36,9 +53,9 @@ class Camera {
     var mouseSensitivity = SENSITIVITY
     var zoom = ZOOM
 
-    val m = Matrix4()
 
     fun getViewMatrix(): Matrix4 {
+        val m = Matrix4()
         val viewMatrix = m.setToLookAt(
                 position,
                 front,
@@ -49,6 +66,7 @@ class Camera {
     constructor(positionIn: Vector3) {
         position = positionIn
         up = Vector3(0.0, 1.0, 0.0)
+        worldUp = Vector3(0.0, 1.0, 0.0)
         yaw = YAW
         pitch = PITCH
         front = Vector3(0.0, 0.0, -1.0)
@@ -57,10 +75,16 @@ class Camera {
         updateCameraVectors()
     }
 
-    constructor(positionIn: Vector3, upIn: Vector3, yawIn: Double, pitchIn: Double,
-                frontIn: Vector3, movementSpeedIn: Double, zoomIn: Double) {
+    constructor(positionIn: Vector3,
+                upIn: Vector3,
+                yawIn: Double,
+                pitchIn: Double,
+                frontIn: Vector3,
+                movementSpeedIn: Double,
+                zoomIn: Double) {
         position = positionIn
         up = upIn
+        worldUp = upIn.clone()
         yaw = yawIn
         pitch = pitchIn
         front = frontIn
@@ -74,6 +98,7 @@ class Camera {
                 yawIn: Double, pitchIn: Double) {
         position = Vector3(posX, posY, posZ)
         up = Vector3(upX, upY, upZ)
+        worldUp = up.clone()
         yaw = yawIn
         pitch = pitchIn
         front = Vector3(0.0, 0.0, -1.0)
@@ -107,10 +132,6 @@ class Camera {
     }
 
 
-    /*fun getViewMatrix(): Matrix4 {
-        return Matrix4.setToLookAt(position, position + front, up)
-    }
-*/
     companion object {
 
         enum class CameraMovement {

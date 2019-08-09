@@ -1,38 +1,38 @@
-/*
+/**
  * Copyright 2013 Dennis Ippel
- * Copyright 2018 Jim Andreas kotlin conversion
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 @file:Suppress("unused")
-package com.androidkotlin.opengl.math
+package org.rajawali3d.math
 
 import kotlin.math.abs
 
 object MathUtil {
-    private const val PRECISION = 0x020000
-    const val PI = Math.PI
-    const val TWO_PI = PI * 2
-    private const val HALF_PI = PI * .5
-    private const val PRE_PI_DIV_180 = PI / 180
-    private const val PRE_180_DIV_PI = 180 / PI
+    val PRECISION = 0x020000
+    val PI = Math.PI
+    val TWO_PI = PI * 2
+    val HALF_PI = PI * .5
+    val PRE_PI_DIV_180 = PI / 180
+    val PRE_180_DIV_PI = 180 / PI
 
-    private const val RAD_SLICE = TWO_PI / PRECISION
-    private const val PRECISION_DIV_2PI = PRECISION / TWO_PI
-    private const val PRECISION_S = PRECISION - 1
+    private val RAD_SLICE = TWO_PI / PRECISION
+    private val PRECISION_DIV_2PI = PRECISION / TWO_PI
+    private val PRECISION_S = PRECISION - 1
     private val sinTable = DoubleArray(PRECISION)
     private val tanTable = DoubleArray(PRECISION)
     private val isInitialized = initialize()
 
-    private fun initialize(): Boolean {
-        var rad: Double
+    fun initialize(): Boolean {
+        var rad : Double
         for (i in 0 until PRECISION) {
             rad = i * RAD_SLICE
             sinTable[i] = kotlin.math.sin(rad)

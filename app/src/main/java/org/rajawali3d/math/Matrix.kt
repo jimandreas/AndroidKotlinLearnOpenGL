@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018 Jim Andreas kotlin conversion
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +15,8 @@
  */
 
 @file:Suppress("unused")
-package com.androidkotlin.opengl.math
+
+package org.rajawali3d.math
 
 import kotlin.math.cos
 import kotlin.math.sin
@@ -48,7 +48,7 @@ import kotlin.math.tan
 </pre> *
  *
  */
-object MatrixDoublePrecision {
+object Matrix {
 
     /** Temporary memory for operations that need temporary matrix data.  */
     private val sTemp = DoubleArray(32)
@@ -78,9 +78,7 @@ object MatrixDoublePrecision {
      */
     fun multiplyMM(result: DoubleArray, resultOffset: Int,
                    lhs: DoubleArray, lhsOffset: Int, rhs: DoubleArray, rhsOffset: Int) {
-
-        var message: String? = null//Column
-
+        var message: String? = null
         when {
             resultOffset + 16 > result.size -> message = "Specified result offset would overflow the passed result matrix."
             lhsOffset + 16 > lhs.size -> message = "Specified left hand side offset would overflow the passed lhs matrix."
@@ -90,7 +88,7 @@ object MatrixDoublePrecision {
             throw IllegalArgumentException(message)
         }
 
-        var sum: Double
+        var sum : Double
         for (i in 0..3) { //Row
             for (j in 0..3) { //Column
                 sum = 0.0
@@ -126,9 +124,7 @@ object MatrixDoublePrecision {
      */
     fun multiplyMV(resultVec: DoubleArray, resultVecOffset: Int,
                    lhsMat: DoubleArray, lhsMatOffset: Int, rhsVec: DoubleArray, rhsVecOffset: Int) {
-
         var message: String? = null
-
         when {
             resultVecOffset + 4 > resultVec.size -> message = "Specified result offset would overflow the passed result vector."
             lhsMatOffset + 16 > lhsMat.size -> message = "Specified left hand side offset would overflow the passed lhs matrix."
@@ -138,8 +134,9 @@ object MatrixDoublePrecision {
             throw IllegalArgumentException(message)
         }
 
+        var sum : Double
         for (i in 0..3) { //Row
-            var sum = 0.0
+            sum = 0.0
             for (k in 0..3) {
                 sum += lhsMat[i + 4 * k + lhsMatOffset] * rhsVec[k + rhsVecOffset]
             }
@@ -282,9 +279,17 @@ object MatrixDoublePrecision {
         return true
     }
 
-    /*
+    /**
      * Computes an orthographic projection matrix.
      *
+     * @param m returns the result
+     * @param mOffset
+     * @param left
+     * @param right
+     * @param bottom
+     * @param top
+     * @param near
+     * @param far
      */
     fun orthoM(m: DoubleArray, mOffset: Int,
                left: Double, right: Double, bottom: Double, top: Double,
@@ -299,15 +304,15 @@ object MatrixDoublePrecision {
             throw IllegalArgumentException("near == far")
         }
 
-        val theWidth = 1.0f / (right - left)
-        val theHeight = 1.0f / (top - bottom)
-        val theDepth = 1.0f / (far - near)
-        val x = 2.0f * theWidth
-        val y = 2.0f * theHeight
-        val z = -2.0f * theDepth
-        val tx = -(right + left) * theWidth
-        val ty = -(top + bottom) * theHeight
-        val tz = -(far + near) * theDepth
+        val r_width = 1.0f / (right - left)
+        val r_height = 1.0f / (top - bottom)
+        val r_depth = 1.0f / (far - near)
+        val x = 2.0f * r_width
+        val y = 2.0f * r_height
+        val z = -2.0f * r_depth
+        val tx = -(right + left) * r_width
+        val ty = -(top + bottom) * r_height
+        val tz = -(far + near) * r_depth
         m[mOffset + 0] = x
         m[mOffset + 5] = y
         m[mOffset + 10] = z
@@ -332,6 +337,12 @@ object MatrixDoublePrecision {
      * @param m the double array that holds the perspective matrix
      * @param offset the offset into double array m where the perspective
      * matrix data is written
+     * @param left
+     * @param right
+     * @param bottom
+     * @param top
+     * @param near
+     * @param far
      */
     fun frustumM(m: DoubleArray, offset: Int,
                  left: Double, right: Double, bottom: Double, top: Double,
@@ -351,21 +362,21 @@ object MatrixDoublePrecision {
         if (far <= 0.0) {
             throw IllegalArgumentException("far <= 0.0")
         }
-        val theWidth = 1.0 / (right - left)
-        val theHeight = 1.0 / (top - bottom)
-        val theDepth = 1.0 / (near - far)
-        val x = 2.0 * (near * theWidth)
-        val y = 2.0 * (near * theHeight)
-        val a = (right + left) * theWidth
-        val b = (top + bottom) * theHeight
-        val c = (far + near) * theDepth
-        val d = 2.0 * (far * near * theDepth)
+        val r_width = 1.0 / (right - left)
+        val r_height = 1.0 / (top - bottom)
+        val r_depth = 1.0 / (near - far)
+        val x = 2.0 * (near * r_width)
+        val y = 2.0 * (near * r_height)
+        val A = (right + left) * r_width
+        val B = (top + bottom) * r_height
+        val C = (far + near) * r_depth
+        val D = 2.0 * (far * near * r_depth)
         m[offset + 0] = x
         m[offset + 5] = y
-        m[offset + 8] = a
-        m[offset + 9] = b
-        m[offset + 10] = c
-        m[offset + 14] = d
+        m[offset + 8] = A
+        m[offset + 9] = B
+        m[offset + 10] = C
+        m[offset + 14] = D
         m[offset + 11] = -1.0
         m[offset + 1] = 0.0
         m[offset + 2] = 0.0
@@ -516,7 +527,7 @@ object MatrixDoublePrecision {
      * @param y translation factor y
      * @param z translation factor z
      */
-    private fun translateM(
+    fun translateM(
             m: DoubleArray, mOffset: Int,
             x: Double, y: Double, z: Double) {
         for (i in 0..3) {
@@ -573,7 +584,7 @@ object MatrixDoublePrecision {
      * @param yIn scale factor y
      * @param zIn scale factor z
      */
-    private fun setRotateM(rm: DoubleArray, rmOffset: Int,
+    fun setRotateM(rm: DoubleArray, rmOffset: Int,
                    aIn: Double, xIn: Double, yIn: Double, zIn: Double) {
         var a = aIn
         var x = xIn
