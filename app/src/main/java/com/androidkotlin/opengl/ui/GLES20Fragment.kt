@@ -45,14 +45,14 @@ class OverviewFragment : Fragment() {
         binding.viewModel1 = viewModel
         glSurfaceView = binding.myGLSurfaceView
 
-        // *****************
+        /* ****************
         // SELECT HERE now for the hack
-        // *****************
+        // *****************/
 
         //val renderer3 = GoogleSampleRenderer(this.context!!, viewModel)
         //val renderer = Renderer121HelloTriangle(this.context!!, viewModel)
-        val renderer = Renderer163CoordinateSystems(this.context!!, viewModel)
-        //val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
+        //val renderer = Renderer163CoordinateSystems(this.context!!, viewModel)
+        val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
 
         glSurfaceView.setEGLContextClientVersion(2)
         glSurfaceView.setRenderer(renderer)
