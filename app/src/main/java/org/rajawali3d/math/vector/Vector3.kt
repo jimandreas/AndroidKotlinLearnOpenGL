@@ -11,6 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 @file:Suppress("unused")
+
 package org.rajawali3d.math.vector
 
 import androidx.annotation.NonNull
@@ -111,8 +112,10 @@ class Vector3 : Cloneable {
      * @throws NumberFormatException if there is a problem parsing the [String] values into doubles.
      */
     @Throws(IllegalArgumentException::class, NumberFormatException::class)
-    constructor(@NonNull @Size(min = 3) values: Array<String>) : this(java.lang.Float.parseFloat(values[0]).toDouble(), java.lang.Float.parseFloat(values[1]).toDouble(), java.lang.Float.parseFloat(values[2]).toDouble()) {
-    }
+    constructor(@NonNull @Size(min = 3) values: Array<String>)
+            : this(java.lang.Float.parseFloat(values[0]).toDouble(),
+            java.lang.Float.parseFloat(values[1]).toDouble(),
+            java.lang.Float.parseFloat(values[2]).toDouble())
 
     /**
      * Constructs a new [Vector3] with components initialized from the input double array.

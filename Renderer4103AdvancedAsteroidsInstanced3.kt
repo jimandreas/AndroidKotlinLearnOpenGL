@@ -27,86 +27,46 @@ import com.androidkotlin.opengl.util.*
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
+import java.lang.Math.random
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
+import kotlin.math.cos
+import kotlin.math.sin
 
 // ref: see:
-// https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
+// https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/10.3.asteroids_instanced/asteroids_instanced.cpp
 
-class Renderer174Camera(
+class Renderer4103AdvancedAsteroidsInstanced3(
         val context: Context,
         viewModel: ViewModel
 ) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
 
-    private val shaderObject = Shader()
-    private val camera = Camera(Vector3(0.0, 0.0, 3.0))
+    private val asteroidShader = Shader()
+    private val planetShader = Shader()
 
-    private var vbo = IntArray(1)
-    private var vao = IntArray(1)
-    //private var ebo = IntArray(1)
+    private val camera = Camera(Vector3(0.0, 0.0, -10.0))
+
+//    private var vbo = IntArray(1)
+//    private var vao = IntArray(1)
+//    //private var ebo = IntArray(1)
 
     private val vertexBuffer: FloatBuffer
     private var texture1 = 0
     private var texture2 = 0
 
     private val vertices = floatArrayOf(
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+            0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
+            0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left
     )
 
-    val cubePositions = arrayOf(
-            Vector3( 0.0,  0.0,  0.0),
-            Vector3( 2.0,  5.0, -15.0),
-            Vector3(-1.5, -2.2, -2.5),
-            Vector3(-3.8, -2.0, -12.3),
-            Vector3( 2.4, -0.4, -3.5),
-            Vector3(-1.7,  3.0, -7.5),
-            Vector3( 1.3, -2.0, -2.5),
-            Vector3( 1.5,  2.0, -2.5),
-            Vector3( 1.5,  0.2, -1.5),
-            Vector3(-1.3,  1.0, -1.5)
+    val indices = intArrayOf(
+            0, 1, 3, // first triangle
+            1, 2, 3  // second triangle
     )
 
     init {
@@ -129,19 +89,52 @@ class Renderer174Camera(
         // Enable depth testing
         glEnable(GL_DEPTH_TEST)
 
-        shaderObject.shaderReadCompileLink(
+        asteroidShader.shaderReadCompileLink(
                 context,
                 Shader.ShaderSource.FROM_ASSETS,
-                "7.4.camera.vs",
-                "7.4.camera.fs")
+                "10.3.asteroids.vs",
+                "10.3.planets.fs")
 
-        glGenVertexArrays(1, vao, 0)
-        glGenBuffers(1, vbo, 0)
+        /*
+         * The fun part:
+         * generate a large list of semi-random model transformation matrices
+         * ------------------------------------------------------------------
+         */
 
-        glBindVertexArray(vao[0])
+        val amount = 100000
+        val radius = 150.0
+        val offset = 25.0
+        val modelMatrices = Array<Matrix4>(amount) {
+            var model = Matrix4()
+            val angle = it.toDouble() / amount.toDouble() * 360.0
+            var displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+            val x = sin(angle) * radius + displacement
+            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+            val y = displacement * 0.4 // keep height of asteroid field smaller compared to x and z
+            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+            val z = cos(angle) * radius + displacement
+            model = model.translate(Vector3(x, y, z))
 
-        GLES30.glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
-        GLES30.glBufferData(GL_ARRAY_BUFFER, vertices.size * 4, vertexBuffer, GL_STATIC_DRAW)
+            // 2. scale: Scale between 0.05 and 0.25
+            val scale = (random() % 20) / 100.0 + 0.05
+            model = model.scale(Vector3(scale))
+
+            // 3. rotation : add random rotation around a (semi) randomly
+            //    picked rotation axis vector
+            val rotAngle = random() % 360
+            model = model.rotate(Vector3(0.4, 0.6, 0.8), rotAngle)
+
+            // 4. now add to list of matrices
+            model
+        }
+
+        // configure instanced array
+        // -------------------------
+
+        var buffer = IntArray(1)
+        glGenBuffers(1, buffer, 0)
+        GLES30.glBindBuffer(GL_ARRAY_BUFFER, buffer[0])
+        GLES30.glBufferData(GL_ARRAY_BUFFER, amount * 16 * 4, modelMatrices, GL_STATIC_DRAW)  // NEEDS WORKObjFile
         // position attribute
         GLES30.glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * 4, 0)
         GLES30.glEnableVertexAttribArray(0)
@@ -155,9 +148,9 @@ class Renderer174Camera(
         texture1 = loadTextureFromAsset163(context,"container2.png")
         texture2= loadTextureFromAsset163(context,"awesomeface.png")
 
-        shaderObject.use()
-        shaderObject.setInt("texture1", 0)
-        shaderObject.setInt("texture2", 1)
+        asteroidShader.use()
+        asteroidShader.setInt("texture1", 0)
+        asteroidShader.setInt("texture2", 1)
 
     }
 
@@ -178,7 +171,7 @@ class Renderer174Camera(
         glBindTexture(GL_TEXTURE_2D, texture1)
         glActiveTexture(GL_TEXTURE1)
         glBindTexture(GL_TEXTURE_2D, texture2)
-        shaderObject.use()
+        asteroidShader.use()
 
         checkGLerr("ODF2")
 
@@ -190,11 +183,11 @@ class Renderer174Camera(
                 100.0,
                 zoom,  //45.0,
                 screenWidth.toDouble() / screenHeight.toDouble())
-        shaderObject.setMat4("projection", projectionM4.floatValues)
+        asteroidShader.setMat4("projection", projectionM4.floatValues)
 
         // viewM4 = viewM4.translate(Vector3(0.0, 0.0, -3.0))
         val viewM4 = camera.getViewMatrix()
-        shaderObject.setMat4("view", viewM4.floatValues)
+        asteroidShader.setMat4("view", viewM4.floatValues)
 
         glBindVertexArray(vao[0])
 
@@ -204,7 +197,7 @@ class Renderer174Camera(
             modelM4 = modelM4.translate(cubePositions[i])
             val angle = 20.0 * i
             modelM4 = modelM4.rotate(Vector3(1.0, 0.3, 0.5), angle)
-            shaderObject.setMat4("model", modelM4.floatValues)
+            asteroidShader.setMat4("model", modelM4.floatValues)
 
             glDrawArrays(GL_TRIANGLES, 0, 36)
 

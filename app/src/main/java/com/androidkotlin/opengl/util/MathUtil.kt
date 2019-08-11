@@ -18,9 +18,11 @@ fun toVec3(someFloatArray: FloatArray): Vector3 {
 }
 
 fun toFloatArray3(vec3: Vector3): FloatArray {
-    val floatArray = floatArrayOf(0f, 0f, 0f)
-    floatArray[0] = vec3.x.toFloat()
-    floatArray[1] = vec3.y.toFloat()
-    floatArray[2] = vec3.z.toFloat()
+    val doubleArray = vec3.toArray()!!
+    val floatArray = floatArrayOf(
+        doubleArray[0].toFloat(),
+        doubleArray[1].toFloat(),
+        doubleArray[2].toFloat()
+    )
     return floatArray
 }

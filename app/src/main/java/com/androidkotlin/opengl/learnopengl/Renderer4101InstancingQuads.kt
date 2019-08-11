@@ -33,7 +33,7 @@ import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class Renderer4103AdvancedAsteroidsInstanced(
+class Renderer4101InstancingQuads(
        val context: Context,
        viewModel: ViewModel
 ) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
@@ -49,7 +49,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
     private var diffuseMap = 0
     private var specularMap = 0
 
-    private val camera = Camera(Vector3(0.0, 0.0, .0))
+    private val camera = Camera(Vector3(0.0, 0.0, 3.0))
 
     private val lightPos = floatArrayOf(1.2f, 1.0f, 2.0f)
 
@@ -236,7 +236,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
         val near = 1.0f
         val far = 20.0f
     }
-    
+
     companion object {
         val vertices = floatArrayOf(
                 // positions          // normals           // texture coords

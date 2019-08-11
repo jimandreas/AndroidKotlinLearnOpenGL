@@ -49,7 +49,7 @@ class Renderer242LightingMapsSpecular(
     private var diffuseMap = 0
     private var specularMap = 0
 
-    private val camera = Camera(Vector3(0.0, 0.0, 100.0))
+    private val camera = Camera(Vector3(0.0, 0.0, 3.0))
 
     private val lightPos = floatArrayOf(1.2f, 1.0f, 2.0f)
 

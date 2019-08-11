@@ -22,6 +22,7 @@
         "ConstantConditionIf",
         "LocalVariableName",
         "PropertyName")
+
 package com.androidkotlin.opengl.util
 
 import org.rajawali3d.math.Matrix4
@@ -63,6 +64,7 @@ class Camera {
         )
         return viewMatrix
     }
+
     constructor(positionIn: Vector3) {
         position = positionIn
         up = Vector3(0.0, 1.0, 0.0)
@@ -106,11 +108,12 @@ class Camera {
     }
 
     private fun updateCameraVectors() {
-        val newfront = Vector3(0.0, 0.0, 0.0)
-        newfront.x = cos(Math.toRadians(yaw) * cos(Math.toRadians(pitch)))
-        newfront.y = sin(Math.toRadians(pitch))
-        newfront.z = sin(Math.toRadians(yaw) * cos(Math.toRadians(pitch)))
-        front = normalize(newfront)
+        val newfront = Vector3(
+                cos(Math.toRadians(yaw) * cos(Math.toRadians(pitch))),
+                sin(Math.toRadians(pitch)),
+                sin(Math.toRadians(yaw) * cos(Math.toRadians(pitch))))
+        newfront.normalize()
+        front = newfront.clone()
         val tempFront1 = front.clone()
         val tempFront2 = front.clone()
 
@@ -118,9 +121,11 @@ class Camera {
         // Normalize the vectors, because their length gets closer to 0
         // the more you look up or down which results in slower movement.
 
-        right = normalize(tempFront1.cross(worldUp))
+        right = tempFront1.cross(worldUp)
+        right.normalize()
         val tempRight = right.clone()
-        up = normalize(tempRight.cross(tempFront2))
+        up = tempRight.cross(tempFront2)
+        up.normalize()
 
     }
 
@@ -183,7 +188,7 @@ class Camera {
             return normalize(N)
         }
 
-        fun normalize(p1: FloatArray): FloatArray {
+        private fun normalize(p1: FloatArray): FloatArray {
             val mag = sqrt((p1[0] * p1[0] +
                     p1[1] * p1[1] +
                     p1[2] * p1[2]).toDouble()).toFloat()
@@ -193,16 +198,16 @@ class Camera {
             return T
         }
 
-        fun normalize(p1: Vector3): Vector3 {
-            val mag = sqrt(sqrt(
+        /*fun normalize(p1: Vector3): Vector3 {
+            val mag = sqrt(
                     p1.x * p1.x +
                             p1.y * p1.y +
-                            p1.z * p1.z))
+                            p1.z * p1.z)
             p1.x = p1.x / mag
             p1.y = p1.y / mag
             p1.z = p1.z / mag
             return p1
-        }
+        }*/
 
     }
 }
