@@ -17,13 +17,13 @@ package com.androidkotlin.opengl.learnopengl
 import android.content.Context
 import android.opengl.GLES20.*
 import android.opengl.GLES30
-import android.opengl.GLES30.glBindVertexArray
-import android.opengl.GLES30.glGenVertexArrays
 import android.opengl.GLSurfaceView
-
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
-import com.androidkotlin.opengl.util.*
+import com.androidkotlin.opengl.util.Camera
+import com.androidkotlin.opengl.util.Shader
+import com.androidkotlin.opengl.util.checkGLerr
+import com.androidkotlin.opengl.util.matrix4toFloatArray
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
@@ -47,7 +47,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
     private val asteroidShader = Shader()
     private val planetShader = Shader()
 
-    private val camera = Camera(Vector3(0.0, 0.0, -10.0))
+    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
 
 //    private var vbo = IntArray(1)
 //    private var vao = IntArray(1)
@@ -93,10 +93,15 @@ class Renderer4103AdvancedAsteroidsInstanced3(
                 context,
                 Shader.ShaderSource.FROM_ASSETS,
                 "10.3.asteroids.vs",
-                "10.3.planets.fs")
+                "10.3.asteroids.fs")
+
+        planetShader.shaderReadCompileLink(
+                context,
+                Shader.ShaderSource.FROM_ASSETS,
+                "10.3.planet.vs",
+                "10.3.planet.fs")
 
         /*
-         * The fun part:
          * generate a large list of semi-random model transformation matrices
          * ------------------------------------------------------------------
          */
@@ -104,14 +109,16 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         val amount = 100000
         val radius = 150.0
         val offset = 25.0
-        val modelMatrices = Array<Matrix4>(amount) {
+        val modelMatrices = Array(amount) {
             var model = Matrix4()
             val angle = it.toDouble() / amount.toDouble() * 360.0
-            var displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+            var displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val x = sin(angle) * radius + displacement
-            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+//            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+            displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val y = displacement * 0.4 // keep height of asteroid field smaller compared to x and z
-            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+//            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
+            displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val z = cos(angle) * radius + displacement
             model = model.translate(Vector3(x, y, z))
 
@@ -131,27 +138,24 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         // configure instanced array
         // -------------------------
 
-        var buffer = IntArray(1)
+        val nativeFloatBuffer = ByteBuffer
+                .allocateDirect(modelMatrices.size * 16 * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+        val convertedFloatArray = matrix4toFloatArray(modelMatrices)
+        nativeFloatBuffer!!.put(convertedFloatArray).position(0)
+        val buffer = IntArray(1)
         glGenBuffers(1, buffer, 0)
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, buffer[0])
-        GLES30.glBufferData(GL_ARRAY_BUFFER, amount * 16 * 4, modelMatrices, GL_STATIC_DRAW)  // NEEDS WORKObjFile
-        // position attribute
-        GLES30.glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * 4, 0)
-        GLES30.glEnableVertexAttribArray(0)
-        // texture coordinate attribute
-        GLES30.glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * 4, 3 * 4)
-        GLES30.glEnableVertexAttribArray(1)
+        GLES30.glBufferData(GL_ARRAY_BUFFER, amount * 16 * 4, nativeFloatBuffer, GL_STATIC_DRAW)
+        checkGLerr("OSC1")
 
-        // load and create textures
-        // -----------------------------------------------------------------------------
-        // TODO: flip textures around the y-axis
-        texture1 = loadTextureFromAsset163(context,"container2.png")
-        texture2= loadTextureFromAsset163(context,"awesomeface.png")
-
-        asteroidShader.use()
-        asteroidShader.setInt("texture1", 0)
-        asteroidShader.setInt("texture2", 1)
-
+        // set transformation matrices as an instance vertex attribute (with divisor 1)
+        // note: we're cheating a little by taking the publicly declared
+        // VAO of the model's mesh(es) and adding new vertexAttribPointers
+        // normally you'd want to do this in a more organized fashion,
+        // but for learning purposes this will do.
+        // ------------------------------------------------------------------------------
     }
 
     override fun onDrawFrame(glUnused: GL10) {
@@ -159,7 +163,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
         camera.zoomHack(-1.0)
 
-        GLES30.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
+        GLES30.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         // (DISABLE THE) Use culling to remove back faces.
@@ -167,11 +171,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
         checkGLerr("ODF1")
 
-        glActiveTexture(GL_TEXTURE0)
-        glBindTexture(GL_TEXTURE_2D, texture1)
-        glActiveTexture(GL_TEXTURE1)
-        glBindTexture(GL_TEXTURE_2D, texture2)
-        asteroidShader.use()
+
 
         checkGLerr("ODF2")
 
@@ -183,27 +183,13 @@ class Renderer4103AdvancedAsteroidsInstanced3(
                 100.0,
                 zoom,  //45.0,
                 screenWidth.toDouble() / screenHeight.toDouble())
-        asteroidShader.setMat4("projection", projectionM4.floatValues)
 
-        // viewM4 = viewM4.translate(Vector3(0.0, 0.0, -3.0))
+
+
         val viewM4 = camera.getViewMatrix()
-        asteroidShader.setMat4("view", viewM4.floatValues)
 
-        glBindVertexArray(vao[0])
 
-        var i = 0
-        while (i < 10) {
-            var modelM4 = Matrix4()
-            modelM4 = modelM4.translate(cubePositions[i])
-            val angle = 20.0 * i
-            modelM4 = modelM4.rotate(Vector3(1.0, 0.3, 0.5), angle)
-            asteroidShader.setMat4("model", modelM4.floatValues)
 
-            glDrawArrays(GL_TRIANGLES, 0, 36)
-
-            checkGLerr("ODF3")
-            i++
-        }
     }
 
     override fun onSurfaceChanged(glUnused: GL10?, width: Int, height: Int) {

@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.androidkotlin.opengl.googlesample.GoogleSampleRenderer
 import com.androidkotlin.opengl.learnopengl.*
 import com.androidkotlin.opengl.realtime.SurfaceViewInstance
 import com.androidkotlin.opengl.ui.databinding.FragmentGettingStartedBinding
@@ -47,12 +48,13 @@ class OverviewFragment : Fragment() {
         // SELECT HERE now for the hack
         // *****************/
 
-        //val renderer3 = GoogleSampleRenderer(this.context!!, viewModel)
+        //val renderer = GoogleSampleRenderer(this.context!!, viewModel)
         //val renderer = Renderer121HelloTriangle(this.context!!, viewModel)
         //val renderer = Renderer163CoordinateSystems(this.context!!, viewModel)
         //val renderer = Renderer174Camera(this.context!!, viewModel)
         //val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
-        val renderer = Renderer4101InstancingQuads(this.context!!, viewModel)
+        //val renderer = Renderer4101InstancingQuads(this.context!!, viewModel)
+        val renderer = Renderer4103AdvancedAsteroidsInstanced3(this.context!!, viewModel)
 
         glSurfaceView.setEGLContextClientVersion(2)
         glSurfaceView.setRenderer(renderer)

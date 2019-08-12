@@ -26,3 +26,17 @@ fun toFloatArray3(vec3: Vector3): FloatArray {
     )
     return floatArray
 }
+
+fun matrix4toFloatArray(matrix4array: Array<Matrix4>): FloatArray {
+    val size = matrix4array.size
+    val outputFloatArray = FloatArray(size * 16)
+
+    val tempArray = FloatArray(16)
+    for (i in 0 until size) {
+        matrix4array[i].toFloatArray(tempArray)
+        for (j in 0 until 16) {
+            outputFloatArray[i*16 + j] = tempArray[j]
+        }
+    }
+    return outputFloatArray
+}
