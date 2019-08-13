@@ -19,6 +19,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetManager
 import android.opengl.GLES20
+import android.opengl.GLES30
 import android.os.Bundle
 import android.os.SystemClock
 import timber.log.Timber
@@ -33,7 +34,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @SuppressLint("DefaultLocale")
-class ObjFile(context: Context) {
+class ObjFile(val context: Context) {
     private val assetManager: AssetManager = context.assets
 
     private var v1 = FloatArray(3)
@@ -43,17 +44,17 @@ class ObjFile(context: Context) {
 
     private var vertices: MutableList<Float> = ArrayList()
     private var normals: MutableList<Float> = ArrayList()
+    private var textureCoordinates: MutableList<Float> = ArrayList()
     private var colors: MutableList<Float> = ArrayList()
-    private var indices: MutableList<Int> = ArrayList()
-    private var normalIndex: MutableList<Int> = ArrayList()
-    private var textureIndex: MutableList<Int> = ArrayList()
+    private var vertexIndices: MutableList<Short> = ArrayList()
+    private var normalIndices: MutableList<Int> = ArrayList()
+    private var textureIndices: MutableList<Int> = ArrayList()
 
     private var haveMaterialColor = false
     private var materialColor = FloatArray(3)
     private var material = Bundle()
     private var triangleIndexCount: Int = 0
     private val vbo = IntArray(1)
-    private val ibo = IntArray(1)
 
     var maxX = 0f
     var maxY = 0f
@@ -181,8 +182,10 @@ class ObjFile(context: Context) {
                     parseVertex(line)
                 } else if (line[0] == 'v' && line[1] == 'n') {
                     parseNormal(line)
+                } else if (line[0] == 'v' && line[1] == 't') {
+                    parseTextureCoordinates(line)
                 } else if (line[0] == 'f') {
-                    parseTriangle(line)
+                    parseFace(line)
                 } else if (line[0] == 'u' && line[1] == 's') {
                     parseUsemtl(line)
                 }
@@ -226,7 +229,7 @@ class ObjFile(context: Context) {
      *
      *     UPDATE : leverages a code snippet from Rajawali
      */
-    private fun parseTriangle(lineIn: String) {
+    private fun parseFace(lineIn: String) {
         var line = lineIn
         var parts = StringTokenizer(line, " ")
         val numTokens = parts.countTokens()
@@ -263,18 +266,18 @@ class ObjFile(context: Context) {
             else
                 idx -= 1
             if (!isQuad)
-                indices.add(idx)
+                vertexIndices.add(idx.toShort())
             else
                 quadvids[i - 1] = idx
             if (hasuv) {
                 idx = Integer.parseInt(subParts.nextToken())
                 if (idx < 0) {
-                    idx += textureIndex.size / 2
+                    idx += textureIndices.size / 2
                 } else {
                     idx -= 1
                 }
                 if (!isQuad)
-                    textureIndex.add(idx)
+                    textureIndices.add(idx)
                 else
                     quadtids[i - 1] = idx
             }
@@ -285,7 +288,7 @@ class ObjFile(context: Context) {
                 } else
                     idx -= 1
                 if (!isQuad)
-                    normalIndex.add(idx)
+                    normalIndices.add(idx)
                 else
                     quadnids[i - 1] = idx
             }
@@ -297,8 +300,8 @@ class ObjFile(context: Context) {
             for (i in 0..5) {
                 val index = indices[i]
                 vertices.add(quadvids[index].toFloat())
-                textureIndex.add(quadtids[index])
-                normalIndex.add(quadnids[index])
+                textureIndices.add(quadtids[index])
+                normalIndices.add(quadnids[index])
             }
         }
 
@@ -312,7 +315,7 @@ class ObjFile(context: Context) {
      */
     private fun parseNormal(line: String) {
 
-        val first_float = line.substring(2)
+        val first_float = line.substring(3)
         val second_space_index = first_float.indexOf(' ') + 1
         val second_float = first_float.substring(second_space_index)
         val third_space_index = second_float.indexOf(' ') + 1
@@ -324,6 +327,25 @@ class ObjFile(context: Context) {
         normals.add(vx)
         normals.add(vy)
         normals.add(vz)
+    }
+
+    /**
+     * ParseTextureCoordinates
+     * Assumptions:
+     * exactly one space between the 'v' and the float
+     * exactly one space between floats
+     */
+    private fun parseTextureCoordinates(line: String) {
+
+        val first_float = line.substring(3)
+        val second_space_index = first_float.indexOf(' ') + 1
+        val second_float = first_float.substring(second_space_index)
+
+        val tu = parseFloat(first_float.substring(0, second_space_index - 1))
+        val tv = parseFloat(second_float)
+
+        textureCoordinates.add(tu)
+        textureCoordinates.add(tv)
     }
 
     /*
@@ -388,122 +410,60 @@ class ObjFile(context: Context) {
 
     /*
      * pull the data from the buffers and assemble
-     * a packed VBO (vertex + normal + color) buffer,
-     * and an indices buffer.
+     * a packed VBO (vertex + normal + texture coordinates) buffer,
+     * and an vertexIndices buffer.
      *
-     * Walk the indices list
-     * to pull the triangle vertices, calculate the normals,
+     * Walk the vertexIndices list
+     * to pull the triangle vertices,
+     * pull the normal and text coordinates
      * and stuff them back into the packed VBO.
      *
-     * TODO: use the normals if supplied.
-     *   Right now the code just does its own calculation
-     *   for normals.
      */
-    fun build_buffers(color: FloatArray /*RGBA*/) {
-        var i = 0
+    fun build_buffers() {
         var offset = 0
-        val vertexData = FloatArray(
-                vertices.size / 3 * STRIDE_IN_FLOATS)
+
+        val vertexData = FloatArray(vertexIndices.size * STRIDE_IN_FLOATS)
 
         /*
-         * loop to generate vertices.
+         * loop to generate vertices + normals + texture coordinates
          */
-        while (i < vertices.size) {
+        val size = vertexIndices.size
+        for (i in 0 until size) {
 
-            vertexData[offset++] = vertices[i + 0]
-            vertexData[offset++] = vertices[i + 1]
-            vertexData[offset++] = vertices[i + 2]
-
-            vertexData[offset++] = 0.0f // set normal to zero for now
-            vertexData[offset++] = 0.0f
-            vertexData[offset++] = 0.0f
-
-            if (haveMaterialColor) {
-                vertexData[offset++] = colors[i + 0]
-                vertexData[offset++] = colors[i + 1]
-                vertexData[offset++] = colors[i + 2]
-                vertexData[offset++] = 1.0f  // TODO: unwire the alpha?
-            } else {
-                // color value
-                vertexData[offset++] = color[0]
-                vertexData[offset++] = color[1]
-                vertexData[offset++] = color[2]
-                vertexData[offset++] = color[3]
+            if (offset + 7 > vertexData.size) {
+                Timber.e("out of range on index %d > size: %d",
+                        offset, vertexData.size)
+                break
             }
-            i += 3
-        }
-
-        // calculate the normal,
-        // set it in the packed VBO.
-        // If current normal is non-zero, average it with previous value.
-
-        var v1i: Int
-        var v2i: Int
-        var v3i: Int
-        i = 0
-        while (i < indices.size) {
-            v1i = indices[i + 0]
-            v2i = indices[i + 1]
-            v3i = indices[i + 2]
-
-            if (v1i < 0 || v2i < 0 || v3i < 0) {
-                Timber.e("v1i is negative!! %d", v1i)
-                i+= 3
+            val vertexNum = vertexIndices[i]
+            if (vertexNum * 3 + 2 > vertices.size) {
+                Timber.e("out of range on vertices %d > size: %d",
+                        vertexNum * 3 + 2, vertices.size)
                 continue
             }
+            vertexData[offset++] = vertices[vertexNum * 3 + 0]
+            vertexData[offset++] = vertices[vertexNum * 3 + 1]
+            vertexData[offset++] = vertices[vertexNum * 3 + 2]
 
-            v1[0] = vertices[v1i * 3 + 0]
-            v1[1] = vertices[v1i * 3 + 1]
-            v1[2] = vertices[v1i * 3 + 2]
+            val normalNum = normalIndices[i]
+            if (normalNum * 3 + 1 > normals.size) {
+                Timber.e("out of range on normals %d > size: %d",
+                        normalNum * 3 + 2, normals.size)
+                continue
+            }
+            vertexData[offset++] = normals[normalNum * 3 + 0]
+            vertexData[offset++] = normals[normalNum * 3 + 1]
+            vertexData[offset++] = normals[normalNum * 3 + 2]
 
-            v2[0] = vertices[v2i * 3 + 0]
-            v2[1] = vertices[v2i * 3 + 1]
-            v2[2] = vertices[v2i * 3 + 2]
-
-            v3[0] = vertices[v3i * 3 + 0]
-            v3[1] = vertices[v3i * 3 + 1]
-            v3[2] = vertices[v3i * 3 + 2]
-
-            n = Camera.getNormal(v1, v2, v3)
-
-            vertexData[v1i * STRIDE_IN_FLOATS + 3 + 0] = n[0] * NORMAL_BRIGHTNESS_FACTOR
-            vertexData[v1i * STRIDE_IN_FLOATS + 3 + 1] = n[1] * NORMAL_BRIGHTNESS_FACTOR
-            vertexData[v1i * STRIDE_IN_FLOATS + 3 + 2] = n[2] * NORMAL_BRIGHTNESS_FACTOR
-
-            vertexData[v2i * STRIDE_IN_FLOATS + 3 + 0] = n[0] * NORMAL_BRIGHTNESS_FACTOR
-            vertexData[v2i * STRIDE_IN_FLOATS + 3 + 1] = n[1] * NORMAL_BRIGHTNESS_FACTOR
-            vertexData[v2i * STRIDE_IN_FLOATS + 3 + 2] = n[2] * NORMAL_BRIGHTNESS_FACTOR
-
-            vertexData[v3i * STRIDE_IN_FLOATS + 3 + 0] = n[0] * NORMAL_BRIGHTNESS_FACTOR
-            vertexData[v3i * STRIDE_IN_FLOATS + 3 + 1] = n[1] * NORMAL_BRIGHTNESS_FACTOR
-            vertexData[v3i * STRIDE_IN_FLOATS + 3 + 2] = n[2] * NORMAL_BRIGHTNESS_FACTOR
-            i += 3
-
+            val textureNum = textureIndices[i]
+            if (textureNum * 2 + 1 > textureCoordinates.size) {
+                Timber.e("out of range on textureCoordinates %d > size: %d",
+                        textureNum * 2 + 1, textureCoordinates.size)
+                continue
+            }
+            vertexData[offset++] = textureCoordinates[textureNum * 2 + 0]
+            vertexData[offset++] = textureCoordinates[textureNum * 2 + 1]
         }
-
-        /*
-         * debug - print out list of formated vertex data
-         */
-        //        for (i = 0; i < vertexData.length; i+= STRIDE_IN_FLOATS) {
-        //            vx = vertexData[i + 0];
-        //            vy = vertexData[i + 1];
-        //            vz = vertexData[i + 2];
-        //            String svx = String.format("%6.2f", vx);
-        //            String svy = String.format("%6.2f", vy);
-        //            String svz = String.format("%6.2f", vz);
-        //
-        //            Timber("data ", i + " x y z "
-        //                    + svx + " " + svy + " " + svz + " and color = "
-        //                    + vertexData[i + 6] + " " + vertexData[i + 7] + " " + vertexData[i + 8]);
-        //        }
-
-//        for (i in 0 until vertexData.size step STRIDE_IN_FLOATS)
-//        {
-//            val vx = vertexData[i]
-//            val vy = vertexData[i+1]
-//            val vz = vertexData[i+2]
-//            Timber.i("data(%5d) %16.8f %16.8f %16.8f", i/ STRIDE_IN_FLOATS, vx, vy, vz)
-//        }
 
         val vertexDataBuffer = ByteBuffer
                 .allocateDirect(vertexData.size * BYTES_PER_FLOAT)
@@ -523,112 +483,32 @@ class ObjFile(context: Context) {
 
             // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         } else {
-            // errorHandler.handleError(ErrorHandler.ErrorType.BUFFER_CREATION_ERROR, "glGenBuffers");
+            checkGLerr("buildBuffers")
             throw RuntimeException("error on buffer gen")
         }
 
-        /*
-         * create the buffer for the indices
-         */
-        offset = 0
-        var x: Int = 0
-        val indexData = ShortArray(indices.size)
-        while (x < indices.size) {
-
-            var index = indices[x].toShort()
-            //indexData[offset++] = --index
-            indexData[offset++] = index
-            x++
-        }
-        triangleIndexCount = indexData.size
-
-        /*
-         * debug - print out list of formated vertex data
-         */
-
-//                //for (i = 0; i < indexData.length; i += 3) {
-//                for (i in 0 until indexData.size step 3) {
-//                    val ix = indexData[i + 0]
-//                    val iy = indexData[i + 1]
-//                    val iz = indexData[i + 2]
-//
-//                    Timber.i("vno %4d %4d %4d %4d", i, ix, iy, iz)
-//
-//                }
-
-        val indexDataBuffer = ByteBuffer
-                .allocateDirect(indexData.size * BYTES_PER_SHORT).order(ByteOrder.nativeOrder())
-                .asShortBuffer()
-        indexDataBuffer.put(indexData).position(0)
-
-        if (ibo[0] > 0) {
-            GLES20.glDeleteBuffers(1, ibo, 0)
-        }
-        GLES20.glGenBuffers(1, ibo, 0)
-        if (ibo[0] > 0) {
-            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, ibo[0])
-            GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER,
-                    indexDataBuffer.capacity() * BYTES_PER_SHORT, indexDataBuffer, GLES20.GL_STATIC_DRAW)
-            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
-        } else {
-            // errorHandler.handleError(ErrorHandler.ErrorType.BUFFER_CREATION_ERROR, "glGenBuffers");
-            throw RuntimeException("error on buffer gen")
-        }
+        val texture1 = loadTextureFromAsset163(context,"planet_Quom1200.png")
     }
 
-    fun render(
-            positionAttribute: Int,
-            colorAttribute: Int,
-            normalAttribute: Int,
-            doWireframeRendering: Boolean) {
+    fun render(shaderObj : Shader) {
 
         // Debug: disable culling to remove back faces.
-        //GLES20.glDisable(GLES20.GL_CULL_FACE);
+        GLES20.glDisable(GLES20.GL_CULL_FACE)
 
-        // TODO : make sure the buffer is NOT released before the Indexes are bound!!
-        /*
-         * draw using the IBO - index buffer object,
-         * and the revised vertex data that has
-         * corrected normals for the body.
-         */
-        if (vbo[0] > 0 && ibo[0] > 0) {
+        shaderObj.use()
+        shaderObj.setInt("texture_diffuse1", 2)
+
+        if (vbo[0] > 0) {
+
+            // position attribute
+            GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
+            GLES30.glEnableVertexAttribArray(0)
+            // texture coordinate attribute
+            GLES30.glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
+            GLES30.glEnableVertexAttribArray(2)
+
             GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
-            // associate the attributes with the bound buffer
-            GLES20.glVertexAttribPointer(positionAttribute,
-                    POSITION_DATA_SIZE_IN_ELEMENTS,
-                    GLES20.GL_FLOAT,
-                    false,
-                    STRIDE_IN_BYTES,
-                    0)  // offset
-            GLES20.glEnableVertexAttribArray(positionAttribute)
-
-            GLES20.glVertexAttribPointer(normalAttribute, NORMAL_DATA_SIZE_IN_ELEMENTS, GLES20.GL_FLOAT, false,
-                    STRIDE_IN_BYTES, POSITION_DATA_SIZE_IN_ELEMENTS * BYTES_PER_FLOAT)
-            GLES20.glEnableVertexAttribArray(normalAttribute)
-
-            GLES20.glVertexAttribPointer(colorAttribute, COLOR_DATA_SIZE_IN_ELEMENTS, GLES20.GL_FLOAT, false,
-                    STRIDE_IN_BYTES, (POSITION_DATA_SIZE_IN_ELEMENTS + NORMAL_DATA_SIZE_IN_ELEMENTS) * BYTES_PER_FLOAT)
-            GLES20.glEnableVertexAttribArray(colorAttribute)
-
-            // Draw
-            val todo = if (doWireframeRendering) {
-                GLES20.GL_LINES
-            } else {
-                GLES20.GL_TRIANGLES
-            }
-
-            /*
-             * draw using the IBO - index buffer object
-             */
-            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, ibo[0])
-            GLES20.glDrawElements(
-                    todo, /* GLES20.GL_TRIANGLES, */
-                    triangleIndexCount,
-                    GLES20.GL_UNSIGNED_SHORT,
-                    0)
-            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0) // release
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)  // release
+            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexIndices.size)
         }
         // Debug:  Use culling to remove back faces.
         GLES20.glEnable(GLES20.GL_CULL_FACE)
@@ -638,10 +518,6 @@ class ObjFile(context: Context) {
         if (vbo[0] > 0) {
             GLES20.glDeleteBuffers(vbo.size, vbo, 0)
             vbo[0] = 0
-        }
-        if (ibo[0] > 0) {
-            GLES20.glDeleteBuffers(ibo.size, ibo, 0)
-            ibo[0] = 0
         }
     }
 
@@ -657,20 +533,20 @@ class ObjFile(context: Context) {
         vertices.clear()
         normals.clear()
         colors.clear()
-        indices.clear()
-        textureIndex.clear()
+        vertexIndices.clear()
+        textureIndices.clear()
         haveMaterialColor = false
     }
 
     companion object {
         private const val POSITION_DATA_SIZE_IN_ELEMENTS = 3
         private const val NORMAL_DATA_SIZE_IN_ELEMENTS = 3
-        private const val COLOR_DATA_SIZE_IN_ELEMENTS = 4
+        private const val TEXTURE_DATA_SIZE_IN_ELEMENTS = 2
 
         private const val BYTES_PER_FLOAT = 4
         private const val BYTES_PER_SHORT = 2
 
-        private const val STRIDE_IN_FLOATS = POSITION_DATA_SIZE_IN_ELEMENTS + NORMAL_DATA_SIZE_IN_ELEMENTS + COLOR_DATA_SIZE_IN_ELEMENTS
+        private const val STRIDE_IN_FLOATS = POSITION_DATA_SIZE_IN_ELEMENTS + NORMAL_DATA_SIZE_IN_ELEMENTS + TEXTURE_DATA_SIZE_IN_ELEMENTS
         private const val STRIDE_IN_BYTES = STRIDE_IN_FLOATS * BYTES_PER_FLOAT
 
         private const val NORMAL_BRIGHTNESS_FACTOR = 7f

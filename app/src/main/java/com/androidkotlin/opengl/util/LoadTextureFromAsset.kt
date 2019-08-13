@@ -107,6 +107,7 @@ fun loadTextureFromAsset163(context: Context, fileName: String): Int {
     checkGLerr("lTFA02")
 
     inputStream.close()
-    Timber.i("texture bitmap file: %s w: %d h: %d", fileName, bitmap.width, bitmap.height)
+    Timber.i("texture bitmap id: %d fileName: %s w: %d h: %d", textureId[0],
+            fileName, bitmap.width, bitmap.height)
     return textureId[0]
 }

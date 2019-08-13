@@ -20,10 +20,7 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
-import com.androidkotlin.opengl.util.Camera
-import com.androidkotlin.opengl.util.Shader
-import com.androidkotlin.opengl.util.checkGLerr
-import com.androidkotlin.opengl.util.matrix4toFloatArray
+import com.androidkotlin.opengl.util.*
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
@@ -46,6 +43,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
     private val asteroidShader = Shader()
     private val planetShader = Shader()
+    private val planet = ObjFile(context)
 
     private val camera = Camera(Vector3(0.0, 0.0, 155.0))
 
@@ -54,8 +52,8 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 //    //private var ebo = IntArray(1)
 
     private val vertexBuffer: FloatBuffer
-    private var texture1 = 0
-    private var texture2 = 0
+    private var planetDiffuseTextureMap = 0
+
 
     private val vertices = floatArrayOf(
             0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
@@ -100,6 +98,10 @@ class Renderer4103AdvancedAsteroidsInstanced3(
                 Shader.ShaderSource.FROM_ASSETS,
                 "10.3.planet.vs",
                 "10.3.planet.fs")
+
+        // load textures
+        // -----------------------------------------------------------------------------
+        planetDiffuseTextureMap = loadTextureFromAsset(context,"container2.png")
 
         /*
          * generate a large list of semi-random model transformation matrices
@@ -156,6 +158,9 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         // normally you'd want to do this in a more organized fashion,
         // but for learning purposes this will do.
         // ------------------------------------------------------------------------------
+
+        planet.parse("planet")
+        planet.build_buffers()
     }
 
     override fun onDrawFrame(glUnused: GL10) {
@@ -171,25 +176,28 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
         checkGLerr("ODF1")
 
-
-
-        checkGLerr("ODF2")
-
-        var projectionM4 = Matrix4()
-
-        val zoom = camera.zoom
-        projectionM4 = projectionM4.setToPerspective(
+        // view/projection transformations
+        var projection = Matrix4()
+        projection = projection.setToPerspective(
                 0.1,
                 100.0,
-                zoom,  //45.0,
-                screenWidth.toDouble() / screenHeight.toDouble())
+                camera.zoom,
+                screenWidth * 1.0 / screenHeight * 1.0)
+        val view = camera.getViewMatrix()
+        asteroidShader.use()
+        asteroidShader.setMat4("projection", toFloatArray16(projection))
+        asteroidShader.setMat4("view", toFloatArray16(view))
 
+        planetShader.use()
+        planetShader.setMat4("projection", toFloatArray16(projection))
+        planetShader.setMat4("view", toFloatArray16(view))
+        planetShader.setInt("texture_diffuse1", planetDiffuseTextureMap)
 
-
-        val viewM4 = camera.getViewMatrix()
-
-
-
+        var model = Matrix4() // identity matrix
+        model = model.translate(Vector3(0.0, -3.0, 0.0))
+        model = model.scale(Vector3(4.0, 4.0, 4.0))
+        planetShader.setMat4("model", toFloatArray16(model))
+        planet.render(planetShader)
     }
 
     override fun onSurfaceChanged(glUnused: GL10?, width: Int, height: Int) {

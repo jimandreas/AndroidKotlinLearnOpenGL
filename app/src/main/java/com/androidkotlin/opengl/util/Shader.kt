@@ -18,7 +18,7 @@ class Shader {
 
     private var vertexShaderHandle = 0
     private var fragmentShaderHandle = 0
-    private var programHandle = 0
+    var programHandle = 0
     enum class ShaderSource { FROM_STRING, FROM_ASSETS }
 
     fun shaderReadCompileLink(context: Context,

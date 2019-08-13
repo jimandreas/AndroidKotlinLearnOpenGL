@@ -63,28 +63,6 @@ class Renderer242LightingMapsSpecular(
         // Enable depth testing
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
 
-      /*  // temporary code
-        // Position the eye in front of the origin.
-        val eyeX = 0.0f
-        val eyeY = 0.0f
-        val eyeZ = -0.5f
-
-        // We are looking toward the distance
-        val lookX = 0.0f
-        val lookY = 0.0f
-        val lookZ = -5.0f
-
-        // Set our up vector. This is where our head would be pointing were we holding the camera.
-        val upX = 0.0f
-        val upY = 1.0f
-        val upZ = 0.0f
-
-        // Set the view matrix. This matrix can be said to represent the camera position.
-        // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
-        // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ)
-        // end temporary code*/
-
         checkGLerr("R01")
 
         lightingShader.shaderReadCompileLink(
