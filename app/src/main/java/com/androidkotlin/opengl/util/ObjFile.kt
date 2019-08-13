@@ -475,10 +475,9 @@ class ObjFile(val context: Context) {
             GLES20.glDeleteBuffers(1, vbo, 0)
         }
         GLES20.glGenBuffers(1, vbo, 0)
-
         if (vbo[0] > 0) {
             GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
-            GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, vertexDataBuffer.capacity() * BYTES_PER_FLOAT,
+            GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, vertexData.size * BYTES_PER_FLOAT,
                     vertexDataBuffer, GLES20.GL_STATIC_DRAW)
 
             // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
@@ -486,8 +485,6 @@ class ObjFile(val context: Context) {
             checkGLerr("buildBuffers")
             throw RuntimeException("error on buffer gen")
         }
-
-        val texture1 = loadTextureFromAsset163(context,"planet_Quom1200.png")
     }
 
     fun render(shaderObj : Shader) {
@@ -495,8 +492,7 @@ class ObjFile(val context: Context) {
         // Debug: disable culling to remove back faces.
         GLES20.glDisable(GLES20.GL_CULL_FACE)
 
-        shaderObj.use()
-        shaderObj.setInt("texture_diffuse1", 2)
+
 
         if (vbo[0] > 0) {
 
@@ -509,6 +505,7 @@ class ObjFile(val context: Context) {
 
             GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
             GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexIndices.size)
+            checkGLerr("render")
         }
         // Debug:  Use culling to remove back faces.
         GLES20.glEnable(GLES20.GL_CULL_FACE)

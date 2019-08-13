@@ -95,15 +95,17 @@ fun loadTextureFromAsset163(context: Context, fileName: String): Int {
 
     GLES30.glGenTextures(1, textureId, 0)
     GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId[0])
+    // NOTE: this order of operation is cloned from "model.h"
+    // load image, create texture and generate mipmaps
+    GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
+    glGenerateMipmap(GL_TEXTURE_2D)
     // wrapping parms
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
     // texture filtering parms
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
     GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-    // load image, create texture and generate mipmaps
-    GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
-    glGenerateMipmap(GL_TEXTURE_2D)
+
     checkGLerr("lTFA02")
 
     inputStream.close()

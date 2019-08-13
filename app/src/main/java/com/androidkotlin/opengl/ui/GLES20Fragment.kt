@@ -56,7 +56,7 @@ class OverviewFragment : Fragment() {
         //val renderer = Renderer4101InstancingQuads(this.context!!, viewModel)
         val renderer = Renderer4103AdvancedAsteroidsInstanced3(this.context!!, viewModel)
 
-        glSurfaceView.setEGLContextClientVersion(2)
+        glSurfaceView.setEGLContextClientVersion(3)
         glSurfaceView.setRenderer(renderer)
 
         val displayMetrics = DisplayMetrics()

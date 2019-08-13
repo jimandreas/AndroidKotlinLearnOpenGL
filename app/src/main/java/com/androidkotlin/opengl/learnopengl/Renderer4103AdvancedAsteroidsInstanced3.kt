@@ -44,43 +44,10 @@ class Renderer4103AdvancedAsteroidsInstanced3(
     private val asteroidShader = Shader()
     private val planetShader = Shader()
     private val planet = ObjFile(context)
-
-    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
-
-//    private var vbo = IntArray(1)
-//    private var vao = IntArray(1)
-//    //private var ebo = IntArray(1)
-
-    private val vertexBuffer: FloatBuffer
     private var planetDiffuseTextureMap = 0
 
-
-    private val vertices = floatArrayOf(
-            0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-            0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left
-    )
-
-    val indices = intArrayOf(
-            0, 1, 3, // first triangle
-            1, 2, 3  // second triangle
-    )
-
-    init {
-        // initialize vertex byte buffer for shape coordinates
-        val bb = ByteBuffer.allocateDirect(
-                // (number of coordinate values * 4 bytes per float)
-                vertices.size * 4)
-        // use the device hardware's native byte order
-        bb.order(ByteOrder.nativeOrder())
-        // create a floating point buffer from the ByteBuffer
-        vertexBuffer = bb.asFloatBuffer()
-        // add the coordinates to the FloatBuffer
-        vertexBuffer.put(vertices)
-        // set the buffer to read the first coordinate
-        vertexBuffer.position(0)
-    }
+    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
+//    private var vbo = IntArray(1)
 
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
 
@@ -101,14 +68,14 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
         // load textures
         // -----------------------------------------------------------------------------
-        planetDiffuseTextureMap = loadTextureFromAsset(context,"container2.png")
+        planetDiffuseTextureMap = loadTextureFromAsset163(context,"planet_Quom1200.png")
 
         /*
          * generate a large list of semi-random model transformation matrices
          * ------------------------------------------------------------------
          */
-
-        val amount = 100000
+/*
+         val amount = 10000
         val radius = 150.0
         val offset = 25.0
         val modelMatrices = Array(amount) {
@@ -159,6 +126,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         // but for learning purposes this will do.
         // ------------------------------------------------------------------------------
 
+*/
         planet.parse("planet")
         planet.build_buffers()
     }
@@ -186,9 +154,9 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         deltaX = 0.0f
         deltaY = 0.0f
         val view = camera.getViewMatrix()
-        asteroidShader.use()
-        asteroidShader.setMat4("projection", toFloatArray16(projection))
-        asteroidShader.setMat4("view", toFloatArray16(view))
+//        asteroidShader.use()
+//        asteroidShader.setMat4("projection", toFloatArray16(projection))
+//        asteroidShader.setMat4("view", toFloatArray16(view))
 
         planetShader.use()
         planetShader.setMat4("projection", toFloatArray16(projection))
