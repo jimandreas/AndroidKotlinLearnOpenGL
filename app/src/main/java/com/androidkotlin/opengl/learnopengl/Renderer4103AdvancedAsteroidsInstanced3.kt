@@ -166,8 +166,6 @@ class Renderer4103AdvancedAsteroidsInstanced3(
     override fun onDrawFrame(glUnused: GL10) {
         Timber.i("OnDrawFrame")
 
-        camera.zoomHack(-1.0)
-
         GLES30.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
@@ -183,6 +181,10 @@ class Renderer4103AdvancedAsteroidsInstanced3(
                 100.0,
                 camera.zoom,
                 screenWidth * 1.0 / screenHeight * 1.0)
+
+        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        deltaX = 0.0f
+        deltaY = 0.0f
         val view = camera.getViewMatrix()
         asteroidShader.use()
         asteroidShader.setMat4("projection", toFloatArray16(projection))

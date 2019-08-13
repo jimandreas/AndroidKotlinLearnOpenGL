@@ -164,7 +164,7 @@ class Renderer174Camera(
     override fun onDrawFrame(glUnused: GL10) {
         Timber.i("OnDrawFrame")
 
-        camera.zoomHack(-1.0)
+        //camera.zoomHack(-1.0)
 
         GLES30.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
@@ -192,7 +192,9 @@ class Renderer174Camera(
                 screenWidth.toDouble() / screenHeight.toDouble())
         shaderObject.setMat4("projection", projectionM4.floatValues)
 
-        // viewM4 = viewM4.translate(Vector3(0.0, 0.0, -3.0))
+        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        deltaX = 0.0f
+        deltaY = 0.0f
         val viewM4 = camera.getViewMatrix()
         shaderObject.setMat4("view", viewM4.floatValues)
 

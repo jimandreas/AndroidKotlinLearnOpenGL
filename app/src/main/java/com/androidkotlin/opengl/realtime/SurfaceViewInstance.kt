@@ -30,8 +30,8 @@ import kotlin.math.sqrt
 
 @Suppress("ConstantConditionIf")
 class SurfaceViewInstance : GLSurfaceView {
-    var mSelectMode = false
-    private var mLastTouchState = NO_FINGER_DOWN
+    var selectMode = false
+    private var lastTouchState = NO_FINGER_DOWN
 
     //private lateinit var renderer: Renderer242LightingMapsSpecular
     private lateinit var renderer: RendererBaseClass
@@ -42,13 +42,13 @@ class SurfaceViewInstance : GLSurfaceView {
     private lateinit var contextLocal: Context
 
     // Offsets for touch events
-    private var mPreviousX: Float = 0.toFloat()
-    private var mPreviousY: Float = 0.toFloat()
+    private var previousX: Float = 0.toFloat()
+    private var previousY: Float = 0.toFloat()
     private var density: Float = 0.toFloat()
-    private var mInitialSpacing: Float = 0.toFloat()
+    private var initialSpacing: Float = 0.toFloat()
 
-    private var mOldX = 0f
-    private var mOldY = 0f
+    private var oldX = 0f
+    private var oldY = 0f
 
     private val isAnimationRunning: Boolean
         get() = !scroller.isFinished
@@ -91,17 +91,6 @@ class SurfaceViewInstance : GLSurfaceView {
         renderer = rendererIn
         density = densityIn
         viewModel = viewModelIn
-
-
-//        viewModel.wireFrameModeOn.observe(viewModel.owner, Observer {
-//            renderer.wireFrameRenderingFlag = it
-//            requestRender()
-//        })
-//
-//        viewModel.shaderToggle.observe(viewModel.owner, Observer {
-//            renderer.shaderProgramToggle = it
-//            requestRender()
-//        })
     }
 
     // with h/t to :
@@ -138,17 +127,17 @@ class SurfaceViewInstance : GLSurfaceView {
 
         //Number of touches
         val pointerCount = m.pointerCount
-        //Timber.i("OnTouch: pointer count %d", pointerCount)
+        Timber.i("OnTouch: pointer count %d", pointerCount)
         when {
             pointerCount > 2 -> {
-                mLastTouchState = MORE_FINGERS
+                lastTouchState = MORE_FINGERS
                 return true
             }
             pointerCount == 2 -> {
-                if (mSelectMode) return true
+                if (selectMode) return true
                 val action = m.actionMasked
                 val actionIndex = m.actionIndex
-                if (mLastTouchState == MORE_FINGERS) {
+                if (lastTouchState == MORE_FINGERS) {
                     x1 = m.getX(0)
                     y1 = m.getY(0)
                     x2 = m.getX(1)
@@ -157,9 +146,9 @@ class SurfaceViewInstance : GLSurfaceView {
                     renderer.touchCoordX = m.x
                     renderer.touchCoordY = m.y
 
-                    mOldX = (x1 + x2) / 2.0f
-                    mOldY = (y1 + y2) / 2.0f
-                    mLastTouchState = TWO_FINGERS_DOWN
+                    oldX = (x1 + x2) / 2.0f
+                    oldY = (y1 + y2) / 2.0f
+                    lastTouchState = TWO_FINGERS_DOWN
                     return true
                 }
                 when (action) {
@@ -174,23 +163,23 @@ class SurfaceViewInstance : GLSurfaceView {
                         renderer.touchCoordY = m.y
 
                         deltax = (x1 + x2) / 2.0f
-                        deltax -= mOldX
+                        deltax -= oldX
                         deltay = (y1 + y2) / 2.0f
-                        deltay -= mOldY
+                        deltay -= oldY
 
                         renderer.deltaTranslateX = renderer.deltaTranslateX + deltax / (density * 300f)
                         renderer.deltaTranslateY = renderer.deltaTranslateY - deltay / (density * 300f)
 
-                        mOldX = (x1 + x2) / 2.0f
-                        mOldY = (y1 + y2) / 2.0f
+                        oldX = (x1 + x2) / 2.0f
+                        oldY = (y1 + y2) / 2.0f
 
                         val mCurrentSpacing = spacing(m)
 
-                        if (mLastTouchState != TWO_FINGERS_DOWN) {
-                            mInitialSpacing = spacing(m)
+                        if (lastTouchState != TWO_FINGERS_DOWN) {
+                            initialSpacing = spacing(m)
                         } else {
-                            deltaSpacing = mCurrentSpacing - mInitialSpacing
-                            deltaSpacing /= mInitialSpacing
+                            deltaSpacing = mCurrentSpacing - initialSpacing
+                            deltaSpacing /= initialSpacing
 
 
                             // TODO: adjust this exponent.
@@ -228,19 +217,19 @@ class SurfaceViewInstance : GLSurfaceView {
                         renderer.touchCoordX = m.x
                         renderer.touchCoordY = m.y
 
-                        mOldX = (x1 + x2) / 2.0f
-                        mOldY = (y1 + y2) / 2.0f
-                        mInitialSpacing = spacing(m)
+                        oldX = (x1 + x2) / 2.0f
+                        oldY = (y1 + y2) / 2.0f
+                        initialSpacing = spacing(m)
                     }
                     MotionEvent.ACTION_POINTER_UP -> if (hack) renderMode = RENDERMODE_WHEN_DIRTY
-                }// Log.w("Down", "touch DOWN, mInitialSpacing is " + mInitialSpacing);
-                mLastTouchState = TWO_FINGERS_DOWN
+                }// Log.w("Down", "touch DOWN, initialSpacing is " + initialSpacing);
+                lastTouchState = TWO_FINGERS_DOWN
                 return true
             }
             pointerCount == 1 -> {
                 /*
-             * handle single finger swipe - rotate each item
-             */
+                 * handle single finger swipe - rotate each item
+                 */
                 val x = m.x
                 val y = m.y
 
@@ -248,19 +237,20 @@ class SurfaceViewInstance : GLSurfaceView {
                 renderer.touchCoordY = m.y
 
                 if (m.action == MotionEvent.ACTION_MOVE) {
-                    if (mLastTouchState != ONE_FINGER_DOWN) {  // handle anything to one finger interaction
-                        mLastTouchState = ONE_FINGER_DOWN
+                    if (lastTouchState != ONE_FINGER_DOWN) {  // handle anything to one finger interaction
+                        lastTouchState = ONE_FINGER_DOWN
                     } else {
-                        val deltaX = (x - mPreviousX) / density / 2f
-                        val deltaY = (y - mPreviousY) / density / 2f
+                        val deltaX = (x - previousX) / density / 2f
+                        val deltaY = (y - previousY) / density / 2f
 
                         renderer.deltaX = renderer.deltaX + deltaX
                         renderer.deltaY = renderer.deltaY + deltaY
-                        // Log.w("touch", ": mDX = " + renderer.deltaX + " mDY = " + renderer.deltaY);
+                        Timber.i("Rotate: dx: %5.2f dy %5.2f density: %5.2f",
+                                deltaX, deltaY, density)
                     }
                 }
-                mPreviousX = x
-                mPreviousY = y
+                previousX = x
+                previousY = y
 
                 return true
             }
@@ -356,7 +346,7 @@ class SurfaceViewInstance : GLSurfaceView {
     }
 
     /**
-     * Force a stop to all pie motion. Called when the user taps during a fling.
+     * Force a stop to all motion. Called when the user taps during a fling.
      */
     private fun stopScrolling() {
         scroller.forceFinished(true)

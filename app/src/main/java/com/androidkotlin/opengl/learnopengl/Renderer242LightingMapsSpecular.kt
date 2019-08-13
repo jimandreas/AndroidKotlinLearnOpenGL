@@ -134,9 +134,6 @@ class Renderer242LightingMapsSpecular(
     override fun onDrawFrame(glUnused: GL10) {
         Timber.i("OnDrawFrame")
 
-        camera.zoomHack(-1.0)
-
-
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
@@ -160,6 +157,9 @@ class Renderer242LightingMapsSpecular(
                 100.0,
                 camera.zoom,
                 screenWidth * 1.0 / screenHeight * 1.0)
+        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        deltaX = 0.0f
+        deltaY = 0.0f
         val view = camera.getViewMatrix()
         lightingShader.setMat4("projection", toFloatArray16(projection))
         lightingShader.setMat4("view", toFloatArray16(view))

@@ -30,6 +30,7 @@ import org.rajawali3d.math.vector.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlin.reflect.jvm.internal.impl.incremental.components.Position
 
 // adaptation of camera code here:
 // https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
@@ -139,15 +140,14 @@ class Camera {
         return T
     }
 
-    fun zoomHack(yoffset: Double) {
-//        if (zoom in 1.0..90.0)
-//            zoom -= yoffset
-//        if (zoom <= 1.0)
-//            zoom = 1.0
-//        if (zoom >= 85.0)
-//            zoom = 85.0
-        yaw += yoffset
-        pitch += yoffset
+    fun setRotation(x: Double, y: Double) {
+        val scale = 50.0
+        val sx = x / scale
+        val sy = y / scale
+        val newPosition = front.multiply(sy)
+        position = position.add(newPosition)
+        val newDirection = right.multiply(sx)
+        position = position.add(newDirection)
         updateCameraVectors()
     }
 
