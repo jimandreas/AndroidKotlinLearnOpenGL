@@ -471,6 +471,7 @@ class ObjFile(val context: Context) {
                 .asFloatBuffer()
         vertexDataBuffer.put(vertexData).position(0)
 
+        Timber.i("About to BindBuffer in OBJ")
         if (vbo[0] > 0) {
             GLES20.glDeleteBuffers(1, vbo, 0)
         }
@@ -482,7 +483,7 @@ class ObjFile(val context: Context) {
 
             // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         } else {
-            checkGLerr("buildBuffers")
+            checkGLerr("buildBuffers END")
             throw RuntimeException("error on buffer gen")
         }
     }
@@ -544,11 +545,6 @@ class ObjFile(val context: Context) {
         private const val BYTES_PER_SHORT = 2
 
         private const val STRIDE_IN_FLOATS = POSITION_DATA_SIZE_IN_ELEMENTS + NORMAL_DATA_SIZE_IN_ELEMENTS + TEXTURE_DATA_SIZE_IN_ELEMENTS
-        private const val STRIDE_IN_BYTES = STRIDE_IN_FLOATS * BYTES_PER_FLOAT
-
-        private const val NORMAL_BRIGHTNESS_FACTOR = 7f
-
-
     }
 
 }

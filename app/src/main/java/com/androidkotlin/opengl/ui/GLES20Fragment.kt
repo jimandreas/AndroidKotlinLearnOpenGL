@@ -52,7 +52,8 @@ class OverviewFragment : Fragment() {
         //val renderer = Renderer121HelloTriangle(this.context!!, viewModel)
         //val renderer = Renderer163CoordinateSystems(this.context!!, viewModel)
         //val renderer = Renderer174Camera(this.context!!, viewModel)
-        val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
+        //val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
+        val renderer = Renderer242LightingMapsPlusCubeObject(this.context!!, viewModel)
         //val renderer = Renderer4101InstancingQuads(this.context!!, viewModel)
         //val renderer = Renderer4103AdvancedAsteroidsInstanced3(this.context!!, viewModel)
 

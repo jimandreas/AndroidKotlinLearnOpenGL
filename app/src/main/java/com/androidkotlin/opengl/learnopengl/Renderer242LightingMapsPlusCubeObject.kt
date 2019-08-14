@@ -33,7 +33,7 @@ import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class Renderer242LightingMapsSpecular(
+class Renderer242LightingMapsPlusCubeObject(
        val context: Context,
        viewModel: ViewModel
 ) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
@@ -42,16 +42,20 @@ class Renderer242LightingMapsSpecular(
     private var vbo = IntArray(1)
     private var cubevao = IntArray(1)
     private var lightvao = IntArray(1)
-    private var vboBody = IntArray(1)
 
     private val lightingShader = Shader()
     private val lampShader = Shader()
     private var diffuseMap = 0
     private var specularMap = 0
-
     private val camera = Camera(Vector3(0.0, 0.0, 3.0))
-
     private val lightPos = floatArrayOf(1.2f, 1.0f, 2.0f)
+
+    /*
+     *  NOTE:  This is an experimental addition - to test the OBJ parsing
+     *  and integration of OBJ based geometry into the scene.
+     */
+    private val cubeObj = ObjFile(context)
+    private val cubePos = floatArrayOf(-0.6f, 0.0f, 1.0f) // to the left
 
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
         // Set the background clear color to black.
@@ -79,13 +83,13 @@ class Renderer242LightingMapsSpecular(
         checkGLerr("R02")
 
         val nativeFloatBuffer = ByteBuffer
-                .allocateDirect(vertices242.size * 4)
+                .allocateDirect(vertices242Cube.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer!!.put(vertices242).position(0)
+        nativeFloatBuffer!!.put(vertices242Cube).position(0)
         glGenBuffers(1, vbo, 0)
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
-        glBufferData(GL_ARRAY_BUFFER, vertices242.size * 4,
+        glBufferData(GL_ARRAY_BUFFER, vertices242Cube.size * 4,
                 nativeFloatBuffer, GLES20.GL_STATIC_DRAW)
 
         checkGLerr("R03")
@@ -125,6 +129,11 @@ class Renderer242LightingMapsSpecular(
         lightingShader.setInt("material.specular", 1)
 
         checkGLerr("R06")
+
+        cubeObj.parse("cube")
+        cubeObj.build_buffers()
+
+        checkGLerr("R07")
     }
 
 
@@ -176,6 +185,21 @@ class Renderer242LightingMapsSpecular(
         glBindVertexArray(cubevao[0])
         glDrawArrays(GL_TRIANGLES, 0, 36)
 
+        checkGLerr("ODF01CUBE")
+
+
+        /********************************************
+         * Add in the Cube via an OBJ path now:
+         */
+        model = Matrix4() // identity matrix
+        model = model.translate(toVec3(cubePos))
+        model = model.scale(Vector3(0.2)) // a smaller cube
+        lightingShader.setMat4("model", toFloatArray16(model))
+        //cubeObj.render(lightingShader)
+        /**
+         *
+         *********************************************/
+
         // also draw the lamp object
         lampShader.use()
 
@@ -214,7 +238,7 @@ class Renderer242LightingMapsSpecular(
     }
 
     companion object {
-        val vertices242 = floatArrayOf(
+        val vertices242Cube = floatArrayOf(
                 // positions          // normals           // texture coords
                 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
                 0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
