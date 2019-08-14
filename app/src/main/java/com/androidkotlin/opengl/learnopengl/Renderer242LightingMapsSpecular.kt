@@ -78,8 +78,6 @@ class Renderer242LightingMapsSpecular(
 
         checkGLerr("R02")
 
-        glGenVertexArrays(1, cubevao, 0)
-
         val nativeFloatBuffer = ByteBuffer
                 .allocateDirect(vertices.size * 4)
                 .order(ByteOrder.nativeOrder())
@@ -91,7 +89,7 @@ class Renderer242LightingMapsSpecular(
                 nativeFloatBuffer, GLES20.GL_STATIC_DRAW)
 
         checkGLerr("R03")
-
+        glGenVertexArrays(1, cubevao, 0)
         glBindVertexArray(cubevao[0])
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0)
         glEnableVertexAttribArray(0)
