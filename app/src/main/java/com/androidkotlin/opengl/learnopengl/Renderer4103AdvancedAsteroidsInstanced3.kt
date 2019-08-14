@@ -46,7 +46,8 @@ class Renderer4103AdvancedAsteroidsInstanced3(
     private val planet = ObjFile(context)
     private var planetDiffuseTextureMap = 0
 
-    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
+//    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
+    private val camera = Camera(Vector3(0.0, 0.0, 10.0))
 //    private var vbo = IntArray(1)
 
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
@@ -69,6 +70,11 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         // load textures
         // -----------------------------------------------------------------------------
         planetDiffuseTextureMap = loadTextureFromAsset163(context,"planet_Quom1200.png")
+//        planetDiffuseTextureMap = loadTextureFromAsset163(context,"container2.png")
+
+        planetShader.use()
+//        planetShader.setInt("texture_diffuse1", planetDiffuseTextureMap)
+        planetShader.setInt("texture_diffuse1", 0)
 
         /*
          * generate a large list of semi-random model transformation matrices
@@ -128,6 +134,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
 */
         planet.parse("planet")
+//        planet.parse("cube")
         planet.build_buffers()
     }
 
@@ -136,9 +143,6 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
         GLES30.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
-
-        // (DISABLE THE) Use culling to remove back faces.
-        glDisable(GL_CULL_FACE)
 
         checkGLerr("ODF1")
 
@@ -161,12 +165,16 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         planetShader.use()
         planetShader.setMat4("projection", toFloatArray16(projection))
         planetShader.setMat4("view", toFloatArray16(view))
-        planetShader.setInt("texture_diffuse1", planetDiffuseTextureMap)
 
         var model = Matrix4() // identity matrix
-        model = model.translate(Vector3(0.0, -3.0, 0.0))
-        model = model.scale(Vector3(4.0, 4.0, 4.0))
+        //model = model.translate(Vector3(0.0, -3.0, 0.0))
+        //model = model.scale(Vector3(4.0, 4.0, 4.0))
         planetShader.setMat4("model", toFloatArray16(model))
+
+        // bind diffuse map
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, planetDiffuseTextureMap)
+
         planet.render(planetShader)
     }
 
