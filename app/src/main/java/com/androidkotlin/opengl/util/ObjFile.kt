@@ -19,6 +19,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetManager
 import android.opengl.GLES20
+import android.opengl.GLES20.glBindBuffer
 import android.opengl.GLES30
 import android.os.Bundle
 import android.os.SystemClock
@@ -491,12 +492,10 @@ class ObjFile(val context: Context) {
     fun render(shaderObj : Shader) {
 
         // Debug: disable culling to remove back faces.
-        GLES20.glDisable(GLES20.GL_CULL_FACE)
-
-
+        //GLES20.glDisable(GLES20.GL_CULL_FACE)
 
         if (vbo[0] > 0) {
-
+            glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
             // position attribute
             GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
             GLES30.glEnableVertexAttribArray(0)
@@ -504,12 +503,14 @@ class ObjFile(val context: Context) {
             GLES30.glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
             GLES30.glEnableVertexAttribArray(2)
 
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
+
             GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexIndices.size)
+            glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
             checkGLerr("render")
         }
+
         // Debug:  Use culling to remove back faces.
-        GLES20.glEnable(GLES20.GL_CULL_FACE)
+        //GLES20.glEnable(GLES20.GL_CULL_FACE)
     }
 
     fun release() {

@@ -18,6 +18,7 @@ package com.androidkotlin.opengl.learnopengl
 
 import android.content.Context
 import android.opengl.GLES20
+import android.opengl.GLES30
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
 
@@ -181,8 +182,17 @@ class Renderer242LightingMapsPlusCubeObject(
         glActiveTexture(GL_TEXTURE1)
         glBindTexture(GL_TEXTURE_2D, specularMap)
 
+        glBindBuffer(GLES20.GL_ARRAY_BUFFER, cubevao[0])
         // render the cube
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
         glBindVertexArray(cubevao[0])
+        // position attribute
+        glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
+        glEnableVertexAttribArray(0)
+        // texture coordinate attribute
+        glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
+        glEnableVertexAttribArray(2)
+
         glDrawArrays(GL_TRIANGLES, 0, 36)
 
         checkGLerr("ODF01CUBE")
@@ -195,7 +205,7 @@ class Renderer242LightingMapsPlusCubeObject(
         model = model.translate(toVec3(cubePos))
         model = model.scale(Vector3(0.2)) // a smaller cube
         lightingShader.setMat4("model", toFloatArray16(model))
-        //cubeObj.render(lightingShader)
+        cubeObj.render(lightingShader)
         /**
          *
          *********************************************/

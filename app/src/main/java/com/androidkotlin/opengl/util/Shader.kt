@@ -181,7 +181,7 @@ class Shader {
     }
     fun setVec3(name: String, value: FloatArray) {
         val loc = glGetUniformLocation(programHandle, name)
-        Timber.i("*** Loc is $loc")
+        //Timber.i("*** Loc is $loc")
         glUniform3fv(loc, 1, value, 0)
         checkGLerr("setVec3")
     }
@@ -210,15 +210,6 @@ class Shader {
                 0)
     }
 
-
-
-    /*public static native void glUniformMatrix2fv(
-        int location,
-        int count,
-        boolean transpose,
-        float[] value,
-        int offset
-    );*/
 
 
 
