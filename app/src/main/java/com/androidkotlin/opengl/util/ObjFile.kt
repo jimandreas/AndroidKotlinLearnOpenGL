@@ -19,7 +19,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetManager
 import android.opengl.GLES20
-import android.opengl.GLES20.glBindBuffer
+import android.opengl.GLES20.*
 import android.opengl.GLES30
 import android.os.Bundle
 import android.os.SystemClock
@@ -471,15 +471,15 @@ class ObjFile(val context: Context) {
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
         vertexDataBuffer.put(vertexData).position(0)
-
-        Timber.i("About to BindBuffer in OBJ")
+        checkGLerr("ObjFile: build_buffers1")
+        Timber.i("ObjFile: About to BindBuffer in OBJ")
         if (vbo[0] > 0) {
-            GLES20.glDeleteBuffers(1, vbo, 0)
+            glDeleteBuffers(1, vbo, 0)
         }
-        GLES20.glGenBuffers(1, vbo, 0)
+        glGenBuffers(1, vbo, 0)
         if (vbo[0] > 0) {
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
-            GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, vertexData.size * BYTES_PER_FLOAT,
+            glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
+            glBufferData(GL_ARRAY_BUFFER, vertexData.size * BYTES_PER_FLOAT,
                     vertexDataBuffer, GLES20.GL_STATIC_DRAW)
 
             // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
@@ -487,6 +487,8 @@ class ObjFile(val context: Context) {
             checkGLerr("buildBuffers END")
             throw RuntimeException("error on buffer gen")
         }
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        checkGLerr("ObjFile: build_buffers: End")
     }
 
     fun getVBO(): IntArray {
@@ -503,7 +505,7 @@ class ObjFile(val context: Context) {
         //GLES20.glDisable(GLES20.GL_CULL_FACE)
 
         if (vbo[0] > 0) {
-            glBindBuffer(GLES20.GL_ARRAY_BUFFER, vbo[0])
+            glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
             // position attribute
             GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
             GLES30.glEnableVertexAttribArray(0)
@@ -513,8 +515,8 @@ class ObjFile(val context: Context) {
 
 
             GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexIndices.size)
-            glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
-            checkGLerr("render")
+            glBindBuffer(GL_ARRAY_BUFFER, 0)
+            checkGLerr("ObjFile: render")
         }
 
         // Debug:  Use culling to remove back faces.
@@ -523,7 +525,7 @@ class ObjFile(val context: Context) {
 
     fun release() {
         if (vbo[0] > 0) {
-            GLES20.glDeleteBuffers(vbo.size, vbo, 0)
+            glDeleteBuffers(vbo.size, vbo, 0)
             vbo[0] = 0
         }
     }
