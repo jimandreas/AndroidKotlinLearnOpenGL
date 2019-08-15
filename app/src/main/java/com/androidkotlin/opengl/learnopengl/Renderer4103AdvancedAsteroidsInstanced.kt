@@ -36,7 +36,7 @@ import kotlin.math.sin
 // ref: see:
 // https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/10.3.asteroids_instanced/asteroids_instanced.cpp
 
-class Renderer4103AdvancedAsteroidsInstanced3(
+class Renderer4103AdvancedAsteroidsInstanced(
         val context: Context,
         viewModel: ViewModel
 ) : RendererBaseClass(context, viewModel), GLSurfaceView.Renderer {
@@ -44,9 +44,10 @@ class Renderer4103AdvancedAsteroidsInstanced3(
     private val asteroidShader = Shader()
     private val planetShader = Shader()
     private val planet = ObjFile(context)
+    private val rock = ObjFile(context)
     private var planetDiffuseTextureMap = 0
 
-//    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
+    //    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
     private val camera = Camera(Vector3(0.0, 0.0, 10.0))
 //    private var vbo = IntArray(1)
 
@@ -69,7 +70,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
 
         // load textures
         // -----------------------------------------------------------------------------
-        planetDiffuseTextureMap = loadTextureFromAsset163(context,"planet_Quom1200.png")
+        planetDiffuseTextureMap = loadTextureFromAsset163(context, "planet_Quom1200.png")
 //        planetDiffuseTextureMap = loadTextureFromAsset163(context,"container2.png")
 
         planetShader.use()
@@ -80,13 +81,13 @@ class Renderer4103AdvancedAsteroidsInstanced3(
          * generate a large list of semi-random model transformation matrices
          * ------------------------------------------------------------------
          */
-/*
-         val amount = 10000
+        val amount = 1000
         val radius = 150.0
         val offset = 25.0
-        val modelMatrices = Array(amount) {
+        val modelMatrices = mutableListOf<Matrix4>()
+        for (i in 0..amount) {
             var model = Matrix4()
-            val angle = it.toDouble() / amount.toDouble() * 360.0
+            val angle = i.toDouble() / amount.toDouble() * 360.0
             var displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val x = sin(angle) * radius + displacement
 //            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
@@ -107,7 +108,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
             model = model.rotate(Vector3(0.4, 0.6, 0.8), rotAngle)
 
             // 4. now add to list of matrices
-            model
+            modelMatrices.add(model)
         }
 
         // configure instanced array
@@ -125,17 +126,11 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         GLES30.glBufferData(GL_ARRAY_BUFFER, amount * 16 * 4, nativeFloatBuffer, GL_STATIC_DRAW)
         checkGLerr("OSC1")
 
-        // set transformation matrices as an instance vertex attribute (with divisor 1)
-        // note: we're cheating a little by taking the publicly declared
-        // VAO of the model's mesh(es) and adding new vertexAttribPointers
-        // normally you'd want to do this in a more organized fashion,
-        // but for learning purposes this will do.
-        // ------------------------------------------------------------------------------
-
-*/
         planet.parse("planet")
-//        planet.parse("cube")
         planet.build_buffers()
+
+        rock.parse("rock")
+        rock.build_buffers()
     }
 
     override fun onDrawFrame(glUnused: GL10) {
@@ -166,7 +161,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
         planetShader.setMat4("projection", toFloatArray16(projection))
         planetShader.setMat4("view", toFloatArray16(view))
 
-        var model = Matrix4() // identity matrix
+        val model = Matrix4() // identity matrix
         //model = model.translate(Vector3(0.0, -3.0, 0.0))
         //model = model.scale(Vector3(4.0, 4.0, 4.0))
         planetShader.setMat4("model", toFloatArray16(model))
@@ -179,7 +174,7 @@ class Renderer4103AdvancedAsteroidsInstanced3(
     }
 
     override fun onSurfaceChanged(glUnused: GL10?, width: Int, height: Int) {
-        Timber.i("OnSurfaceChanged, width %d, height %d", width, height )
+        Timber.i("OnSurfaceChanged, width %d, height %d", width, height)
         // Set the OpenGL viewport to the same size as the surface.
         glViewport(0, 0, width, height)
         screenWidth = width
@@ -219,7 +214,6 @@ class Renderer4103AdvancedAsteroidsInstanced3(
                 FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
             }
         """.trimIndent()
-
 
 
         private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
