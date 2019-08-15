@@ -47,6 +47,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
     private val planet = ObjFile(context)
     private val rock = ObjFile(context)
     private var planetDiffuseTextureMap = 0
+    private var rockDiffuseTextureMap = 0
     private var rockVBO = IntArray(1)
     private var rockMatrix4buffer = IntArray(1)
     private var rockVertexArray = IntArray(1)
@@ -75,8 +76,14 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
         // load textures
         // -----------------------------------------------------------------------------
+
+        rockDiffuseTextureMap = loadTextureFromAsset163(context, "rock.png")
+        asteroidShader.use()
+        asteroidShader.setInt("texture_diffuse1", 0)
+
         planetDiffuseTextureMap = loadTextureFromAsset163(context, "planet_Quom1200.png")
 //        planetDiffuseTextureMap = loadTextureFromAsset163(context,"container2.png")
+//        planetDiffuseTextureMap = loadTextureFromAsset163(context,"rock.png")
 
         planetShader.use()
 //        planetShader.setInt("texture_diffuse1", planetDiffuseTextureMap)
@@ -110,7 +117,8 @@ class Renderer4103AdvancedAsteroidsInstanced(
             model = model.translate(Vector3(x, y, z))
 
             // 2. scale: Scale between 0.05 and 0.25
-            val scale = (random() % 20) / 100.0 + 0.05
+//            val scale = (random() % 20) / 100.0 + 0.05
+            val scale = 100.0
             model = model.scale(Vector3(scale))
 
             // 3. rotation : add random rotation around a (semi) randomly
@@ -140,6 +148,8 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
         rock.parse("rock")
         rock.build_buffers()
+
+
 
         // now hack in the assignment of 4 VEC4 slots to match the Matrix4
         // array entries in the shader
@@ -213,8 +223,8 @@ class Renderer4103AdvancedAsteroidsInstanced(
         checkGLerr("ODF2")
 
         // Draw meteorites (rocks)
-        asteroidShader.use()
-        asteroidShader.setInt("texture_diffuse1", 0)
+//        asteroidShader.use()
+//        asteroidShader.setInt("texture_diffuse1", 0)
         glActiveTexture(GL_TEXTURE0)
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
         GLES30.glBindVertexArray(rockVertexArray[0])
