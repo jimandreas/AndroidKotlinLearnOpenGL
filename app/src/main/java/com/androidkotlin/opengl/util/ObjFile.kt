@@ -489,6 +489,14 @@ class ObjFile(val context: Context) {
         }
     }
 
+    fun getVBO(): IntArray {
+        return vbo
+    }
+
+    fun getVertexCount(): Int {
+        return vertexIndices.size
+    }
+
     fun render(shaderObj : Shader) {
 
         // Debug: disable culling to remove back faces.
