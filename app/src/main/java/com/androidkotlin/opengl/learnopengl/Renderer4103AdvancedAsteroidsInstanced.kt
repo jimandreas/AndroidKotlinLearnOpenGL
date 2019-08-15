@@ -100,8 +100,11 @@ class Renderer4103AdvancedAsteroidsInstanced(
          * ------------------------------------------------------------------
          */
         numberOfRocks = 100
-        val radius = 150.0
-        val offset = 25.0
+//        val radius = 150.0
+//        val offset = 25.0
+
+        val radius = 10.0
+        val offset = 2.0
         val modelMatrices = mutableListOf<Matrix4>()
         for (i in 0 until numberOfRocks) {
             var model = Matrix4()
@@ -146,7 +149,8 @@ class Renderer4103AdvancedAsteroidsInstanced(
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         checkGLerr("OSC1")
 
-        rock.parse("rock")
+//        rock.parse("rock")
+        rock.parse("planet")
         rock.build_buffers()
 
 
@@ -216,7 +220,8 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
         // bind diffuse map
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, planetDiffuseTextureMap)
+//        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, planetDiffuseTextureMap)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rockDiffuseTextureMap)
 
         planet.render(planetShader)
 
@@ -229,6 +234,9 @@ class Renderer4103AdvancedAsteroidsInstanced(
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
         GLES30.glBindVertexArray(rockVertexArray[0])
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockMatrix4buffer[0])
+        // bind diffuse map
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rockDiffuseTextureMap)
 
         // position attribute
 //        GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
