@@ -49,3 +49,11 @@ dependencies:
 
 glm:<br>
 https://github.com/kotlin-graphics/glm
+
+
+notes:
+--------------
+Renderer4102InstancingHacking
+an experiement with instancing - after difficulties with the
+rendering rocks, move back to what works - the 2D colored patches.
+Curious that one renders in the center after rendering only 4 off to the side?

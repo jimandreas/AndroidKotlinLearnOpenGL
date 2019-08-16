@@ -39,6 +39,7 @@ class Renderer4102InstancingHacking(
     private var quadVBO = IntArray(1)
     private var quadVAO = IntArray(1)
     private var instanceVBO = IntArray(1)
+    private var patchCount = 0
 
     private val shader = Shader()
 
@@ -76,10 +77,11 @@ class Renderer4102InstancingHacking(
         val offset = 0.01f
         val translationsArray = FloatArray(200)
         var index = 0
-        for (y in -7 until -4 step 2) {
-            for (x in -7 until -4 step 2) {
+        for (y in -5 until -2 step 2) {
+            for (x in -5 until -2 step 2) {
                 translationsArray[index++] = x.toFloat() / 10.0f + offset
                 translationsArray[index++] = y.toFloat() / 10.0f + offset
+                patchCount++
             }
         }
 
@@ -140,7 +142,7 @@ class Renderer4102InstancingHacking(
         checkGLerr("ODF01")
         glBindVertexArray(quadVAO[0])
         checkGLerr("ODF02")
-        glDrawArraysInstanced(GLES20.GL_TRIANGLES, 0, 6, 100)
+        glDrawArraysInstanced(GLES20.GL_TRIANGLES, 0, 6, /*100*/ patchCount)
         checkGLerr("ODF03")
         glBindVertexArray(0)
 
