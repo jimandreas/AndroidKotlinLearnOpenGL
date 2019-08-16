@@ -66,8 +66,8 @@ class Renderer4102InstancingHacking(
         shader.shaderReadCompileLink(
                 context,
                 Shader.ShaderSource.FROM_ASSETS,
-                "10.1.instancing.vs",
-                "10.1.instancing.fs")
+                "10.1.instancingHack.vs",
+                "10.1.instancingHack.fs")
 
         checkGLerr("R02")
 
@@ -81,6 +81,7 @@ class Renderer4102InstancingHacking(
             for (x in -5 until -2 step 2) {
                 translationsArray[index++] = x.toFloat() / 10.0f + offset
                 translationsArray[index++] = y.toFloat() / 10.0f + offset
+                translationsArray[index++] = 0f
                 patchCount++
             }
         }
@@ -124,7 +125,14 @@ class Renderer4102InstancingHacking(
         // also set instance data
         glEnableVertexAttribArray(2)
         glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0])
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, 2 * 4, 0)
+        /*
+         * this is the instance coordinate - use one per vertex
+         */
+        glVertexAttribPointer(2, /*2*/ 3,
+                GL_FLOAT,
+                false, /*2*/
+                3* 4,
+                0)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glVertexAttribDivisor(2, 1)
 

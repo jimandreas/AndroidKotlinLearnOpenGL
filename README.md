@@ -57,3 +57,14 @@ Renderer4102InstancingHacking
 an experiement with instancing - after difficulties with the
 rendering rocks, move back to what works - the 2D colored patches.
 Curious that one renders in the center after rendering only 4 off to the side?
+
+This works for hacking the patches based on instance:
+
+    void main()
+    {
+        fColor = aColor;
+        float myfloat = float(gl_InstanceID+1);
+        vec2 pos = aPos * myfloat;
+        gl_Position = vec4(pos + aOffset, 0.0, 1.0);
+    }
+
