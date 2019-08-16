@@ -54,8 +54,9 @@ class OverviewFragment : Fragment() {
         //val renderer = Renderer242LightingMapsSpecular(this.context!!, viewModel)
         //val renderer = Renderer242LightingMapsPlusCubeObject(this.context!!, viewModel)
         //val renderer = Renderer4101InstancingQuads(this.context!!, viewModel)
-        val renderer = Renderer4102InstancingHacking(this.context!!, viewModel)
+        //val renderer = Renderer4102InstancingHacking(this.context!!, viewModel)
         //val renderer = Renderer4103AdvancedAsteroidsInstanced(this.context!!, viewModel)
+        val renderer = Renderer480AdvancedGlslUBO(this.context!!, viewModel)
 
         glSurfaceView.setEGLContextClientVersion(3)
         glSurfaceView.setRenderer(renderer)

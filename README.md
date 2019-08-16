@@ -68,3 +68,23 @@ This works for hacking the patches based on instance:
         gl_Position = vec4(pos + aOffset, 0.0, 1.0);
     }
 
+
+more notes:
+-------------
+
+vec2 instvec = vec2(gl_InstanceID);
+    vec2 pos = aPos * instvec;
+
+
+2019-08-16 08:04:07.196 6059-6100/com.androidkotlin.opengl E/Shader: Error compiling shader (10.1.instancingHack.vs): ERROR: 0:13: '/' :  wrong operand types  no operation '/' exists that takes a left-hand operand of type 'InstanceID highp int' and a right operand of type 'const float' (or there is no acceptable conversion)
+    ERROR: 0:13: '*' :  wrong operand types  no operation '*' exists that takes a left-hand operand of type 'in mediump 2-component vector of float' and a right operand of type 'InstanceID highp int' (or there is no acceptable conversion)
+
+void main()
+{
+    fColor = aColor;
+    vec2 pos = aPos * (gl_InstanceID / 100.0);
+    gl_Position = vec4(pos + aOffset, 0.0, 1.0);
+}
+
+
+

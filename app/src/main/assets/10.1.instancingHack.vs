@@ -12,5 +12,5 @@ void main()
     fColor = aColor;
     float myfloat = float(gl_InstanceID+1);
     vec2 pos = aPos * myfloat;
-    gl_Position = vec4(pos + aOffset, 0.0, 1.0);
+    gl_Position = vec4(pos + aOffset, -myfloat*0.1, 1.0);
 }
