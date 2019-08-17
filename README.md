@@ -107,3 +107,16 @@ projection and view matrices to the common shader.
         mat4 projection;
         mat4 view;
     };
+
+Notes:  code needs further cleanup as I left parts of the instancing project in the
+original for use in debugging.   This should get stripped out at some point.
+
+GoogleSampleRenderer
+---------------------
+
+Android OpenGL Triangle and Square sample
+
+Tutorial URL:  https://developer.android.com/training/graphics/opengl
+
+This is the basic "Hello Opengl" introduction - just the basics.   It is included for
+comparisons to code styling to the learnopengl methodology.

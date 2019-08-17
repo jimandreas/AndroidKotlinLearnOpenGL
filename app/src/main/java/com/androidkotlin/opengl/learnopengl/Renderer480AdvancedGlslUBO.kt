@@ -270,16 +270,15 @@ class Renderer480AdvancedGlslUBO(
         deltaX = 0.0f
         deltaY = 0.0f
 
-        var buf = m4toFloatBuffer(projection)
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, buf)
-        glBindBuffer(GL_UNIFORM_BUFFER, 0)
-
-
         val view = camera.getViewMatrix()
-        buf = m4toFloatBuffer(view)
-
+        // stuff the projection and view M4s into the
+        //  two halves of the UBO in the vertex shader
+        // (the shader that is shared by all four cubes)
+        val pbuf = m4toFloatBuffer(projection)
+        val vbuf = m4toFloatBuffer(view)
         glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
-        glBufferSubData(GL_UNIFORM_BUFFER, 16 * 4, 16 * 4, buf)
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, pbuf)
+        glBufferSubData(GL_UNIFORM_BUFFER, 16 * 4, 16 * 4, vbuf)
         glBindBuffer(GL_UNIFORM_BUFFER, 0)
 
         // draw 4 cubes
