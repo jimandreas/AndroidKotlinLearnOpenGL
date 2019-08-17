@@ -25,6 +25,7 @@ import com.androidkotlin.opengl.ui.ViewModel
 import com.androidkotlin.opengl.util.Camera
 import com.androidkotlin.opengl.util.Shader
 import com.androidkotlin.opengl.util.checkGLerr
+import com.androidkotlin.opengl.util.m4toFloatBuffer
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
@@ -56,7 +57,7 @@ class Renderer480AdvancedGlslUBO(
     private val shaderBlue = Shader()
     private val shaderYellow = Shader()
 
-    private val camera = Camera(Vector3(0.0, 0.0, 3.0))
+    private val camera = Camera(Vector3(0.0, 0.0, 5.0))
 
     private val quadVertices = floatArrayOf(
             // positions     // colors
@@ -269,32 +270,16 @@ class Renderer480AdvancedGlslUBO(
         deltaX = 0.0f
         deltaY = 0.0f
 
-        var tempFloatArray = FloatArray(16)
-        projection.toFloatArray(tempFloatArray)
-        GLES20.glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
-        val nativeFloatBufferProjection = ByteBuffer
-                .allocateDirect(16 * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-        nativeFloatBufferProjection!!.put(tempFloatArray).position(0)
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, nativeFloatBufferProjection)
+        var buf = m4toFloatBuffer(projection)
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, buf)
         glBindBuffer(GL_UNIFORM_BUFFER, 0)
 
 
-        var view = camera.getViewMatrix()
-        //view = Matrix4()
-        view = view.scale(0.5)
-        tempFloatArray = FloatArray(16)
-        view.toFloatArray(tempFloatArray)
-        GLES20.glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
-        val nativeFloatBufferView = ByteBuffer
-                .allocateDirect(16 * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-        nativeFloatBufferView!!.put(tempFloatArray).position(0)
+        val view = camera.getViewMatrix()
+        buf = m4toFloatBuffer(view)
 
         glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
-        glBufferSubData(GL_UNIFORM_BUFFER, 16 * 4, 16 * 4, nativeFloatBufferView)
+        glBufferSubData(GL_UNIFORM_BUFFER, 16 * 4, 16 * 4, buf)
         glBindBuffer(GL_UNIFORM_BUFFER, 0)
 
         // draw 4 cubes

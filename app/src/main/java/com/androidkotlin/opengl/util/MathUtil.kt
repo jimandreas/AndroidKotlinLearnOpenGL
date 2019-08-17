@@ -1,7 +1,12 @@
 package com.androidkotlin.opengl.util
 
+import android.opengl.GLES20
+import android.opengl.GLES30
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
 
 fun toFloatArray16(someMatrix: Matrix4) : FloatArray {
     return someMatrix.floatValues
@@ -39,4 +44,18 @@ fun matrix4toFloatArray(matrix4array: List<Matrix4>): FloatArray {
         }
     }
     return outputFloatArray
+}
+
+/**
+ * toss a Matrix4 into a NIO native buffer (FloatBuffer) and return it
+ */
+fun m4toFloatBuffer(m4: Matrix4) : FloatBuffer {
+    val tempFloatArray = FloatArray(16)
+    m4.toFloatArray(tempFloatArray)
+    val nativeFloatBuffer = ByteBuffer
+            .allocateDirect(16 * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer()
+    nativeFloatBuffer!!.put(tempFloatArray).position(0)
+    return nativeFloatBuffer
 }
