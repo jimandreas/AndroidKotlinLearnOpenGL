@@ -32,7 +32,7 @@ fun toFloatArray3(vec3: Vector3): FloatArray {
     return floatArray
 }
 
-fun matrix4toFloatArray(matrix4array: List<Matrix4>): FloatArray {
+fun matrix4ArraytoFloatBuffer(matrix4array: List<Matrix4>): FloatBuffer {
     val size = matrix4array.size
     val outputFloatArray = FloatArray(size * 16)
 
@@ -43,7 +43,13 @@ fun matrix4toFloatArray(matrix4array: List<Matrix4>): FloatArray {
             outputFloatArray[i*16 + j] = tempArray[j]
         }
     }
-    return outputFloatArray
+
+    val nativeFloatBuffer = ByteBuffer
+            .allocateDirect(size * 16 * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer()
+    nativeFloatBuffer!!.put(outputFloatArray).position(0)
+    return nativeFloatBuffer
 }
 
 /**

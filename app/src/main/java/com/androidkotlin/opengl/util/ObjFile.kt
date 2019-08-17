@@ -499,7 +499,7 @@ class ObjFile(val context: Context) {
         return vertexIndices.size
     }
 
-    fun render(shaderObj : Shader) {
+    fun render() {
 
         // Debug: disable culling to remove back faces.
         //GLES20.glDisable(GLES20.GL_CULL_FACE)

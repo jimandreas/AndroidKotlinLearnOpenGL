@@ -15,7 +15,6 @@
 package com.androidkotlin.opengl.learnopengl
 
 import android.content.Context
-import android.opengl.GLES20
 import android.opengl.GLES20.*
 import android.opengl.GLES30
 import android.opengl.GLES30.glVertexAttribDivisor
@@ -27,8 +26,6 @@ import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
 import java.lang.Math.random
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.cos
@@ -44,18 +41,16 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
     private val asteroidShader = Shader()
     private val planetShader = Shader()
-    private val planet = ObjFile(context)
-    private val rock = ObjFile(context)
-    private var planetDiffuseTextureMap = 0
-    private var rockDiffuseTextureMap = 0
-    private var rockVBO = IntArray(1)
+    private val planetVBO = ObjFile(context)
+    private val asteroidVBO = ObjFile(context)
+    private var planetTextureMap = 0
+    private var asteroidTextureMap = 0
+
     private var rockMatrix4buffer = IntArray(1)
     private var rockVertexArray = IntArray(1)
-    private var numberOfRocks = 0
+    private var numberOfRocks = 10
 
-    //    private val camera = Camera(Vector3(0.0, 0.0, 155.0))
-    private val camera = Camera(Vector3(0.0, 0.0, 10.0))
-//    private var vbo = IntArray(1)
+    private val camera = Camera(Vector3(0.0, 0.0, 20.0))
 
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
 
@@ -74,41 +69,39 @@ class Renderer4103AdvancedAsteroidsInstanced(
                 "10.3.planet.vs",
                 "10.3.planet.fs")
 
-        // load textures
-        // -----------------------------------------------------------------------------
 
-        rockDiffuseTextureMap = loadTextureFromAsset163(context, "rock.png")
+        /*
+         * load textures
+         */
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE1)
+        planetTextureMap = loadTextureFromAsset163(context, "planet_Quom1200.png")
+        planetShader.use()
+        planetShader.setInt("texture_diffuse1", 1)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, planetTextureMap)
+
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        asteroidTextureMap = loadTextureFromAsset163(context, "rock.png")
         asteroidShader.use()
         asteroidShader.setInt("texture_diffuse1", 0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, asteroidTextureMap)
 
-        planetDiffuseTextureMap = loadTextureFromAsset163(context, "planet_Quom1200.png")
-//        planetDiffuseTextureMap = loadTextureFromAsset163(context,"container2.png")
-//        planetDiffuseTextureMap = loadTextureFromAsset163(context,"rock.png")
 
-        planetShader.use()
-//        planetShader.setInt("texture_diffuse1", planetDiffuseTextureMap)
-        planetShader.setInt("texture_diffuse1", 0)
+        planetVBO.parse("planet")
+        planetVBO.build_buffers()
 
-        planet.parse("planet")
-        planet.build_buffers()
-
-//        asteroidShader.use()
-//        asteroidShader.setInt("texture_diffuse1", 0)
+        asteroidVBO.parse("rock")
+        asteroidVBO.build_buffers()
 
         /*
          * generate a large list of semi-random model transformation matrices
          * ------------------------------------------------------------------
          */
-        numberOfRocks = 100
-//        val radius = 150.0
-//        val offset = 25.0
 
         val radius = 10.0
         val offset = 2.0
-        val modelMatrices = mutableListOf<Matrix4>()
-        for (i in 0 until numberOfRocks) {
+        val modelMatrices = MutableList(numberOfRocks) {
             var model = Matrix4()
-            val angle = i.toDouble() / numberOfRocks.toDouble() * 360.0
+            val angle = it.toDouble() / numberOfRocks.toDouble() * 360.0
             var displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val x = sin(angle) * radius + displacement
             displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
@@ -118,30 +111,26 @@ class Renderer4103AdvancedAsteroidsInstanced(
 //            displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val z = cos(angle) * radius + displacement
             model = model.translate(Vector3(x, y, z))
+            Timber.i("translate %6.2f %6.2f %6.2f", x, y, z)
 
             // 2. scale: Scale between 0.05 and 0.25
 //            val scale = (random() % 20) / 100.0 + 0.05
-            val scale = 100.0
-            model = model.scale(Vector3(scale))
+//            val scale = 1.0
+//            model = model.scale(Vector3(scale))
 
             // 3. rotation : add random rotation around a (semi) randomly
             //    picked rotation axis vector
-            val rotAngle = random() % 360
-            model = model.rotate(Vector3(0.4, 0.6, 0.8), rotAngle)
+//            val rotAngle = random() % 360
+//            model = model.rotate(Vector3(0.4, 0.6, 0.8), rotAngle)
 
             // 4. now add to list of matrices
-            modelMatrices.add(model)
+            model
         }
 
         // configure instanced array
         // -------------------------
 
-        val nativeFloatBuffer = ByteBuffer
-                .allocateDirect(modelMatrices.size * 16 * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-        val convertedFloatArray = matrix4toFloatArray(modelMatrices)
-        nativeFloatBuffer!!.put(convertedFloatArray).position(0)
+        val nativeFloatBuffer = matrix4ArraytoFloatBuffer(modelMatrices)
 
         glGenBuffers(1, rockMatrix4buffer, 0)
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockMatrix4buffer[0])
@@ -149,17 +138,11 @@ class Renderer4103AdvancedAsteroidsInstanced(
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         checkGLerr("OSC1")
 
-//        rock.parse("rock")
-        rock.parse("planet")
-        rock.build_buffers()
-
-
-
         // now hack in the assignment of 4 VEC4 slots to match the Matrix4
         // array entries in the shader
         //   ref:   layout (location = 3) in mat4 aInstanceMatrix;
         checkGLerr("OSC1")
-//        rockVBO = rock.getVBO()
+//        rockVBO = asteroidVBO.getVBO()
 //        glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, rockMatrix4buffer[0])
         GLES30.glGenVertexArrays(1, rockVertexArray, 0)
@@ -169,8 +152,6 @@ class Renderer4103AdvancedAsteroidsInstanced(
         GLES30.glEnableVertexAttribArray(4)
         GLES30.glEnableVertexAttribArray(5)
         GLES30.glEnableVertexAttribArray(6)
-
-
 
         GLES30.glVertexAttribPointer(3, 4, GLES30.GL_FLOAT, false, 16 * 4, 0)
         GLES30.glVertexAttribPointer(4, 4, GLES30.GL_FLOAT, false, 16 * 4, 4 * 4)
@@ -200,78 +181,57 @@ class Renderer4103AdvancedAsteroidsInstanced(
                 100.0,
                 camera.zoom,
                 screenWidth * 1.0 / screenHeight * 1.0)
+        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        deltaX = 0.0f
+        deltaY = 0.0f
+
+        val view = camera.getViewMatrix()
 
         camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
         deltaX = 0.0f
         deltaY = 0.0f
-        val view = camera.getViewMatrix()
-//        asteroidShader.use()
-//        asteroidShader.setMat4("projection", toFloatArray16(projection))
-//        asteroidShader.setMat4("view", toFloatArray16(view))
+
+        /*
+         Draw asteroids
+         */
+        asteroidShader.use()
+        asteroidShader.setMat4("projection", toFloatArray16(projection))
+        asteroidShader.setMat4("view", toFloatArray16(view))
+
+        var modela = Matrix4()
+        modela = modela.translate(Vector3(-10.0, -3.0, 0.0))
+        modela = modela.scale(Vector3(1.0, 1.0, 1.0))
+        asteroidShader.setMat4("model", toFloatArray16(modela))
+
+        asteroidVBO.render()
+
+        /*
+         * draw instanced asteroids (currently doesn't function)
+         */
+//        GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
+//        GLES30.glBindVertexArray(rockVertexArray[0])
+//        GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockMatrix4buffer[0])
+//        val vertexCount = asteroidVBO.getVertexCount()
+//        GLES30.glDrawArraysInstanced(GL_TRIANGLES,
+//                0,
+//                vertexCount,
+//                numberOfRocks)
+//        GLES30.glBindVertexArray(0)
+
+        checkGLerr("ODF2")
+
+        /*
+         * draw planetVBO
+         */
 
         planetShader.use()
         planetShader.setMat4("projection", toFloatArray16(projection))
         planetShader.setMat4("view", toFloatArray16(view))
-
-        val model = Matrix4() // identity matrix
-        //model = model.translate(Vector3(0.0, -3.0, 0.0))
-        //model = model.scale(Vector3(4.0, 4.0, 4.0))
-        planetShader.setMat4("model", toFloatArray16(model))
-
-        // bind diffuse map
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-//        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, planetDiffuseTextureMap)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rockDiffuseTextureMap)
-
-        planet.render(planetShader)
-
-        checkGLerr("ODF2")
-
-        // Draw meteorites (rocks)
-//        asteroidShader.use()
-//        asteroidShader.setInt("texture_diffuse1", 0)
-        glActiveTexture(GL_TEXTURE0)
-        GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
-        GLES30.glBindVertexArray(rockVertexArray[0])
-        GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockMatrix4buffer[0])
-        // bind diffuse map
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, rockDiffuseTextureMap)
-
-        // position attribute
-//        GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
-//        GLES30.glEnableVertexAttribArray(0)
-        // texture coordinate attribute
-//        GLES30.glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
-//        GLES30.glEnableVertexAttribArray(2)
-
-//        GLES30.glEnableVertexAttribArray(3)
-//        GLES30.glEnableVertexAttribArray(4)
-//        GLES30.glEnableVertexAttribArray(5)
-//        GLES30.glEnableVertexAttribArray(6)
-//
-//        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, rockMatrix4buffer[0])
-//
-//        GLES30.glVertexAttribPointer(3, 4, GLES30.GL_FLOAT, false, 16 * 4, 0)
-//        GLES30.glVertexAttribPointer(4, 4, GLES30.GL_FLOAT, false, 16 * 4, 4 * 4)
-//        GLES30.glVertexAttribPointer(5, 4, GLES30.GL_FLOAT, false, 16 * 4, 8 * 4)
-//        GLES30.glVertexAttribPointer(6, 4, GLES30.GL_FLOAT, false, 16 * 4, 12 * 4)
-//
-//        glVertexAttribDivisor(3, 1)
-//        glVertexAttribDivisor(4, 1)
-//        glVertexAttribDivisor(5, 1)
-//        glVertexAttribDivisor(6, 1)
-
-        //GLES30.glDrawArraysInstanced(GLES30.GL_TRIANGLES, 0, rock.getVertexCount(), 1)
-
-        GLES30.glDrawArraysInstanced(GL_TRIANGLES,
-                0,
-                rock.getVertexCount(),
-                numberOfRocks)
-        GLES30.glBindVertexArray(0)
+        val modelp = Matrix4() // identity matrix
+        planetShader.setMat4("model", toFloatArray16(modelp))
+        planetVBO.render()
 
         checkGLerr("ODF3")
-
     }
 
     override fun onSurfaceChanged(glUnused: GL10?, width: Int, height: Int) {

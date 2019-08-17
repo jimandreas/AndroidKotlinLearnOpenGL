@@ -205,7 +205,7 @@ class Renderer242LightingMapsPlusCubeObject(
         model = model.translate(toVec3(cubePos))
         model = model.scale(Vector3(0.2)) // a smaller cube
         lightingShader.setMat4("model", toFloatArray16(model))
-        cubeObj.render(lightingShader)
+        cubeObj.render()
         /**
          *
          *********************************************/
