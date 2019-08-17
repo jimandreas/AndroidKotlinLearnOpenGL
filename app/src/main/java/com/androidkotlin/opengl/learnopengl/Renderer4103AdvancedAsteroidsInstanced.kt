@@ -26,6 +26,9 @@ import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
 import java.lang.Math.random
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.cos
@@ -48,7 +51,15 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
     private var rockMatrix4buffer = IntArray(1)
     private var rockVertexArray = IntArray(1)
-    private var numberOfRocks = 10
+    private lateinit var modelMatrices : MutableList<Matrix4>
+    private lateinit var nativeFloatBuffer: FloatBuffer
+    private var numberOfRocks = 1000
+
+    /*
+     * this is to trigger a one-time copy of the native buffer as a test
+     */
+    private var testOfNativeBufferDone = false
+    val floatArray = FloatArray(16 * numberOfRocks)
 
     private val camera = Camera(Vector3(0.0, 0.0, 20.0))
 
@@ -98,30 +109,28 @@ class Renderer4103AdvancedAsteroidsInstanced(
          */
 
         val radius = 10.0
-        val offset = 2.0
-        val modelMatrices = MutableList(numberOfRocks) {
+        val offset = 2.5
+        modelMatrices = MutableList(numberOfRocks) {
             var model = Matrix4()
             val angle = it.toDouble() / numberOfRocks.toDouble() * 360.0
             var displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
             val x = sin(angle) * radius + displacement
             displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
-//            displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
-            val y = displacement * 0.4 // keep height of asteroid field smaller compared to x and z
-            displacement = (random() % (2 * offset * 100).toInt()) / 100.0 - offset
-//            displacement = ((random() - 0.5) * 2 * offset * 100) / 100.0 - offset
+            val y = displacement * 0.4 + 1.75// keep height of asteroid field smaller compared to x and z
+            displacement = (random() * (2 * offset * 100).toInt()) / 100.0 - offset
             val z = cos(angle) * radius + displacement
             model = model.translate(Vector3(x, y, z))
-            Timber.i("translate %6.2f %6.2f %6.2f", x, y, z)
+            //Timber.i("translate %6.2f %6.2f %6.2f", x, y, z)
 
             // 2. scale: Scale between 0.05 and 0.25
 //            val scale = (random() % 20) / 100.0 + 0.05
-//            val scale = 1.0
-//            model = model.scale(Vector3(scale))
+            val scale = (random() * 100.0) / 1000.0 + 0.01
+            model = model.scale(Vector3(scale))
 
             // 3. rotation : add random rotation around a (semi) randomly
             //    picked rotation axis vector
-//            val rotAngle = random() % 360
-//            model = model.rotate(Vector3(0.4, 0.6, 0.8), rotAngle)
+            val rotAngle = random() * 360.0
+            model = model.rotate(Vector3(0.4, 0.6, 0.8), rotAngle)
 
             // 4. now add to list of matrices
             model
@@ -130,7 +139,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
         // configure instanced array
         // -------------------------
 
-        val nativeFloatBuffer = matrix4ArraytoFloatBuffer(modelMatrices)
+        nativeFloatBuffer = matrix4ArraytoFloatBuffer(modelMatrices)
 
         glGenBuffers(1, rockMatrix4buffer, 0)
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockMatrix4buffer[0])
@@ -199,11 +208,33 @@ class Renderer4103AdvancedAsteroidsInstanced(
         asteroidShader.setMat4("view", toFloatArray16(view))
 
         var modela = Matrix4()
-        modela = modela.translate(Vector3(-10.0, -3.0, 0.0))
-        modela = modela.scale(Vector3(1.0, 1.0, 1.0))
-        asteroidShader.setMat4("model", toFloatArray16(modela))
+//        modela = modela.translate(Vector3(-10.0, -3.0, 0.0))
+//        modela = modela.scale(Vector3(1.0, 1.0, 1.0))
+//        asteroidShader.setMat4("model", toFloatArray16(modela))
 
-        asteroidVBO.render()
+//        val iterator = modelMatrices.iterator()
+//        while (iterator.hasNext()) {
+//            modela = iterator.next()
+//            asteroidShader.setMat4("model", toFloatArray16(modela))
+//            asteroidVBO.render()
+//        }
+
+        /*
+         * attempt to pull data from NIO float buffer (check the data!)
+         */
+        if (!testOfNativeBufferDone) {
+            nativeFloatBuffer.get(floatArray, 0, numberOfRocks * 16)
+            testOfNativeBufferDone = true
+        }
+        for (i in 0 until numberOfRocks) {
+            val floatSubArray = FloatArray(16)
+            for (j in 0 until 16) {
+                floatSubArray[j] = floatArray[i*16 + j]
+            }
+            asteroidShader.setMat4("model", floatSubArray)
+            asteroidVBO.render()
+        }
+
 
         /*
          * draw instanced asteroids (currently doesn't function)
