@@ -74,7 +74,7 @@ class Renderer480AdvancedGlslUBO(
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
 
         // Enable depth testing
-        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
+        //GLES20.glEnable(GLES20.GL_DEPTH_TEST)
 
         checkGLerr("R01")
 
@@ -158,17 +158,18 @@ class Renderer480AdvancedGlslUBO(
 //                45.0,
 //                screenWidth * 1.0 / screenHeight * 1.0)
 
-        val projection = Matrix4()
-        val tempFloatArray = FloatArray(16)
-        projection.toFloatArray(tempFloatArray)
-        GLES20.glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
-        val nativeFloatBufferProjection = ByteBuffer
-                .allocateDirect(16 * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-        nativeFloatBufferProjection!!.put(tempFloatArray).position(0)
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, nativeFloatBufferProjection)
-        glBindBuffer(GL_UNIFORM_BUFFER, 0)
+//        var projection = Matrix4()
+//        projection = projection.rotate(Vector3(0.0, 1.0, 1.0), 10.0)
+//        val tempFloatArray = FloatArray(16)
+//        projection.toFloatArray(tempFloatArray)
+//        GLES20.glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
+//        val nativeFloatBufferProjection = ByteBuffer
+//                .allocateDirect(16 * 4)
+//                .order(ByteOrder.nativeOrder())
+//                .asFloatBuffer()
+//        nativeFloatBufferProjection!!.put(tempFloatArray).position(0)
+//        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, nativeFloatBufferProjection)
+//        glBindBuffer(GL_UNIFORM_BUFFER, 0)
 
 //***************** OLD
         // generate a list of 100 quad locations/translation-vectors
@@ -256,9 +257,34 @@ class Renderer480AdvancedGlslUBO(
         checkGLerr("ODF03")
         glBindVertexArray(0)
 
-        //val view = camera.getViewMatrix()
-        val view = Matrix4()
-        val tempFloatArray = FloatArray(16)
+
+        // view/projection transformations
+        var projection = Matrix4()
+        projection = projection.setToPerspective(
+                0.1,
+                100.0,
+                camera.zoom,
+                screenWidth * 1.0 / screenHeight * 1.0)
+        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        deltaX = 0.0f
+        deltaY = 0.0f
+
+        var tempFloatArray = FloatArray(16)
+        projection.toFloatArray(tempFloatArray)
+        GLES20.glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
+        val nativeFloatBufferProjection = ByteBuffer
+                .allocateDirect(16 * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+        nativeFloatBufferProjection!!.put(tempFloatArray).position(0)
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, nativeFloatBufferProjection)
+        glBindBuffer(GL_UNIFORM_BUFFER, 0)
+
+
+        var view = camera.getViewMatrix()
+        //view = Matrix4()
+        view = view.scale(0.5)
+        tempFloatArray = FloatArray(16)
         view.toFloatArray(tempFloatArray)
         GLES20.glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
         val nativeFloatBufferView = ByteBuffer

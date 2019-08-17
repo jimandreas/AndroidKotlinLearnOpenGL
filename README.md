@@ -88,3 +88,22 @@ void main()
 
 
 
+
+descriptions
+=============
+
+Renderer480AdvancedGlslUBO
+--------------------------
+
+Tutorial URL: https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL
+
+Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/8.advanced_glsl_ubo/advanced_glsl_ubo.cpp
+
+Use of simple Uniform Buffer Object  - in this case to pass in the
+projection and view matrices to the common shader.
+
+    layout (std140) uniform Matrices
+    {
+        mat4 projection;
+        mat4 view;
+    };
