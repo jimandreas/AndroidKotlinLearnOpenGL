@@ -1,62 +1,48 @@
 AndroidKotlinLearnOpenGL
 ==========================
 
-history
----------
+Building
+--------------------
+This repo is set up to build using Android Studio 3.4 or greater.   It is written
+in Kotlin.
 
-Implementing some of the excercises from:
+Emulators and devices
+----------------------
+When displaying in an emulator - enable the higher level of OpenGL ES.
 
-https://learnopengl.com/Getting-started/OpenGL
+GLESDynamicVersion = on
 
-reference:
------------------
-
-https://github.com/JoeyDeVries/LearnOpenGL
-
-Android Framework
------------------
-The Android application framework is one Activity and multiple Fragments - one for each major section
-in the learnopengl "coursework".  The framework also includes modern Android techniques - more
-can be learned about these techniques in the excellent Udacity course:
-
-https://classroom.udacity.com/courses/ud9012
-
-- Databinding
-- ViewModel with LiveData controls
-
-build requirements
-------------------
-Android Studio 3.4 or higher
+to ~/.android/advancedFeatures.ini 
 
 current status
 ---------------
-Just getting started
+Exercises are operational through Instancing.  
 
-testing
----------
+descriptions
+=============
 
-One sample Junit test added as placeholder
+The project implements the following exercises in descending complexity.  The exercises are adapted 
+for Android, OpenGL ES3+, and are implemented in Kotlin.
 
-Other references:
-------------------
+It also borrows from 
+the camera.h located at:
 
-Twitter handle for Joey de Vries
-<br>
-https://twitter.com/JoeyDeVriez
+https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
 
-dependencies:
---------------
+Renderer4103AdvancedAsteroidsInstanced
+--------------------------------------
+Tutorial URL: https://learnopengl.com/Advanced-OpenGL/Instancing
 
-glm:<br>
-https://github.com/kotlin-graphics/glm
+Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/10.3.asteroids_instanced/asteroids_instanced.cpp
 
+Uses a Matrix4 instance array and the associated hacks to set up 4 vector4 attributes to import the 
+Matrix4 into the shader.  TODO:  replace this ugly hack with a modern buffer if that works 
+in the emulator and phone.
 
-notes:
---------------
 Renderer4102InstancingHacking
-an experiement with instancing - after difficulties with the
-rendering rocks, move back to what works - the 2D colored patches.
-Curious that one renders in the center after rendering only 4 off to the side?
+-----------------------------
+No tutorial for this - this was a variation on "Renderer4101InstancingQuads" to add an OBJ based 
+rendering with an instanced based renderer and work through the shader mechanics.
 
 This works for hacking the patches based on instance:
 
@@ -68,33 +54,8 @@ This works for hacking the patches based on instance:
         gl_Position = vec4(pos + aOffset, 0.0, 1.0);
     }
 
-
-more notes:
--------------
-
-vec2 instvec = vec2(gl_InstanceID);
-    vec2 pos = aPos * instvec;
-
-
-2019-08-16 08:04:07.196 6059-6100/com.androidkotlin.opengl E/Shader: Error compiling shader (10.1.instancingHack.vs): ERROR: 0:13: '/' :  wrong operand types  no operation '/' exists that takes a left-hand operand of type 'InstanceID highp int' and a right operand of type 'const float' (or there is no acceptable conversion)
-    ERROR: 0:13: '*' :  wrong operand types  no operation '*' exists that takes a left-hand operand of type 'in mediump 2-component vector of float' and a right operand of type 'InstanceID highp int' (or there is no acceptable conversion)
-
-void main()
-{
-    fColor = aColor;
-    vec2 pos = aPos * (gl_InstanceID / 100.0);
-    gl_Position = vec4(pos + aOffset, 0.0, 1.0);
-}
-
-
-
-
-descriptions
-=============
-
 Renderer480AdvancedGlslUBO
 --------------------------
-
 Tutorial URL: https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL
 
 Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/8.advanced_glsl_ubo/advanced_glsl_ubo.cpp
@@ -111,6 +72,40 @@ projection and view matrices to the common shader.
 Notes:  code needs further cleanup as I left parts of the instancing project in the
 original for use in debugging.   This should get stripped out at some point.
 
+Renderer242LightingMapsPlusCubeObject
+---------------------------
+No tutorial for this.  It is a variation on Renderer242LightingMapsSpecular 
+and adds in an OBJ based cube to test integration of OBJ rendering into the scene.
+
+Renderer242LightingMapsSpecular
+---------------------------
+Tutorial URL: https://learnopengl.com/Lighting/Lighting-maps
+
+Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/2.lighting/4.2.lighting_maps_specular_map/lighting_maps_specular.cpp
+
+Excellent tutorial on lighting combined with textures.
+
+Renderer174Camera
+-------------------
+Tutorial URL: https://learnopengl.com/Getting-started/Camera
+
+Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
+
+Renderer163CoordinateSystems
+----------------------------
+Tutorial URL: https://learnopengl.com/Getting-started/Coordinate-Systems
+
+Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/6.3.coordinate_systems_multiple/coordinate_systems_multiple.cpp
+
+Renderer121HelloTriangle
+-------------------------
+Tutorial URL: https://learnopengl.com/Getting-started/Hello-Triangle
+
+Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/2.1.hello_triangle/hello_triangle.cpp
+
+The "hello world" basics in the learnopengl.com style.   But adapted to Android and 
+OpenGL ES and Kotlin instead of a PC and a GPU and C++.
+
 GoogleSampleRenderer
 ---------------------
 
@@ -120,3 +115,27 @@ Tutorial URL:  https://developer.android.com/training/graphics/opengl
 
 This is the basic "Hello Opengl" introduction - just the basics.   It is included for
 comparisons to code styling to the learnopengl methodology.
+
+Project notes
+=============
+
+Android Framework
+-----------------
+The Android application framework is one Activity and multiple Fragments - one for each major section
+in the learnopengl "coursework".  The framework also includes modern Android techniques - more
+can be learned about these techniques in the excellent Udacity course:
+
+https://classroom.udacity.com/courses/ud9012
+
+- Databinding
+- ViewModel with LiveData controls
+
+Imported content
+----------------
+The project does not use any supporting graphics libraries aside what is built into the 
+Android Framework.  The math support is provided by the Rajawali Math modules - these are 
+located in the:
+
+    org.rajawali.math
+    
+package and were simply converted to Kotlin.
