@@ -53,8 +53,14 @@ class Renderer4103AdvancedAsteroidsInstanced(
     private var rockVertexArray = IntArray(1)
     private lateinit var modelMatrices : MutableList<Matrix4>
     private lateinit var nativeFloatBuffer: FloatBuffer
-    private var numberOfRocks = 1000
-
+    private var numberOfRocks = 30000
+    /*
+     * android notes (sony Xperia)
+     *     50K - too big
+     *     25K - OK
+     *     37K - curious system failure
+     *     30K - OK, also fine on emulator with HW assist
+     */
     /*
      * this is to trigger a one-time copy of the native buffer as a test
      */
@@ -242,9 +248,11 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
 
         /*
-         * draw instanced asteroids
+         * 2: draw instanced asteroids
          *    Now it works!!
          *    Do NOT rebind the rockMatrix4 buffer :-) - it is bound in the rockVertexArray already.
+         *    See also:  https://stackoverflow.com/a/21652955
+         *      for a good "versioned" explanation of VertexArrays vs Buffers
          */
         GLES30.glBindVertexArray(rockVertexArray[0])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, asteroidObjVBO[0])
