@@ -15,6 +15,7 @@
 package com.androidkotlin.opengl.learnopengl
 
 import android.content.Context
+import android.opengl.GLES20
 import android.opengl.GLES20.*
 import android.opengl.GLES30
 import android.opengl.GLES30.glVertexAttribDivisor
@@ -26,8 +27,6 @@ import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber
 import java.lang.Math.random
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -48,6 +47,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
     private val asteroidVBO = ObjFile(context)
     private var planetTextureMap = 0
     private var asteroidTextureMap = 0
+    private var asteroidObjVBO = IntArray(1)
 
     private var rockMatrix4buffer = IntArray(1)
     private var rockVertexArray = IntArray(1)
@@ -102,6 +102,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
         asteroidVBO.parse("rock")
         asteroidVBO.build_buffers()
+        asteroidObjVBO = asteroidVBO.getVBO()
 
         /*
          * generate a large list of semi-random model transformation matrices
@@ -150,12 +151,12 @@ class Renderer4103AdvancedAsteroidsInstanced(
         // now hack in the assignment of 4 VEC4 slots to match the Matrix4
         // array entries in the shader
         //   ref:   layout (location = 3) in mat4 aInstanceMatrix;
-        checkGLerr("OSC1")
-//        rockVBO = asteroidVBO.getVBO()
-//        glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, rockMatrix4buffer[0])
+
         GLES30.glGenVertexArrays(1, rockVertexArray, 0)
         GLES30.glBindVertexArray(rockVertexArray[0])
+
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, asteroidObjVBO[0])
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, rockMatrix4buffer[0])
 
         GLES30.glEnableVertexAttribArray(3)
         GLES30.glEnableVertexAttribArray(4)
@@ -207,47 +208,57 @@ class Renderer4103AdvancedAsteroidsInstanced(
         asteroidShader.setMat4("projection", toFloatArray16(projection))
         asteroidShader.setMat4("view", toFloatArray16(view))
 
-        var modela = Matrix4()
-//        modela = modela.translate(Vector3(-10.0, -3.0, 0.0))
-//        modela = modela.scale(Vector3(1.0, 1.0, 1.0))
-//        asteroidShader.setMat4("model", toFloatArray16(modela))
 
+        /*
+         * 1: pull data directly from modelMatrices and pass
+         *    to the model variable in the shader
+         *    --> the "aInstanceMatrix" instance variable is removed
+         *    in the shader in this case
+         */
 //        val iterator = modelMatrices.iterator()
 //        while (iterator.hasNext()) {
-//            modela = iterator.next()
+//            val modela = iterator.next()
 //            asteroidShader.setMat4("model", toFloatArray16(modela))
 //            asteroidVBO.render()
 //        }
 
         /*
-         * attempt to pull data from NIO float buffer (check the data!)
+         * 1b: attempt to pull data from NIO float buffer (check the data!)
+         *    --> the "aInstanceMatrix" instance variable is removed
+         *    in the shader in this case too.
          */
-        if (!testOfNativeBufferDone) {
-            nativeFloatBuffer.get(floatArray, 0, numberOfRocks * 16)
-            testOfNativeBufferDone = true
-        }
-        for (i in 0 until numberOfRocks) {
-            val floatSubArray = FloatArray(16)
-            for (j in 0 until 16) {
-                floatSubArray[j] = floatArray[i*16 + j]
-            }
-            asteroidShader.setMat4("model", floatSubArray)
-            asteroidVBO.render()
-        }
+//        if (!testOfNativeBufferDone) {
+//            nativeFloatBuffer.get(floatArray, 0, numberOfRocks * 16)
+//            testOfNativeBufferDone = true
+//        }
+//        for (i in 0 until numberOfRocks) {
+//            val floatSubArray = FloatArray(16)
+//            for (j in 0 until 16) {
+//                floatSubArray[j] = floatArray[i*16 + j]
+//            }
+//            asteroidShader.setMat4("model", floatSubArray)
+//            asteroidVBO.render()
+//        }
 
 
         /*
-         * draw instanced asteroids (currently doesn't function)
+         * draw instanced asteroids
+         *    Now it works!!
+         *    Do NOT rebind the rockMatrix4 buffer :-) - it is bound in the rockVertexArray already.
          */
-//        GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockVBO[0])
-//        GLES30.glBindVertexArray(rockVertexArray[0])
-//        GLES30.glBindBuffer(GL_ARRAY_BUFFER, rockMatrix4buffer[0])
-//        val vertexCount = asteroidVBO.getVertexCount()
-//        GLES30.glDrawArraysInstanced(GL_TRIANGLES,
-//                0,
-//                vertexCount,
-//                numberOfRocks)
-//        GLES30.glBindVertexArray(0)
+        GLES30.glBindVertexArray(rockVertexArray[0])
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, asteroidObjVBO[0])
+        GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
+        GLES30.glEnableVertexAttribArray(0)
+        // texture coordinate attribute
+        GLES30.glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
+        GLES30.glEnableVertexAttribArray(2)
+//        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, rockMatrix4buffer[0])
+        val vertexCount = asteroidVBO.getVertexCount()
+        GLES30.glDrawArraysInstanced(GL_TRIANGLES,
+                0,
+                vertexCount,
+                numberOfRocks)
 
         checkGLerr("ODF2")
 
