@@ -1,5 +1,6 @@
 package com.androidkotlin.opengl.ui
 
+import android.view.View
 import android.widget.SeekBar
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -39,13 +40,20 @@ class ViewModel : ViewModel() {
     val lowResViewAdjuster: LiveData<Int>
         get() = _lowResViewAdjuster
 
+    private val _buttonClicked = MutableLiveData<String>()
+    val buttonClicked: LiveData<String>
+        get() = _buttonClicked
 
+    fun clickProcessed() {
+        _buttonClicked.value = ""
+    }
     init {
-        _wireFrameModeOn.value = false
-        _shaderToggle.value = false
-        _nextModel.value = 0
-        _renderModelFromBuffer.value = false
-        _lowResViewAdjuster.value = 5
+//        _wireFrameModeOn.value = false
+//        _shaderToggle.value = false
+//        _nextModel.value = 0
+//        _renderModelFromBuffer.value = false
+//        _lowResViewAdjuster.value = 5
+//        _buttonClicked.value = "none"
     }
 
     private fun toggleWireFrameMode() {
@@ -63,8 +71,13 @@ class ViewModel : ViewModel() {
         _nextModel.value = _nextModel.value?.plus(1)
     }
 
-    fun onClickOpenGL() {
-        Timber.i("Button click")
+    fun onClickOpenGL(view: View) {
+        Timber.i("Button click id %d", view.id)
+    }
+
+    fun onButton(str: String) {
+        Timber.i("Button click id %s", str)
+        _buttonClicked.value = str
     }
 
 //    private val _seekbarValue: MutableLiveData<Int> = MutableLiveData()

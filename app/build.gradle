@@ -20,7 +20,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'kotlinx-serialization'
-//apply plugin: "androidx.navigation.safeargs"
+apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdkVersion 28
@@ -44,6 +44,15 @@ android {
     androidExtensions {
         experimental = true
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
@@ -60,18 +69,14 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.0.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.0.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-alpha01'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-alpha01'
+
+    // Fragment in AndroidX
+    implementation "androidx.fragment:fragment-ktx:1.2.0-alpha02"
 
     // Core with Ktx
     implementation "androidx.core:core-ktx:$version_core"
-
-    // rajawali
-    implementation 'org.rajawali3d:rajawali:1.0.325'
-
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:glide:4.9.0'
 
     // Timber : https://github.com/JakeWharton/timber
     implementation 'com.jakewharton.timber:timber:4.7.1'

@@ -19,13 +19,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_root"
-    app:startDestination="@+id/titleFragment">
+    app:startDestination="@id/selectorFragment">
+
+
     <fragment
-        android:id="@+id/titleFragment"
-        android:name="com.androidkotlin.opengl.ui.OverviewFragment"
-        android:label="asdf"
-        tools:layout="@layout/fragment_getting_started">
+        android:id="@+id/selectorFragment"
+        android:name="com.androidkotlin.opengl.ui.SelectorFragment"
+        android:label="SelectorFragment">
+        <action
+            android:id="@+id/action_showExercise"
+            app:destination="@id/exerciseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@+id/selectorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseFragment"
+        android:name="com.androidkotlin.opengl.ui.ExerciseFragment"
+        android:label="ExerciseFragment" >
+        <argument
+            android:name="selectedExercise"
+            app:argType="string"
+            />
+        <action
+            android:id="@+id/action_exerciseFragment_to_selectorFragment"
+            app:destination="@id/selectorFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
-
 </navigation>

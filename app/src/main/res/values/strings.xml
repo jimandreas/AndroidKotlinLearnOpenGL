@@ -31,4 +31,17 @@
 
     <string name="nextmodel">NEXT</string>
 
+
+    <string name = "b1">GoogleSample</string>
+    <string name = "b2">HelloTriangle</string>
+    <string name = "b3">CoordinateSystems</string>
+    <string name = "b4">Camera</string>
+    <string name = "b5">LightingMaps</string>
+    <string name = "b6">LightingMaps+Cube</string>
+    <string name = "b7">AdvancedGlslUBO</string>
+    <string name = "b8">InstancingQuads</string>
+    <string name = "b9">InstancingHacking</string>
+    <string name = "b10">AsteroidsInstanced</string>
+
+
 </resources>

@@ -53,13 +53,14 @@ class Renderer4103AdvancedAsteroidsInstanced(
     private var rockVertexArray = IntArray(1)
     private lateinit var modelMatrices : MutableList<Matrix4>
     private lateinit var nativeFloatBuffer: FloatBuffer
-    private var numberOfRocks = 30000
+    private var numberOfRocks = 1000
     /*
      * android notes (sony Xperia)
      *     50K - too big
      *     25K - OK
      *     37K - curious system failure
      *     30K - OK, also fine on emulator with HW assist
+     *      1K - looks cooler
      */
     /*
      * this is to trigger a one-time copy of the native buffer as a test
