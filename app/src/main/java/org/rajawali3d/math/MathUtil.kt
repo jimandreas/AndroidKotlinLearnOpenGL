@@ -10,11 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-@file:Suppress("unused")
 package org.rajawali3d.math
-
-import kotlin.math.abs
 
 object MathUtil {
     val PRECISION = 0x020000
@@ -32,11 +28,11 @@ object MathUtil {
     private val isInitialized = initialize()
 
     fun initialize(): Boolean {
-        var rad : Double
+        var rad = 0.0
         for (i in 0 until PRECISION) {
             rad = i * RAD_SLICE
-            sinTable[i] = kotlin.math.sin(rad)
-            tanTable[i] = kotlin.math.tan(rad)
+            sinTable[i] = Math.sin(rad)
+            tanTable[i] = Math.tan(rad)
         }
         return true
     }
@@ -66,7 +62,7 @@ object MathUtil {
     }
 
     fun realEqual(a: Double, b: Double, tolerance: Double): Boolean {
-        return abs(b - a) <= tolerance
+        return Math.abs(b - a) <= tolerance
     }
 
     fun clamp(value: Double, min: Double, max: Double): Double {
@@ -81,8 +77,8 @@ object MathUtil {
         return if (value < min) min else if (value > max) max else value
     }
 
-    fun getClosestPowerOfTwo(xIn: Int): Int {
-        var x = xIn
+    fun getClosestPowerOfTwo(x: Int): Int {
+        var x = x
         --x
         x = x or (x shr 1)
         x = x or (x shr 2)

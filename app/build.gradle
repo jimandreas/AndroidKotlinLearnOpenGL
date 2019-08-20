@@ -78,6 +78,13 @@ dependencies {
     // Core with Ktx
     implementation "androidx.core:core-ktx:$version_core"
 
+    // Appcompat
+    // https://developer.android.com/jetpack/androidx/releases/appcompat
+    implementation "androidx.appcompat:appcompat:1.1.0-rc01"
+
+    // rajawali
+    implementation 'org.rajawali3d:rajawali:1.0.325'
+
     // Timber : https://github.com/JakeWharton/timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 

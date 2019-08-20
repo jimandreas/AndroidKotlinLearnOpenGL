@@ -11,7 +11,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
-import org.rajawali3d.math.Quaternion.Companion.identity
+
 
 /**
  * @author Jared Woolston (jwoolston@keywcorp.com)
@@ -416,7 +416,7 @@ class Vector3Test {
     @Test
     fun testRotateBy() {
         run {
-            val q = identity
+            val q = Quaternion()
             val v = Vector3(0.0, 0.0, 1.0)
             v.rotateBy(q)
 

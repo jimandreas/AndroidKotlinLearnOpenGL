@@ -4,7 +4,10 @@ AndroidKotlinLearnOpenGL
 Building
 --------------------
 This repo is set up to build using Android Studio 3.4 or greater.   It is written
-in Kotlin.
+in Kotlin.  It is important to build the project before looking at the code closely 
+in Android Studio.  Both the Data Binding and the Navigator frameworks generate code
+that is called directly by the project.   <b>These calls will show as undefined before the
+project is built!!<b>
 
 Emulators and devices
 ----------------------
@@ -14,11 +17,14 @@ GLESDynamicVersion = on
 
 to ~/.android/advancedFeatures.ini 
 
-current status
----------------
-Exercises are operational through Instancing.  
+For more information on this emulator configuration see the MISC.md file.
 
-descriptions
+Current Status
+---------------
+Exercises are operational through Instancing.  Basic camera manipulation is 
+included for some of the exercises but could be improved.
+
+Exercise Descriptions
 =============
 
 The project implements the following exercises in descending complexity.  The exercises are adapted 
@@ -134,8 +140,10 @@ Imported content
 ----------------
 The project does not use any supporting graphics libraries aside what is built into the 
 Android Framework.  The math support is provided by the Rajawali Math modules - these are 
-located in the:
+located in the library:
 
-    org.rajawali.math
+    implementation 'org.rajawali3d:rajawali:1.0.325'
     
-package and were simply converted to Kotlin.
+See also the Github repo:
+
+https://github.com/Rajawali/Rajawali

@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 package org.rajawali3d.math
 
 import org.rajawali3d.math.vector.Vector3
@@ -19,7 +18,7 @@ class Plane {
     /**
      * Plane normal
      */
-    var normal: Vector3 = Vector3(0.0, 0.0, 0.0)
+    var normal: Vector3? = null
         private set
     var d: Double = 0.toDouble()
         private set
@@ -49,37 +48,38 @@ class Plane {
         v1.subtractAndSet(point1, point2)
         v2.subtractAndSet(point3, point2)
         normal = v1.cross(v2)
-        normal.normalize()
+        normal!!.normalize()
 
         d = -point1.dot(normal)
     }
 
     fun setComponents(x: Double, y: Double, z: Double, w: Double) {
-        normal.setAll(x, y, z)
+        normal!!.setAll(x, y, z)
         d = w
     }
 
     fun getDistanceTo(point: Vector3): Double {
-        return d + normal.dot(point)
+        return d + normal!!.dot(point)
     }
 
     fun getPointSide(point: Vector3): PlaneSide {
-        val distance = Vector3.dot(normal, point) + d
-        return when {
-            distance == 0.0 -> PlaneSide.ONPLANE
-            distance < 0 -> PlaneSide.BACK
-            else -> PlaneSide.FRONT
-        }
+        val distance = Vector3.dot(normal!!, point) + d
+        return if (distance == 0.0)
+            PlaneSide.ONPLANE
+        else if (distance < 0)
+            PlaneSide.BACK
+        else
+            PlaneSide.FRONT
     }
 
     fun isFrontFacing(direction: Vector3): Boolean {
-        val dot = Vector3.dot(normal, direction)
+        val dot = Vector3.dot(normal!!, direction)
         return dot <= 0
     }
 
     fun normalize() {
-        val inverseNormalLength = 1.0 / normal.length()
-        normal.multiply(inverseNormalLength)
+        val inverseNormalLength = 1.0 / normal!!.length()
+        normal!!.multiply(inverseNormalLength)
         d *= inverseNormalLength
     }
 }

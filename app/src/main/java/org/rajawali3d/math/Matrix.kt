@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package org.rajawali3d.math
-
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
-import kotlin.math.tan
 
 /**
  * NOTE: This class taken from Android Open Source Project source code
@@ -77,23 +70,31 @@ object Matrix {
      * rhsOffset + 16 > rhs.length.
      */
     fun multiplyMM(result: DoubleArray, resultOffset: Int,
-                   lhs: DoubleArray, lhsOffset: Int, rhs: DoubleArray, rhsOffset: Int) {
+                   lhs: DoubleArray, lhsOffset: Int, rhs: DoubleArray?, rhsOffset: Int) {
         var message: String? = null
-        when {
-            resultOffset + 16 > result.size -> message = "Specified result offset would overflow the passed result matrix."
-            lhsOffset + 16 > lhs.size -> message = "Specified left hand side offset would overflow the passed lhs matrix."
-            rhsOffset + 16 > rhs.size -> message = "Specified right hand side offset would overflow the passed rhs matrix."
+        if (result == null) {
+            message = "Result matrix can not be null."
+        } else if (lhs == null) {
+            message = "Left hand side matrix can not be null."
+        } else if (rhs == null) {
+            message = "Right hand side matrix can not be null."
+        } else if (resultOffset + 16 > result.size) {
+            message = "Specified result offset would overflow the passed result matrix."
+        } else if (lhsOffset + 16 > lhs.size) {
+            message = "Specified left hand side offset would overflow the passed lhs matrix."
+        } else if (rhsOffset + 16 > rhs.size) {
+            message = "Specified right hand side offset would overflow the passed rhs matrix."
         }
         if (message != null) {
             throw IllegalArgumentException(message)
         }
 
-        var sum : Double
+        var sum = 0.0
         for (i in 0..3) { //Row
             for (j in 0..3) { //Column
                 sum = 0.0
                 for (k in 0..3) {
-                    sum += lhs[i + 4 * k + lhsOffset] * rhs[4 * j + k + rhsOffset]
+                    sum += lhs!![i + 4 * k + lhsOffset] * rhs!![4 * j + k + rhsOffset]
                 }
                 result[i + 4 * j + resultOffset] = sum
             }
@@ -123,22 +124,30 @@ object Matrix {
      * rhsVecOffset + 4 > rhsVec.length.
      */
     fun multiplyMV(resultVec: DoubleArray, resultVecOffset: Int,
-                   lhsMat: DoubleArray, lhsMatOffset: Int, rhsVec: DoubleArray, rhsVecOffset: Int) {
+                   lhsMat: DoubleArray, lhsMatOffset: Int, rhsVec: DoubleArray?, rhsVecOffset: Int) {
         var message: String? = null
-        when {
-            resultVecOffset + 4 > resultVec.size -> message = "Specified result offset would overflow the passed result vector."
-            lhsMatOffset + 16 > lhsMat.size -> message = "Specified left hand side offset would overflow the passed lhs matrix."
-            rhsVecOffset + 4 > rhsVec.size -> message = "Specified right hand side offset would overflow the passed rhs vector."
+        if (resultVec == null) {
+            message = "Result vector can not be null."
+        } else if (lhsMat == null) {
+            message = "Left hand side matrix can not be null."
+        } else if (rhsVec == null) {
+            message = "Right hand side vector can not be null."
+        } else if (resultVecOffset + 4 > resultVec.size) {
+            message = "Specified result offset would overflow the passed result vector."
+        } else if (lhsMatOffset + 16 > lhsMat.size) {
+            message = "Specified left hand side offset would overflow the passed lhs matrix."
+        } else if (rhsVecOffset + 4 > rhsVec.size) {
+            message = "Specified right hand side offset would overflow the passed rhs vector."
         }
         if (message != null) {
             throw IllegalArgumentException(message)
         }
 
-        var sum : Double
+        var sum = 0.0
         for (i in 0..3) { //Row
             sum = 0.0
             for (k in 0..3) {
-                sum += lhsMat[i + 4 * k + lhsMatOffset] * rhsVec[k + rhsVecOffset]
+                sum += lhsMat!![i + 4 * k + lhsMatOffset] * rhsVec!![k + rhsVecOffset]
             }
             resultVec[i + resultVecOffset] = sum
         }
@@ -402,7 +411,7 @@ object Matrix {
      */
     fun perspectiveM(m: DoubleArray, offset: Int,
                      fovy: Double, aspect: Double, zNear: Double, zFar: Double) {
-        val f = 1.0 / tan(fovy * (Math.PI / 360.0))
+        val f = 1.0 / Math.tan(fovy * (Math.PI / 360.0))
         val rangeReciprocal = 1.0 / (zNear - zFar)
 
         m[offset + 0] = f / aspect
@@ -435,7 +444,7 @@ object Matrix {
      * @return the length of a vector
      */
     fun length(x: Double, y: Double, z: Double): Double {
-        return sqrt(x * x + y * y + z * z)
+        return Math.sqrt(x * x + y * y + z * z)
     }
 
     /**
@@ -579,17 +588,17 @@ object Matrix {
      * Rotates matrix m by angle a (in degrees) around the axis (x, y, z)
      * @param rm returns the result
      * @param rmOffset index into rm where the result matrix starts
-     * @param aIn angle to rotate in degrees
-     * @param xIn scale factor x
-     * @param yIn scale factor y
-     * @param zIn scale factor z
+     * @param a angle to rotate in degrees
+     * @param x scale factor x
+     * @param y scale factor y
+     * @param z scale factor z
      */
     fun setRotateM(rm: DoubleArray, rmOffset: Int,
-                   aIn: Double, xIn: Double, yIn: Double, zIn: Double) {
-        var a = aIn
-        var x = xIn
-        var y = yIn
-        var z = zIn
+                   a: Double, x: Double, y: Double, z: Double) {
+        var a = a
+        var x = x
+        var y = y
+        var z = z
         rm[rmOffset + 3] = 0.0
         rm[rmOffset + 7] = 0.0
         rm[rmOffset + 11] = 0.0
@@ -598,8 +607,8 @@ object Matrix {
         rm[rmOffset + 14] = 0.0
         rm[rmOffset + 15] = 1.0
         a *= Math.PI / 180.0f
-        val s = sin(a)
-        val c = cos(a)
+        val s = Math.sin(a)
+        val c = Math.cos(a)
         if (1.0 == x && 0.0 == y && 0.0 == z) {
             rm[rmOffset + 5] = c
             rm[rmOffset + 10] = c
@@ -661,24 +670,24 @@ object Matrix {
      * Converts Euler angles to a rotation matrix
      * @param rm returns the result
      * @param rmOffset index into rm where the result matrix starts
-     * @param xIn angle of rotation, in degrees
-     * @param yIn angle of rotation, in degrees
-     * @param zIn angle of rotation, in degrees
+     * @param x angle of rotation, in degrees
+     * @param y angle of rotation, in degrees
+     * @param z angle of rotation, in degrees
      */
     fun setRotateEulerM(rm: DoubleArray, rmOffset: Int,
-                        xIn: Double, yIn: Double, zIn: Double) {
-        var x = xIn
-        var y = yIn
-        var z = zIn
+                        x: Double, y: Double, z: Double) {
+        var x = x
+        var y = y
+        var z = z
         x *= Math.PI / 180.0f
         y *= Math.PI / 180.0f
         z *= Math.PI / 180.0f
-        val cx = cos(x)
-        val sx = sin(x)
-        val cy = cos(y)
-        val sy = sin(y)
-        val cz = cos(z)
-        val sz = sin(z)
+        val cx = Math.cos(x)
+        val sx = Math.sin(x)
+        val cy = Math.cos(y)
+        val sy = Math.sin(y)
+        val cz = Math.cos(z)
+        val sz = Math.sin(z)
         val cxsy = cx * sy
         val sxsy = sx * sy
 
@@ -732,7 +741,7 @@ object Matrix {
         var fz = centerZ - eyeZ
 
         // Normalize f
-        val rlf = 1.0f / length(fx, fy, fz)
+        val rlf = 1.0f / Matrix.length(fx, fy, fz)
         fx *= rlf
         fy *= rlf
         fz *= rlf
@@ -743,7 +752,7 @@ object Matrix {
         var sz = fx * upY - fy * upX
 
         // and normalize s
-        val rls = 1.0f / length(sx, sy, sz)
+        val rls = 1.0f / Matrix.length(sx, sy, sz)
         sx *= rls
         sy *= rls
         sz *= rls

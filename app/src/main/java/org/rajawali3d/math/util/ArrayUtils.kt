@@ -1,4 +1,3 @@
-@file:Suppress("unused")
 package org.rajawali3d.math.util
 
 import java.nio.Buffer
@@ -89,7 +88,7 @@ object ArrayUtils {
         for (i in 0 until subArrayCount) {
             totalLength += arrays[i].size
         }
-        val result = arrays[0].copyOf(totalLength)
+        val result = Arrays.copyOf(arrays[0], totalLength)
         var offset = arrays[0].size
         for (i in 1 until subArrayCount) {
             System.arraycopy(arrays[i], 0, result, offset, arrays[i].size)
@@ -112,7 +111,7 @@ object ArrayUtils {
         for (i in 0 until subArrayCount) {
             totalLength += arrays[i].size
         }
-        val result = arrays[0].copyOf(totalLength)
+        val result = Arrays.copyOf(arrays[0], totalLength)
         var offset = arrays[0].size
         for (i in 1 until subArrayCount) {
             System.arraycopy(arrays[i], 0, result, offset, arrays[i].size)
@@ -135,7 +134,7 @@ object ArrayUtils {
         for (i in 0 until subArrayCount) {
             totalLength += arrays[i].size
         }
-        val result = arrays[0].copyOf(totalLength)
+        val result = Arrays.copyOf(arrays[0], totalLength)
         var offset = arrays[0].size
         for (i in 1 until subArrayCount) {
             System.arraycopy(arrays[i], 0, result, offset, arrays[i].size)
@@ -151,7 +150,7 @@ object ArrayUtils {
      * @return double array containing the data of the buffer.
      */
     fun getDoubleArrayFromBuffer(buffer: DoubleBuffer): DoubleArray? {
-        val array: DoubleArray?
+        var array: DoubleArray? = null
         if (buffer.hasArray()) {
             array = buffer.array()
         } else {
@@ -169,7 +168,7 @@ object ArrayUtils {
      * @return float array containing the data of the buffer.
      */
     fun getFloatArrayFromBuffer(buffer: FloatBuffer): FloatArray? {
-        val array: FloatArray?
+        var array: FloatArray? = null
         if (buffer.hasArray()) {
             array = buffer.array()
         } else {
@@ -188,7 +187,7 @@ object ArrayUtils {
      * @return int array containing the data of the buffer.
      */
     fun getIntArrayFromBuffer(buffer: Buffer): IntArray {
-        val array: IntArray?
+        var array: IntArray? = null
         if (buffer.hasArray()) {
             array = buffer.array() as IntArray
         } else {
