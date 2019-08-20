@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.*
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -51,7 +52,9 @@ class ExerciseFragment : Fragment() {
             sab.title = whichExercise
             sab.setDisplayHomeAsUpEnabled(true)
             sab.setDisplayShowHomeEnabled(true)
+            //sab.setHomeButtonEnabled(true)  // this is currently ignored!!
         }
+
 
         //   Ooops this is the system back button!
         //   I need the home button
@@ -59,8 +62,6 @@ class ExerciseFragment : Fragment() {
 //        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
 //            Timber.e("WOW back pressed!!")
 //        }
-
-
 
         when (whichExercise) {
             "GoogleSample" -> setupRenderer(GoogleSampleRenderer(this.context!!, viewModel), Affordances.SPIN)
@@ -83,6 +84,13 @@ class ExerciseFragment : Fragment() {
         glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
 
         return binding.root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            Timber.e("Exercise:  back button seen!!")
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupRenderer(rendererIn: RendererBaseClass, mouseAffordance: Affordances) {

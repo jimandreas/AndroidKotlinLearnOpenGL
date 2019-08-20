@@ -1,4 +1,3 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 package org.rajawali3d.math
 
 import org.rajawali3d.math.vector.Vector3
