@@ -22,7 +22,8 @@ For more information on this emulator configuration see the MISC.md file.
 Current Status
 ---------------
 Exercises are operational through Instancing.  Basic camera manipulation is 
-included for some of the exercises but could be improved.
+included and is implemented only for movement in the x and z direction.
+The camera movement leverages the Quaternion implementation of Rajawali.
 
 Exercise Descriptions
 =============
@@ -33,7 +34,7 @@ for Android, OpenGL ES3+, and are implemented in Kotlin.
 It also borrows from 
 the camera.h located at:
 
-https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
+https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 
 Renderer4103AdvancedAsteroidsInstanced
 --------------------------------------
@@ -139,10 +140,8 @@ https://classroom.udacity.com/courses/ud9012
 Imported content
 ----------------
 The project does not use any supporting graphics libraries aside what is built into the 
-Android Framework.  The math support is provided by the Rajawali Math modules - these are 
-located in the library:
-
-    implementation 'org.rajawali3d:rajawali:1.0.325'
+Android Framework.  The math support is provided by the Rajawali Math modules. 
+The modules are converted to kotlin and are located in the java/org/rejawali3d subtree.
     
 See also the Github repo:
 

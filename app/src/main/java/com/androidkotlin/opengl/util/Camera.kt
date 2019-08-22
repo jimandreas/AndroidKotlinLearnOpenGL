@@ -23,47 +23,63 @@
         "LocalVariableName",
         "PropertyName")
 
-package com.androidkotlin.opengl.util
+package com.androidkotlin.bigfile.util
 
+import org.rajawali3d.math.Matrix
 import org.rajawali3d.math.Matrix4
+import org.rajawali3d.math.Quaternion
+import org.rajawali3d.math.WorldParameters
 import org.rajawali3d.math.vector.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
-import kotlin.reflect.jvm.internal.impl.incremental.components.Position
 
 // adaptation of camera code here:
 // https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 
 /*
- *  basically a straight translation of "camera.h" into kotlin
+ *  basically a straight translation of the learnopengl "camera.h" into kotlin
  */
+
 class Camera {
 
-    var position: Vector3 = Vector3(0.0, 0.0, 0.0)
-    var front: Vector3 = Vector3(0.0, 0.0, 0.0)
-    var up: Vector3 = Vector3(0.0, 0.0, 0.0)
-    var right: Vector3 = Vector3(0.0, 0.0, 0.0)
-    var worldUp: Vector3 = Vector3(0.0, 0.0, 0.0)
+    /* public */ var position: Vector3 = Vector3(0.0, 0.0, 0.0)
+    private var front: Vector3 = Vector3(0.0, 0.0, 0.0)
+    private var up: Vector3 = Vector3(0.0, 0.0, 0.0)
+    private var right: Vector3 = Vector3(0.0, 0.0, 0.0)
+    private var worldUp: Vector3 = Vector3(0.0, 0.0, 0.0)
 
     // Euler Angles
-    var yaw = YAW
-    var pitch = PITCH
+    private var yaw = YAW
+    private var pitch = PITCH
 
     // camera options
-    var movementSpeed = SPEED
-    var mouseSensitivity = SENSITIVITY
-    var zoom = ZOOM
+    private var movementSpeed = SPEED
+    private var mouseSensitivity = SENSITIVITY
+    /* public */ var zoom = ZOOM
 
+    private var tmpOrientation = Quaternion()
+    private var orientation = Quaternion()
+    private var localOrientation = Quaternion()
+    private var cameraViewMatrix = Matrix4()
+    private var scratchMatrix = Matrix4()
+    private var tempVec = Vector3()
 
     fun getViewMatrix(): Matrix4 {
         val m = Matrix4()
-        val viewMatrix = m.setToLookAt(
+        cameraViewMatrix = m.setToLookAt(
                 position,
                 front,
                 up
         )
-        return viewMatrix
+        val quatViewMatrix = getViewMatrixQuaterionBased()
+
+        val eulerViewMatrix = Matrix4()
+        Matrix.setLookAtM(eulerViewMatrix.doubleValues, 0, position.x, position.y, position.z,
+                front.x, front.y, front.z, up.x, up.y, up.z)
+
+        //return eulerViewMatrix
+        return quatViewMatrix
     }
 
     constructor(positionIn: Vector3) {
@@ -209,5 +225,97 @@ class Camera {
             return p1
         }*/
 
+        /**
+         * Copyright 2013 Dennis Ippel
+         *
+         * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+         * the License. You may obtain a copy of the License at
+         *
+         * http://www.apache.org/licenses/LICENSE-2.0
+         *
+         * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+         * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+         * specific language governing permissions and limitations under the License.
+         */
+
     }
+
+    // from :
+    //  Rajawali\rajawali\src\main\java\org\rajawali3d\cameras\Camera.java
+    //     modificatoins : conversion to Kotlin
+    //  Quaternion based camera setup
+    private fun getViewMatrixQuaterionBased(): Matrix4 {
+        // Create an inverted orientation. This is because the view matrix is the
+        // inverse operation of a model matrix
+        tmpOrientation.setAll(orientation)
+        tmpOrientation.inverse()
+
+        // Create the view matrix
+        val matrix = cameraViewMatrix.doubleValues
+        // Precompute these factors for speed
+        val x2 = tmpOrientation.x * tmpOrientation.x
+        val y2 = tmpOrientation.y * tmpOrientation.y
+        val z2 = tmpOrientation.z * tmpOrientation.z
+        val xy = tmpOrientation.x * tmpOrientation.y
+        val xz = tmpOrientation.x * tmpOrientation.z
+        val yz = tmpOrientation.y * tmpOrientation.z
+        val wx = tmpOrientation.w * tmpOrientation.x
+        val wy = tmpOrientation.w * tmpOrientation.y
+        val wz = tmpOrientation.w * tmpOrientation.z
+
+        matrix[Matrix4.M00] = 1.0 - 2.0 * (y2 + z2)
+        matrix[Matrix4.M10] = 2.0 * (xy - wz)
+        matrix[Matrix4.M20] = 2.0 * (xz + wy)
+        matrix[Matrix4.M30] = 0.0
+
+        matrix[Matrix4.M01] = 2.0 * (xy + wz)
+        matrix[Matrix4.M11] = 1.0 - 2.0 * (x2 + z2)
+        matrix[Matrix4.M21] = 2.0 * (yz - wx)
+        matrix[Matrix4.M31] = 0.0
+
+        matrix[Matrix4.M02] = 2.0 * (xz - wy)
+        matrix[Matrix4.M12] = 2.0 * (yz + wx)
+        matrix[Matrix4.M22] = 1.0 - 2.0 * (x2 + y2)
+        matrix[Matrix4.M32] = 0.0
+
+        matrix[Matrix4.M03] = (-position.x * matrix[Matrix4.M00]
+                + -position.y * matrix[Matrix4.M01] + -position.z * matrix[Matrix4.M02])
+        matrix[Matrix4.M13] = (-position.x * matrix[Matrix4.M10]
+                + -position.y * matrix[Matrix4.M11] + -position.z * matrix[Matrix4.M12])
+        matrix[Matrix4.M23] = (-position.x * matrix[Matrix4.M20]
+                + -position.y * matrix[Matrix4.M21] + -position.z * matrix[Matrix4.M22])
+        matrix[Matrix4.M33] = 1.0
+
+        tmpOrientation.setAll(localOrientation).inverse()
+        cameraViewMatrix.leftMultiply(tmpOrientation.toRotationMatrix(scratchMatrix))
+        return cameraViewMatrix
+
+    }
+
+    /**
+     * Utility method to move the specified number of units along the current right axis. This will
+     * also adjust the look at target (if a valid one is currently set).
+     *
+     * (NOTE: lookat renamed to "front" to match the learnopengl naming
+     *
+     * @param units `double` Number of units to move. If negative, movement will be in the "left" direction.
+     */
+    fun moveRight(units: Double) {
+        tempVec.setAll(WorldParameters.RIGHT_AXIS)
+        tempVec.rotateBy(orientation).normalize()
+        tempVec.multiply(units)
+        position.add(tempVec)
+        front.add(tempVec)
+
+    }
+
+    fun moveForward(units: Double) {
+        tempVec.setAll(WorldParameters.FORWARD_AXIS)
+        tempVec.rotateBy(orientation).normalize()
+        tempVec.multiply(units)
+        position.add(tempVec)
+        front.add(tempVec)
+
+    }
+
 }
