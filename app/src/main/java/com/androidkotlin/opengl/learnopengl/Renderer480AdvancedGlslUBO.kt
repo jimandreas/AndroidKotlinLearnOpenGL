@@ -20,9 +20,10 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
+import com.androidkotlin.bigfile.util.Camera
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
-import com.androidkotlin.opengl.util.Camera
+
 import com.androidkotlin.opengl.util.Shader
 import com.androidkotlin.opengl.util.checkGLerr
 import com.androidkotlin.opengl.util.m4toFloatBuffer
@@ -266,9 +267,13 @@ class Renderer480AdvancedGlslUBO(
                 100.0,
                 camera.zoom,
                 screenWidth * 1.0 / screenHeight * 1.0)
-        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+
+        //        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        camera.moveRight(deltaX.toDouble())
+        camera.moveForward(deltaY.toDouble())
         deltaX = 0.0f
         deltaY = 0.0f
+
 
         val view = camera.getViewMatrix()
         // stuff the projection and view M4s into the

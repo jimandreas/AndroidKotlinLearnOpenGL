@@ -20,10 +20,11 @@ import android.opengl.GLES30
 import android.opengl.GLES30.glBindVertexArray
 import android.opengl.GLES30.glGenVertexArrays
 import android.opengl.GLSurfaceView
-
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
-import com.androidkotlin.opengl.util.*
+import com.androidkotlin.opengl.util.Shader
+import com.androidkotlin.opengl.util.checkGLerr
+import com.androidkotlin.opengl.util.loadTextureFromAsset163
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import timber.log.Timber

@@ -20,6 +20,7 @@ import android.opengl.GLES30
 import android.opengl.GLES30.glBindVertexArray
 import android.opengl.GLES30.glGenVertexArrays
 import android.opengl.GLSurfaceView
+import com.androidkotlin.bigfile.util.Camera
 
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
@@ -192,7 +193,9 @@ class Renderer174Camera(
                 screenWidth.toDouble() / screenHeight.toDouble())
         shaderObject.setMat4("projection", projectionM4.floatValues)
 
-        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+//        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
+        camera.moveRight(deltaX.toDouble())
+        camera.moveForward(deltaY.toDouble())
         deltaX = 0.0f
         deltaY = 0.0f
         val viewM4 = camera.getViewMatrix()
