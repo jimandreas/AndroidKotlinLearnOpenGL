@@ -155,37 +155,11 @@ class Renderer4101InstancingQuads(
 
         lastX = screenWidth / 2.0f
         lastY = screenHeight / 2.0f
-
-        // Create a new perspective projection matrix. The height will stay the same
-        // while the width will vary as per aspect ratio.
-        val ratio = width.toFloat() / height
-        val left = -ratio * scaleCurrentF
-        val right = ratio * scaleCurrentF
-        val bottom = -1.0f * scaleCurrentF
-        val top = 1.0f * scaleCurrentF
-        val near = 1.0f
-        val far = 20.0f
     }
 
     companion object {
-
-
-        private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
-
         private var screenWidth = 0
         private var screenHeight = 0
-
-        /*
-    * Store the accumulated touch based manipulation
-    */
-        private val accumulatedRotation = FloatArray(16)
-        private val accumulatedTranslation = FloatArray(16)
-        private val accumulatedScaling = FloatArray(16)
-
-        /*
-     * Store the current rotation.
-     */
-        private val incrementalRotation = FloatArray(16)
 
         private var lastX = 0f
         private var lastY = 0f

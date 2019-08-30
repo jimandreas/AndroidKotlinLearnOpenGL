@@ -156,7 +156,9 @@ class Camera {
         return T
     }
 
-    fun setRotation(x: Double, y: Double) {
+    fun setRotation(xIn: Float, yIn: Float) {
+        val x = xIn.toDouble()
+        val y = yIn.toDouble()
         val scale = 50.0
         val sx = x / scale
         val sy = y / scale
@@ -300,7 +302,8 @@ class Camera {
      *
      * @param units `double` Number of units to move. If negative, movement will be in the "left" direction.
      */
-    fun moveRight(units: Double) {
+    fun moveRight(unitsIn: Float) {
+        val units = unitsIn.toDouble()
         tempVec.setAll(WorldParameters.RIGHT_AXIS)
         tempVec.rotateBy(orientation).normalize()
         tempVec.multiply(units)
@@ -309,13 +312,26 @@ class Camera {
 
     }
 
-    fun moveForward(units: Double) {
+    fun moveForward(unitsIn: Float) {
+        val units = unitsIn.toDouble()
         tempVec.setAll(WorldParameters.FORWARD_AXIS)
         tempVec.rotateBy(orientation).normalize()
         tempVec.multiply(units)
         position.add(tempVec)
         front.add(tempVec)
 
+    }
+
+    fun zoomInOut(deltaZoomIn: Float) : Double {
+        val delta = deltaZoomIn.toDouble()
+        if (zoom + delta > 45.0) {
+            return zoom
+        }
+        if (zoom + delta < 9.0) {
+            return zoom
+        }
+        zoom += delta
+        return zoom
     }
 
 }

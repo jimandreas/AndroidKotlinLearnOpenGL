@@ -3,11 +3,11 @@ AndroidKotlinLearnOpenGL
 
 Building
 --------------------
-This repo is set up to build using Android Studio 3.4 or greater.   It is written
+This repo is set up to build using Android Studio 3.5 or greater.   It is written
 in Kotlin.  It is important to build the project before looking at the code closely 
 in Android Studio.  Both the Data Binding and the Navigator frameworks generate code
 that is called directly by the project.   <b>These calls will show as undefined before the
-project is built!!<b>
+project is built!!</b>
 
 Emulators and devices
 ----------------------
@@ -24,6 +24,14 @@ Current Status
 Exercises are operational through Instancing.  Basic camera manipulation is 
 included and is implemented only for movement in the x and z direction.
 The camera movement leverages the Quaternion implementation of Rajawali.
+
+Architecture diagram
+--------------------
+<img src="Screenshots/OpenGLwithLiveDataArchitecture.png" width = 582>
+
+Sample Screenshot
+-----------------
+<img src="Screenshots/CameraExercise.png" width = 385>
 
 Exercise Descriptions
 =============

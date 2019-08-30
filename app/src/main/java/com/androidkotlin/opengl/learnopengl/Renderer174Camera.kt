@@ -184,21 +184,21 @@ class Renderer174Camera(
         checkGLerr("ODF2")
 
         var projectionM4 = Matrix4()
-
-        val zoom = camera.zoom
+        val zoom = camera.zoomInOut(deltaZoom)
         projectionM4 = projectionM4.setToPerspective(
                 0.1,
                 100.0,
                 zoom,  //45.0,
                 screenWidth.toDouble() / screenHeight.toDouble())
-        shaderObject.setMat4("projection", projectionM4.floatValues)
-
-//        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
-        camera.moveRight(deltaX.toDouble())
-        camera.moveForward(deltaY.toDouble())
+        camera.setRotation(deltaX, deltaY)
+        camera.moveRight(deltaX)
+        camera.moveForward(deltaY)
         deltaX = 0.0f
         deltaY = 0.0f
+        deltaZoom = 0.0f
+
         val viewM4 = camera.getViewMatrix()
+        shaderObject.setMat4("projection", projectionM4.floatValues)
         shaderObject.setMat4("view", viewM4.floatValues)
 
         glBindVertexArray(vao[0])
@@ -227,58 +227,11 @@ class Renderer174Camera(
 
         lastX = screenWidth / 2.0f
         lastY = screenHeight / 2.0f
-
-        // Create a new perspective projection matrix. The height will stay the same
-        // while the width will vary as per aspect ratio.
-        val ratio = width.toFloat() / height
-        val left = -ratio * scaleCurrentF
-        val right = ratio * scaleCurrentF
-        val bottom = -1.0f * scaleCurrentF
-        val top = 1.0f * scaleCurrentF
-        val near = 1.0f
-        val far = 20.0f
     }
 
     companion object {
-        private val vertexShaderSource = """
-            #version 300 es
-            precision mediump float;
-            layout (location = 0) in vec3 aPos;
-            void main()
-            {
-                gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-            }
-        """.trimIndent()
-
-        private val fragmentShaderSource = """
-            #version 300 es
-            precision mediump float;
-            out vec4 FragColor;
-            void main()
-            {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-            }
-        """.trimIndent()
-
-
-
-        private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
-
         private var screenWidth = 0
         private var screenHeight = 0
-
-        /*
-        * Store the accumulated touch based manipulation
-        */
-        private val accumulatedRotation = FloatArray(16)
-        private val accumulatedTranslation = FloatArray(16)
-        private val accumulatedScaling = FloatArray(16)
-
-        /*
-         * Store the current rotation.
-         */
-        private val incrementalRotation = FloatArray(16)
-
     }
 
     private var lastX = 0f

@@ -261,25 +261,26 @@ class Renderer480AdvancedGlslUBO(
 
 
         // view/projection transformations
-        var projection = Matrix4()
-        projection = projection.setToPerspective(
+        var projectionM4 = Matrix4()
+        val zoom = camera.zoomInOut(deltaZoom)
+        projectionM4 = projectionM4.setToPerspective(
                 0.1,
                 100.0,
-                camera.zoom,
-                screenWidth * 1.0 / screenHeight * 1.0)
-
-        //        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
-        camera.moveRight(deltaX.toDouble())
-        camera.moveForward(deltaY.toDouble())
+                zoom,  //45.0,
+                screenWidth.toDouble() / screenHeight.toDouble())
+        camera.setRotation(deltaX, deltaY)
+        camera.moveRight(deltaX)
+        camera.moveForward(deltaY)
         deltaX = 0.0f
         deltaY = 0.0f
+        deltaZoom = 0.0f
 
 
         val view = camera.getViewMatrix()
         // stuff the projection and view M4s into the
         //  two halves of the UBO in the vertex shader
         // (the shader that is shared by all four cubes)
-        val pbuf = m4toFloatBuffer(projection)
+        val pbuf = m4toFloatBuffer(projectionM4)
         val vbuf = m4toFloatBuffer(view)
         glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices[0])
         glBufferSubData(GL_UNIFORM_BUFFER, 0, 16 * 4, pbuf)
@@ -288,7 +289,7 @@ class Renderer480AdvancedGlslUBO(
 
         // draw 4 cubes
         // RED
-        glBindVertexArray(cubeVAO[0]);
+        glBindVertexArray(cubeVAO[0])
         shaderRed.use()
         var model = Matrix4()
         model = model.translate(Vector3(-0.75, 0.75, 0.0)) // move top-left
@@ -323,38 +324,11 @@ class Renderer480AdvancedGlslUBO(
 
         lastX = screenWidth / 2.0f
         lastY = screenHeight / 2.0f
-
-        // Create a new perspective projection matrix. The height will stay the same
-        // while the width will vary as per aspect ratio.
-        val ratio = width.toFloat() / height
-        val left = -ratio * scaleCurrentF
-        val right = ratio * scaleCurrentF
-        val bottom = -1.0f * scaleCurrentF
-        val top = 1.0f * scaleCurrentF
-        val near = 1.0f
-        val far = 20.0f
     }
 
     companion object {
-
-
-        private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
-
         private var screenWidth = 0
         private var screenHeight = 0
-
-        /*
-    * Store the accumulated touch based manipulation
-    */
-        private val accumulatedRotation = FloatArray(16)
-        private val accumulatedTranslation = FloatArray(16)
-        private val accumulatedScaling = FloatArray(16)
-
-        /*
-     * Store the current rotation.
-     */
-        private val incrementalRotation = FloatArray(16)
-
         private var lastX = 0f
         private var lastY = 0f
 
