@@ -15,7 +15,6 @@
 package com.androidkotlin.opengl.learnopengl
 
 import android.content.Context
-import android.opengl.GLES20
 import android.opengl.GLES20.*
 import android.opengl.GLES30
 import android.opengl.GLES30.glVertexAttribDivisor
@@ -52,7 +51,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
     private var rockMatrix4buffer = IntArray(1)
     private var rockVertexArray = IntArray(1)
-    private lateinit var modelMatrices : MutableList<Matrix4>
+    private lateinit var modelMatrices: MutableList<Matrix4>
     private lateinit var nativeFloatBuffer: FloatBuffer
     private var numberOfRocks = 1000
     /*
@@ -63,12 +62,6 @@ class Renderer4103AdvancedAsteroidsInstanced(
      *     30K - OK, also fine on emulator with HW assist
      *      1K - looks cooler
      */
-    /*
-     * this is to trigger a one-time copy of the native buffer as a test
-     */
-    private var testOfNativeBufferDone = false
-    val floatArray = FloatArray(16 * numberOfRocks)
-
     private val camera = Camera(Vector3(0.0, 0.0, 20.0))
 
     override fun onSurfaceCreated(glUnused: GL10, config: EGLConfig) {
@@ -193,18 +186,19 @@ class Renderer4103AdvancedAsteroidsInstanced(
         checkGLerr("ODF1")
 
         // view/projection transformations
-        var projection = Matrix4()
-        projection = projection.setToPerspective(
+        var projectionM4 = Matrix4()
+        val zoom = camera.zoomInOut(deltaZoom)
+        projectionM4 = projectionM4.setToPerspective(
                 0.1,
                 100.0,
-                camera.zoom,
-                screenWidth * 1.0 / screenHeight * 1.0)
-
-        //        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
-        camera.moveRight(deltaX.toDouble())
-        camera.moveForward(deltaY.toDouble())
+                zoom,  //45.0,
+                screenWidth.toDouble() / screenHeight.toDouble())
+        camera.setRotation(deltaX, deltaY)
+        camera.moveRight(deltaX)
+        camera.moveForward(deltaY)
         deltaX = 0.0f
         deltaY = 0.0f
+        deltaZoom = 0.0f
 
         val view = camera.getViewMatrix()
 
@@ -212,7 +206,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
          Draw asteroids
          */
         asteroidShader.use()
-        asteroidShader.setMat4("projection", toFloatArray16(projection))
+        asteroidShader.setMat4("projection", toFloatArray16(projectionM4))
         asteroidShader.setMat4("view", toFloatArray16(view))
 
 
@@ -257,10 +251,10 @@ class Renderer4103AdvancedAsteroidsInstanced(
          */
         GLES30.glBindVertexArray(rockVertexArray[0])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, asteroidObjVBO[0])
-        GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
+        GLES30.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0)
         GLES30.glEnableVertexAttribArray(0)
         // texture coordinate attribute
-        GLES30.glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
+        GLES30.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4)
         GLES30.glEnableVertexAttribArray(2)
 //        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, rockMatrix4buffer[0])
         val vertexCount = asteroidVBO.getVertexCount()
@@ -276,7 +270,7 @@ class Renderer4103AdvancedAsteroidsInstanced(
          */
 
         planetShader.use()
-        planetShader.setMat4("projection", toFloatArray16(projection))
+        planetShader.setMat4("projection", toFloatArray16(projectionM4))
         planetShader.setMat4("view", toFloatArray16(view))
         val modelp = Matrix4() // identity matrix
         planetShader.setMat4("model", toFloatArray16(modelp))
@@ -294,59 +288,12 @@ class Renderer4103AdvancedAsteroidsInstanced(
 
         lastX = screenWidth / 2.0f
         lastY = screenHeight / 2.0f
-
-        // Create a new perspective projection matrix. The height will stay the same
-        // while the width will vary as per aspect ratio.
-        val ratio = width.toFloat() / height
-        val left = -ratio * scaleCurrentF
-        val right = ratio * scaleCurrentF
-        val bottom = -1.0f * scaleCurrentF
-        val top = 1.0f * scaleCurrentF
-        val near = 1.0f
-        val far = 20.0f
     }
 
     companion object {
-        private val vertexShaderSource = """
-            #version 300 es
-            precision mediump float;
-            layout (location = 0) in vec3 aPos;
-            void main()
-            {
-                gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-            }
-        """.trimIndent()
-
-        private val fragmentShaderSource = """
-            #version 300 es
-            precision mediump float;
-            out vec4 FragColor;
-            void main()
-            {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-            }
-        """.trimIndent()
-
-
-        private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
-
         private var screenWidth = 0
         private var screenHeight = 0
-
-        /*
-        * Store the accumulated touch based manipulation
-        */
-        private val accumulatedRotation = FloatArray(16)
-        private val accumulatedTranslation = FloatArray(16)
-        private val accumulatedScaling = FloatArray(16)
-
-        /*
-         * Store the current rotation.
-         */
-        private val incrementalRotation = FloatArray(16)
-
     }
-
     private var lastX = 0f
     private var lastY = 0f
 }

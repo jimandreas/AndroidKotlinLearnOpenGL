@@ -157,20 +157,22 @@ class Renderer242LightingMapsPlusCubeObject(
         lightingShader.setFloat("material.shininess", 64.0f)
 
         // view/projection transformations
-        var projection = Matrix4()
-        projection = projection.setToPerspective(
+        var projectionM4 = Matrix4()
+        val zoom = camera.zoomInOut(deltaZoom)
+        projectionM4 = projectionM4.setToPerspective(
                 0.1,
                 100.0,
-                camera.zoom,
-                screenWidth * 1.0 / screenHeight * 1.0)
-
-        //        camera.setRotation(deltaX.toDouble(), deltaY.toDouble())
-        camera.moveRight(deltaX.toDouble())
-        camera.moveForward(deltaY.toDouble())
+                zoom,  //45.0,
+                screenWidth.toDouble() / screenHeight.toDouble())
+        camera.setRotation(deltaX, deltaY)
+        camera.moveRight(deltaX)
+        camera.moveForward(deltaY)
         deltaX = 0.0f
         deltaY = 0.0f
+        deltaZoom = 0.0f
+
         val view = camera.getViewMatrix()
-        lightingShader.setMat4("projection", toFloatArray16(projection))
+        lightingShader.setMat4("projection", toFloatArray16(projectionM4))
         lightingShader.setMat4("view", toFloatArray16(view))
 
         var model = Matrix4() // identity matrix
@@ -214,7 +216,7 @@ class Renderer242LightingMapsPlusCubeObject(
         // also draw the lamp object
         lampShader.use()
 
-        lampShader.setMat4("projection", toFloatArray16(projection))
+        lampShader.setMat4("projection", toFloatArray16(projectionM4))
         lampShader.setMat4("view", toFloatArray16(view))
         model = Matrix4() // identity matrix
         model = model.translate(toVec3(lightPos))
@@ -236,16 +238,6 @@ class Renderer242LightingMapsPlusCubeObject(
 
         lastX = screenWidth / 2.0f
         lastY = screenHeight / 2.0f
-
-        // Create a new perspective projection matrix. The height will stay the same
-        // while the width will vary as per aspect ratio.
-        val ratio = width.toFloat() / height
-        val left = -ratio * scaleCurrentF
-        val right = ratio * scaleCurrentF
-        val bottom = -1.0f * scaleCurrentF
-        val top = 1.0f * scaleCurrentF
-        val near = 1.0f
-        val far = 20.0f
     }
 
     companion object {
@@ -293,24 +285,8 @@ class Renderer242LightingMapsPlusCubeObject(
                 -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
                 -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f)
     }
-
-    private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
-
     private var screenWidth = 0
     private var screenHeight = 0
-
-    /*
-    * Store the accumulated touch based manipulation
-    */
-    private val accumulatedRotation = FloatArray(16)
-    private val accumulatedTranslation = FloatArray(16)
-    private val accumulatedScaling = FloatArray(16)
-
-    /*
-     * Store the current rotation.
-     */
-    private val incrementalRotation = FloatArray(16)
-
     private var lastX = 0f
     private var lastY = 0f
 

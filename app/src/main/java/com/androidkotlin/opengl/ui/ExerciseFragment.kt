@@ -106,8 +106,6 @@ class ExerciseFragment : Fragment() {
          * use of SpannableStringBuilder
          * https://stackoverflow.com/a/50053818
          */
-
-        // example
 //        val s = SpannableStringBuilder()
 //                .append("First Part Not Bold ")
 //                .bold { append("BOLD") }
