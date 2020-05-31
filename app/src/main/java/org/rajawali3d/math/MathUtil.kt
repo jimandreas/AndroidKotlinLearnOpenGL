@@ -17,8 +17,8 @@ package org.rajawali3d.math
 import kotlin.math.abs
 
 object MathUtil {
-    val PRECISION = 0x020000
-    val PI = Math.PI
+    const val PRECISION = 0x020000
+    const val PI = Math.PI
     val TWO_PI = PI * 2
     val HALF_PI = PI * .5
     val PRE_PI_DIV_180 = PI / 180

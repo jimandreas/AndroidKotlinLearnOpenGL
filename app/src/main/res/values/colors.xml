@@ -22,8 +22,4 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorRedInt">#00000001</color>
-    <color name="colorGreenInt">#00000002</color>
-    <color name="colorBlueInt">#00000003</color>
-
 </resources>

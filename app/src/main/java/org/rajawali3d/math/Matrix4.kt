@@ -21,7 +21,6 @@ import org.rajawali3d.math.util.ArrayUtils
 import org.rajawali3d.math.vector.Vector3
 import org.rajawali3d.math.vector.Vector3.Axis
 
-import java.util.Arrays
 import kotlin.math.sqrt
 
 /**
@@ -1204,19 +1203,19 @@ class Matrix4 : Cloneable {
         // @formatter:on
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (o == null || javaClass != o.javaClass) {
+        if (other == null || javaClass != other.javaClass) {
             return false
         }
-        val matrix4 = o as Matrix4?
-        return Arrays.equals(doubleValues, matrix4!!.doubleValues)
+        val matrix4 = other as Matrix4?
+        return doubleValues.contentEquals(matrix4!!.doubleValues)
     }
 
     override fun hashCode(): Int {
-        return Arrays.hashCode(doubleValues)
+        return doubleValues.contentHashCode()
     }
 
     @NonNull

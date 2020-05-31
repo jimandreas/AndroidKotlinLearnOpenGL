@@ -17,10 +17,6 @@ class Vector2 {
     var x: Double = 0.toDouble()
     var y: Double = 0.toDouble()
 
-    constructor() {
-
-    }
-
     constructor(x: Double, y: Double) {
         this.x = x
         this.y = y

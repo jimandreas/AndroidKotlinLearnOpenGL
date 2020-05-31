@@ -20,12 +20,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.androidkotlin.opengl.learnopengl.Renderer4103AdvancedAsteroidsInstanced
 import com.androidkotlin.opengl.ui.databinding.FragmentSelectorBinding
 import timber.log.Timber
 

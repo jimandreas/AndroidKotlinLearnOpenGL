@@ -20,7 +20,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
-import com.androidkotlin.bigfile.util.Camera
+import com.androidkotlin.opengl.util.Camera
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
 
@@ -121,7 +121,7 @@ class Renderer480AdvancedGlslUBO(
                 .allocateDirect(cubeVertices480.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer480!!.put(cubeVertices480).position(0)
+        nativeFloatBuffer480.put(cubeVertices480).position(0)
         glBufferData(GL_ARRAY_BUFFER, cubeVertices480.size * 4,
                 nativeFloatBuffer480, GLES20.GL_STATIC_DRAW)
 
@@ -193,7 +193,7 @@ class Renderer480AdvancedGlslUBO(
                 .allocateDirect(translationsArray.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer2!!.put(translationsArray).position(0)
+        nativeFloatBuffer2.put(translationsArray).position(0)
         glGenBuffers(1, instanceVBO, 0)
         glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0])
         glBufferData(GL_ARRAY_BUFFER,
@@ -211,7 +211,7 @@ class Renderer480AdvancedGlslUBO(
                 .allocateDirect(quadVertices.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer!!.put(quadVertices).position(0)
+        nativeFloatBuffer.put(quadVertices).position(0)
 
         glGenVertexArrays(1, quadVAO, 0)
         glGenBuffers(1, quadVBO, 0)

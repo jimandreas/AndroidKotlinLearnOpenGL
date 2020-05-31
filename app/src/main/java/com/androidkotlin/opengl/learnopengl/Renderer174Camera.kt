@@ -20,7 +20,7 @@ import android.opengl.GLES30
 import android.opengl.GLES30.glBindVertexArray
 import android.opengl.GLES30.glGenVertexArrays
 import android.opengl.GLSurfaceView
-import com.androidkotlin.bigfile.util.Camera
+import com.androidkotlin.opengl.util.Camera
 
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel

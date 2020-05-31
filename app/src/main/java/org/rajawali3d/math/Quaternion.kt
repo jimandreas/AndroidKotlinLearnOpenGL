@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "LocalVariableName")
 package org.rajawali3d.math
 
 import androidx.annotation.FloatRange
@@ -423,17 +423,17 @@ class Quaternion : Cloneable {
     /**
      * Sets this [Quaternion] from the given Euler angles.
      *
-     * @param yaw   double The yaw angle in degrees.
+     * @param yawIn   double The yaw angle in degrees.
      * @param pitch double The pitch angle in degrees.
      * @param roll  double The roll angle in degrees.
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
     @NonNull
-    fun fromEuler(yaw: Double, pitch: Double, roll: Double): Quaternion {
-        var yaw = yaw
-        var pitch = pitch
-        var roll = roll
+    fun fromEuler(yawIn: Double, pitchIn: Double, rollIn: Double): Quaternion {
+        var yaw = yawIn
+        var pitch = pitchIn
+        var roll = rollIn
         yaw = Math.toRadians(yaw)
         pitch = Math.toRadians(pitch)
         roll = Math.toRadians(roll)
@@ -1049,14 +1049,14 @@ class Quaternion : Cloneable {
         return Quaternion(w, x, y, z)
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (o !is Quaternion) {
+        if (other !is Quaternion) {
             return false
         }
-        val comp = o as Quaternion?
+        val comp = other as Quaternion?
         return x == comp!!.x && y == comp.y && z == comp.z && w == comp.w
     }
 
@@ -1094,8 +1094,8 @@ class Quaternion : Cloneable {
     companion object {
         //Tolerances
         //public static final double F_EPSILON               = .001;
-        val NORMALIZATION_TOLERANCE = 1e-6
-        val PARALLEL_TOLERANCE = 1e-6
+        const val NORMALIZATION_TOLERANCE = 1e-6
+        const val PARALLEL_TOLERANCE = 1e-6
         @NonNull
         private val sTmp1 = Quaternion(0.0, 0.0, 0.0, 0.0)
         @NonNull

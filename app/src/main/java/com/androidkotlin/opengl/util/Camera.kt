@@ -23,7 +23,7 @@
         "LocalVariableName",
         "PropertyName")
 
-package com.androidkotlin.bigfile.util
+package com.androidkotlin.opengl.util
 
 import org.rajawali3d.math.Matrix
 import org.rajawali3d.math.Matrix4
@@ -300,7 +300,7 @@ class Camera {
      *
      * (NOTE: lookat renamed to "front" to match the learnopengl naming
      *
-     * @param units `double` Number of units to move. If negative, movement will be in the "left" direction.
+     * @param unitsIn `double` Number of units to move. If negative, movement will be in the "left" direction.
      */
     fun moveRight(unitsIn: Float) {
         val units = unitsIn.toDouble()

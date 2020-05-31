@@ -1,7 +1,5 @@
 package com.androidkotlin.opengl.util
 
-import android.opengl.GLES20
-import android.opengl.GLES30
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.vector.Vector3
 import java.nio.ByteBuffer
@@ -48,7 +46,7 @@ fun matrix4ArraytoFloatBuffer(matrix4array: List<Matrix4>): FloatBuffer {
             .allocateDirect(size * 16 * 4)
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
-    nativeFloatBuffer!!.put(outputFloatArray).position(0)
+    nativeFloatBuffer.put(outputFloatArray).position(0)
     return nativeFloatBuffer
 }
 
@@ -62,6 +60,6 @@ fun m4toFloatBuffer(m4: Matrix4) : FloatBuffer {
             .allocateDirect(16 * 4)
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
-    nativeFloatBuffer!!.put(tempFloatArray).position(0)
+    nativeFloatBuffer.put(tempFloatArray).position(0)
     return nativeFloatBuffer
 }

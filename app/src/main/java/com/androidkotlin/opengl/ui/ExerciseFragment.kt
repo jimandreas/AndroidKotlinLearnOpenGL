@@ -1,23 +1,18 @@
 package com.androidkotlin.opengl.ui
 
-import android.graphics.Typeface.*
 import android.opengl.GLSurfaceView
 import android.os.Bundle
-import android.text.*
+import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import com.androidkotlin.opengl.googlesample.GoogleSampleRenderer
 import com.androidkotlin.opengl.learnopengl.*
 import com.androidkotlin.opengl.realtime.RendererBaseClass
@@ -46,7 +41,7 @@ class ExerciseFragment : Fragment() {
         val act = activity as AppCompatActivity
         val sab = act.supportActionBar
 
-        val whichExercise = ExerciseFragmentArgs.fromBundle(arguments!!).selectedExercise
+        val whichExercise = ExerciseFragmentArgs.fromBundle(requireArguments()).selectedExercise
 
         if (sab != null) {
             sab.title = whichExercise
@@ -64,18 +59,18 @@ class ExerciseFragment : Fragment() {
 //        }
 
         when (whichExercise) {
-            "GoogleSample" -> setupRenderer(GoogleSampleRenderer(this.context!!, viewModel), Affordances.SPIN)
-            "HelloTriangle" -> setupRenderer(Renderer121HelloTriangle(this.context!!, viewModel), Affordances.NONE)
-            "CoordinateSystems" -> setupRenderer(Renderer163CoordinateSystems(this.context!!, viewModel), Affordances.NONE)
-            "Camera" -> setupRenderer(Renderer174Camera(this.context!!, viewModel), Affordances.FULL)
-            "LightingMaps" -> setupRenderer(Renderer242LightingMapsSpecular(this.context!!, viewModel), Affordances.FULL)
-            "LightingMaps+Cube" -> setupRenderer(Renderer242LightingMapsPlusCubeObject(this.context!!, viewModel), Affordances.FULL)
-            "AdvancedGlslUBO" -> setupRenderer(Renderer480AdvancedGlslUBO(this.context!!, viewModel), Affordances.FULL)
-            "InstancingQuads" -> setupRenderer(Renderer4101InstancingQuads(this.context!!, viewModel), Affordances.NONE)
-            "InstancingHacking" -> setupRenderer(Renderer4102InstancingHacking(this.context!!, viewModel), Affordances.NONE)
-            "AsteroidsInstanced" -> setupRenderer(Renderer4103AdvancedAsteroidsInstanced(this.context!!, viewModel), Affordances.FULL)
+            "GoogleSample" -> setupRenderer(GoogleSampleRenderer(this.requireContext(), viewModel), Affordances.SPIN)
+            "HelloTriangle" -> setupRenderer(Renderer121HelloTriangle(this.requireContext(), viewModel), Affordances.NONE)
+            "CoordinateSystems" -> setupRenderer(Renderer163CoordinateSystems(this.requireContext(), viewModel), Affordances.NONE)
+            "Camera" -> setupRenderer(Renderer174Camera(this.requireContext(), viewModel), Affordances.FULL)
+            "LightingMaps" -> setupRenderer(Renderer242LightingMapsSpecular(this.requireContext(), viewModel), Affordances.FULL)
+            "LightingMaps+Cube" -> setupRenderer(Renderer242LightingMapsPlusCubeObject(this.requireContext(), viewModel), Affordances.FULL)
+            "AdvancedGlslUBO" -> setupRenderer(Renderer480AdvancedGlslUBO(this.requireContext(), viewModel), Affordances.FULL)
+            "InstancingQuads" -> setupRenderer(Renderer4101InstancingQuads(this.requireContext(), viewModel), Affordances.NONE)
+            "InstancingHacking" -> setupRenderer(Renderer4102InstancingHacking(this.requireContext(), viewModel), Affordances.NONE)
+            "AsteroidsInstanced" -> setupRenderer(Renderer4103AdvancedAsteroidsInstanced(this.requireContext(), viewModel), Affordances.FULL)
             else -> {
-                setupRenderer(GoogleSampleRenderer(this.context!!, viewModel), Affordances.SPIN)
+                setupRenderer(GoogleSampleRenderer(this.requireContext(), viewModel), Affordances.SPIN)
             }
         }
 
@@ -99,7 +94,7 @@ class ExerciseFragment : Fragment() {
         glSurfaceView.setRenderer(renderer)
 
         val displayMetrics = DisplayMetrics()
-        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
         glSurfaceView.setRendererInInstance(rendererIn, displayMetrics.density, viewModel)
 
         /*

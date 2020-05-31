@@ -41,17 +41,12 @@ https://raw.githubusercontent.com/danginsburg/opengles3-book/master/Android_Java
 package com.androidkotlin.opengl.util
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.opengl.GLES20
 import android.opengl.GLES20.GL_TEXTURE_2D
 import android.opengl.GLES20.glGenerateMipmap
 import android.opengl.GLES30
 import android.opengl.GLUtils
 import timber.log.Timber
-
-import java.io.IOException
-import java.io.InputStream
 
 
 // TODO: check out "Methods for encoding and decoding ETC1 textures. "

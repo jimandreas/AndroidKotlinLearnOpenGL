@@ -18,7 +18,6 @@ package com.androidkotlin.opengl.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetManager
-import android.opengl.GLES20
 import android.opengl.GLES20.*
 import android.opengl.GLES30
 import android.os.Bundle
@@ -480,7 +479,8 @@ class ObjFile(val context: Context) {
         if (vbo[0] > 0) {
             glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
             glBufferData(GL_ARRAY_BUFFER, vertexData.size * BYTES_PER_FLOAT,
-                    vertexDataBuffer, GLES20.GL_STATIC_DRAW)
+                    vertexDataBuffer, GL_STATIC_DRAW
+            )
 
             // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         } else {
@@ -507,10 +507,10 @@ class ObjFile(val context: Context) {
         if (vbo[0] > 0) {
             glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
             // position attribute
-            GLES30.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 8 * 4, 0)
+            GLES30.glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0)
             GLES30.glEnableVertexAttribArray(0)
             // texture coordinate attribute
-            GLES30.glVertexAttribPointer(2, 2, GLES20.GL_FLOAT, false, 8 * 4, 6 * 4)
+            GLES30.glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4)
             GLES30.glEnableVertexAttribArray(2)
 
 

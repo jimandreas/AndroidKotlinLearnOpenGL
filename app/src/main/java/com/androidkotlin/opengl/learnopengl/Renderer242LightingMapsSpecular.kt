@@ -20,7 +20,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
-import com.androidkotlin.bigfile.util.Camera
+import com.androidkotlin.opengl.util.Camera
 import com.androidkotlin.opengl.realtime.RendererBaseClass
 import com.androidkotlin.opengl.ui.ViewModel
 import com.androidkotlin.opengl.util.*
@@ -80,7 +80,7 @@ class Renderer242LightingMapsSpecular(
                 .allocateDirect(vertices242.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer!!.put(vertices242).position(0)
+        nativeFloatBuffer.put(vertices242).position(0)
         glGenBuffers(1, vbo, 0)
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0])
         glBufferData(GL_ARRAY_BUFFER, vertices242.size * 4,

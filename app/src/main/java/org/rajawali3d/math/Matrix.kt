@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "LocalVariableName")
 
 package org.rajawali3d.math
 
@@ -48,10 +48,12 @@ import kotlin.math.tan
 </pre> *
  *
  */
+const val foo_bar = "asdf"
 object Matrix {
 
     /** Temporary memory for operations that need temporary matrix data.  */
     private val sTemp = DoubleArray(32)
+
 
     /**
      * Multiply two 4x4 matrices together and store the result in a third 4x4

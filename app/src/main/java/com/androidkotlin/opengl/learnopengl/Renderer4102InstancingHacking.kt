@@ -90,7 +90,7 @@ class Renderer4102InstancingHacking(
                 .allocateDirect(translationsArray.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer2!!.put(translationsArray).position(0)
+        nativeFloatBuffer2.put(translationsArray).position(0)
         glGenBuffers(1, instanceVBO, 0)
         glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0])
         glBufferData(GL_ARRAY_BUFFER,
@@ -108,7 +108,7 @@ class Renderer4102InstancingHacking(
                 .allocateDirect(quadVertices.size * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-        nativeFloatBuffer!!.put(quadVertices).position(0)
+        nativeFloatBuffer.put(quadVertices).position(0)
 
         glGenVertexArrays(1, quadVAO, 0)
         glGenBuffers(1, quadVBO, 0)

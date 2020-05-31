@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-@file:Suppress("unused")
+@file:Suppress("unused", "LocalVariableName")
 
 package org.rajawali3d.math.vector
 
@@ -1081,7 +1081,7 @@ class Vector3 : Cloneable {
             for (i in vecs.indices) {
                 vecs[i].normalize()
                 for (j in i + 1 until vecs.size) {
-                    vecs[j].subtract(Vector3.projectAndCreate(vecs[j], vecs[i]))
+                    vecs[j].subtract(projectAndCreate(vecs[j], vecs[i]))
                 }
             }
         }
@@ -1094,7 +1094,7 @@ class Vector3 : Cloneable {
          */
         fun orthoNormalize(@NonNull v1: Vector3, @NonNull v2: Vector3) {
             v1.normalize()
-            v2.subtract(Vector3.projectAndCreate(v2, v1))
+            v2.subtract(projectAndCreate(v2, v1))
             v2.normalize()
         }
 
@@ -1291,9 +1291,9 @@ class Vector3 : Cloneable {
         @NonNull
         fun getAxisVector(@NonNull axis: Axis): Vector3 {
             when (axis) {
-                Vector3.Axis.X -> return X
-                Vector3.Axis.Y -> return Y
-                Vector3.Axis.Z -> return Z
+                Axis.X -> return X
+                Axis.Y -> return Y
+                Axis.Z -> return Z
                 else -> throw IllegalArgumentException("The specified Axis is not a valid choice.")
             }
         }
