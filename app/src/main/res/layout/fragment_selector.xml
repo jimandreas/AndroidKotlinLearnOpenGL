@@ -134,49 +134,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button9" />
 
-        <!--SeekBar and two TextViews below-->
-        <!--These are left-over from previous experimentation-->
-
-        <SeekBar
-            android:id="@+id/discreteSeekBar"
-            android:visibility="gone"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="24dp"
-            android:max="10"
-            android:onProgressChanged="@{(view, p, b) -> viewModel1.onProgressChangedHere(view, p, true)}"
-            android:progress="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/text_resolution_value" />
-
-        <TextView
-            android:id="@+id/text_resolution_value"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="@string/blue"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/text_label_resolution"
-            tools:text="Blue" />
-
-        <TextView
-            android:id="@+id/text_label_resolution"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/resolution"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
