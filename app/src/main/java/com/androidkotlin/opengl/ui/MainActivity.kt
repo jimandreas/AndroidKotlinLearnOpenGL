@@ -10,6 +10,7 @@ import com.androidkotlin.opengl.ui.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
+
     /**
      * Our MainActivity is only responsible for setting the content view that contains the
      * Navigation Host.
@@ -24,13 +25,12 @@ class MainActivity : AppCompatActivity() {
      * this override handles the back button in the menu bar.
      * The system back button is handled by the navigation system.
      */
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item != null) {
-            if (item.itemId == android.R.id.home) {
-                Navigation.findNavController(this, R.id.myNavHostFragment)
-                        //.navigateUp())
-                        .navigate(ExerciseFragmentDirections.actionExerciseFragmentToSelectorFragment())
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (item.itemId == android.R.id.home) {
+            Navigation.findNavController(this, R.id.myNavHostFragment)
+                //.navigateUp())
+                .navigate(ExerciseFragmentDirections.actionExerciseFragmentToSelectorFragment())
         }
         return super.onOptionsItemSelected(item)
     }
