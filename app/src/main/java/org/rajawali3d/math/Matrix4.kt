@@ -44,7 +44,7 @@ class Matrix4 : Cloneable {
      * @return double array containing the backing array. The returned array is owned
      * by this [Matrix4] and is subject to change as the implementation sees fit.
      */
-    @NonNull
+    /* @NonNull */
     @Size(16)
     @get:NonNull
     @get:Size(16)
@@ -54,19 +54,19 @@ class Matrix4 : Cloneable {
     //and not static to ensure that this class can be utilized by multiple threads
     //in a safe manner without the overhead of synchronization. This is a tradeoff of
     //speed for memory and it is considered a small enough memory increase to be acceptable.
-    @NonNull
+    /* @NonNull */
     @Size(16)
     private val mTmp = DoubleArray(16) //A scratch matrix
-    @NonNull
+    /* @NonNull */
     @Size(16)
     private val mFloat = FloatArray(16) //A float copy of the values, used for sending to GL.
-    @NonNull
+    /* @NonNull */
     private val mQuat = Quaternion() //A scratch quaternion.
-    @NonNull
+    /* @NonNull */
     private val mVec1 = Vector3() //A scratch Vector3
-    @NonNull
+    /* @NonNull */
     private val mVec2 = Vector3() //A scratch Vector3
-    @NonNull
+    /* @NonNull */
     private val mVec3 = Vector3() //A scratch Vector3
     @Nullable
     private var mMatrix: Matrix4? = null //A scratch Matrix4
@@ -78,7 +78,7 @@ class Matrix4 : Cloneable {
      * @return [Vector3] representing the translation.
      */
     val translation: Vector3
-        @NonNull
+        /* @NonNull */
         get() = getTranslation(Vector3())
 
     /**
@@ -88,7 +88,7 @@ class Matrix4 : Cloneable {
      * @return [Vector3] representing the scaling.
      */
     val scaling: Vector3
-        @NonNull
+        /* @NonNull */
         get() {
             val x = sqrt(doubleValues[M00] * doubleValues[M00] + doubleValues[M01] * doubleValues[M01] + doubleValues[M02] * doubleValues[M02])
             val y = sqrt(doubleValues[M10] * doubleValues[M10] + doubleValues[M11] * doubleValues[M11] + doubleValues[M12] * doubleValues[M12])
@@ -103,7 +103,7 @@ class Matrix4 : Cloneable {
      * by this [Matrix4] and is subject to change as the implementation sees fit.
      */
     val floatValues: FloatArray
-        @NonNull
+        /* @NonNull */
         @Size(16)
         get() {
             ArrayUtils.convertDoublesToFloats(doubleValues, mFloat)
@@ -122,7 +122,7 @@ class Matrix4 : Cloneable {
      *
      * @param matrix [Matrix4] The matrix to clone.
      */
-    constructor(@NonNull matrix: Matrix4) {
+    constructor(/* @NonNull */ matrix: Matrix4) {
         setAll(matrix)
     }
 
@@ -133,7 +133,7 @@ class Matrix4 : Cloneable {
      * @param matrix double array containing the values for the matrix in column major order.
      * The array is not modified or referenced after this constructor completes.
      */
-    constructor(@NonNull @Size(min = 16) matrix: DoubleArray) {
+    constructor(/* @NonNull */ @Size(min = 16) matrix: DoubleArray) {
         setAll(matrix)
     }
 
@@ -144,7 +144,7 @@ class Matrix4 : Cloneable {
      * @param matrix float array containing the values for the matrix in column major order.
      * The array is not modified or referenced after this constructor completes.
      */
-    constructor(@NonNull @Size(min = 16) matrix: FloatArray) {
+    constructor(/* @NonNull */ @Size(min = 16) matrix: FloatArray) {
         setAll(ArrayUtils.convertFloatsToDoubles(matrix)!!)
     }
 
@@ -153,7 +153,7 @@ class Matrix4 : Cloneable {
      *
      * @param quat [Quaternion] The [Quaternion] to be copied.
      */
-    constructor(@NonNull quat: Quaternion) {
+    constructor(/* @NonNull */ quat: Quaternion) {
         setAll(quat)
     }
 
@@ -164,8 +164,8 @@ class Matrix4 : Cloneable {
      *
      * @return A reference to this [Matrix4] to facilitate chaining.
      */
-    @NonNull
-    fun setAll(@NonNull matrix: Matrix4): Matrix4 {
+    /* @NonNull */
+    fun setAll(/* @NonNull */ matrix: Matrix4): Matrix4 {
         matrix.toArray(doubleValues)
         return this
     }
@@ -180,14 +180,14 @@ class Matrix4 : Cloneable {
      *
      * @return A reference to this [Matrix4] to facilitate chaining.
      */
-    @NonNull
-    fun setAll(@NonNull @Size(min = 16) matrix: DoubleArray): Matrix4 {
+    /* @NonNull */
+    fun setAll(/* @NonNull */ @Size(min = 16) matrix: DoubleArray): Matrix4 {
         System.arraycopy(matrix, 0, doubleValues, 0, 16)
         return this
     }
 
-    @NonNull
-    fun setAll(@NonNull @Size(min = 16) matrix: FloatArray): Matrix4 {
+    /* @NonNull */
+    fun setAll(/* @NonNull */ @Size(min = 16) matrix: FloatArray): Matrix4 {
         // @formatter:off
         doubleValues[0] = matrix[0].toDouble()
         doubleValues[1] = matrix[1].toDouble()
@@ -217,8 +217,8 @@ class Matrix4 : Cloneable {
      *
      * @return A reference to this [Matrix4] to facilitate chaining.
      */
-    @NonNull
-    fun setAll(@NonNull quat: Quaternion): Matrix4 {
+    /* @NonNull */
+    fun setAll(/* @NonNull */ quat: Quaternion): Matrix4 {
         quat.toRotationMatrix(doubleValues)
         return this
     }

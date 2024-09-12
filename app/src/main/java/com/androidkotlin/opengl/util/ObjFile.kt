@@ -77,7 +77,7 @@ class ObjFile(val context: Context) {
         val elapsed_time = (SystemClock.uptimeMillis() - start_time) / 1000
         val pretty_print = String.format("%6.2f", elapsed_time)
 
-        Timber.i("finished parsing in $pretty_print seconds.")
+        Timber.i("finished parsing in %6.2f seconds.", pretty_print)
         Timber.i("max xyz min xyz %7.2f %7.2f %7.2f and %7.2f %7.2f %7.2f",
                 maxX, maxY, maxZ, minX, minY, minZ)
     }

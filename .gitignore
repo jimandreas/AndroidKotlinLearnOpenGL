@@ -14,6 +14,7 @@ hs_err_pid*
 local.properties
 build/
 .gradle/
+.kotlin/
 .idea
 *.iml
 

@@ -46,11 +46,11 @@ class Quaternion : Cloneable {
     var z: Double = 0.toDouble()
 
     //Scratch members
-    @NonNull
+    /* @NonNull */
     private val mTmpVec1 = Vector3()
-    @NonNull
+    /* @NonNull */
     private val mTmpVec2 = Vector3()
-    @NonNull
+    /* @NonNull */
     private val mTmpVec3 = Vector3()
 
     /**
@@ -59,7 +59,7 @@ class Quaternion : Cloneable {
      * @return [Vector3] The x axis of this [Quaternion].
      */
     val xAxis: Vector3
-        @NonNull
+        /* @NonNull */
         get() {
             val fTy = 2.0 * y
             val fTz = 2.0 * z
@@ -79,7 +79,7 @@ class Quaternion : Cloneable {
      * @return [Vector3] The y axis of this [Quaternion].
      */
     val yAxis: Vector3
-        @NonNull
+        /* @NonNull */
         get() {
             val fTx = 2.0 * x
             val fTy = 2.0 * y
@@ -100,7 +100,7 @@ class Quaternion : Cloneable {
      * @return [Vector3] The z axis of this [Quaternion].
      */
     val zAxis: Vector3
-        @NonNull
+        /* @NonNull */
         get() {
             val fTx = 2.0 * x
             val fTy = 2.0 * y
@@ -200,7 +200,7 @@ class Quaternion : Cloneable {
      *
      * @param quat [Quaternion] to take values from.
      */
-    constructor(@NonNull quat: Quaternion) {
+    constructor(/* @NonNull */ quat: Quaternion) {
         setAll(quat)
     }
 
@@ -211,7 +211,7 @@ class Quaternion : Cloneable {
      * @param axis  [Vector3] The axis of rotation.
      * @param angle double The angle of rotation in degrees.
      */
-    constructor(@NonNull axis: Vector3, angle: Double) {
+    constructor(/* @NonNull */ axis: Vector3, angle: Double) {
         fromAngleAxis(axis, angle)
     }
 
@@ -225,7 +225,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun setAll(w: Double, x: Double, y: Double, z: Double): Quaternion {
         this.w = w
         this.x = x
@@ -242,7 +242,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun setAll(quat: Quaternion): Quaternion {
         return setAll(quat.w, quat.x, quat.y, quat.z)
     }
@@ -255,8 +255,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun fromAngleAxis(@NonNull axis: Axis, angle: Double): Quaternion {
+    /* @NonNull */
+    fun fromAngleAxis(/* @NonNull */ axis: Axis, angle: Double): Quaternion {
         fromAngleAxis(Vector3.getAxisVector(axis), angle)
         return this
     }
@@ -269,8 +269,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun fromAngleAxis(@NonNull axis: Vector3, angle: Double): Quaternion {
+    /* @NonNull */
+    fun fromAngleAxis(/* @NonNull */ axis: Vector3, angle: Double): Quaternion {
         if (axis.isZero) {
             return identity()
         } else {
@@ -299,7 +299,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun fromAngleAxis(x: Double, y: Double, z: Double, angle: Double): Quaternion {
         return this.fromAngleAxis(Vector3(x, y, z), angle)
     }
@@ -314,8 +314,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun fromAxes(@NonNull xAxis: Vector3, @NonNull yAxis: Vector3, @NonNull zAxis: Vector3): Quaternion {
+    /* @NonNull */
+    fun fromAxes(/* @NonNull */ xAxis: Vector3, /* @NonNull */ yAxis: Vector3, /* @NonNull */ zAxis: Vector3): Quaternion {
         return fromAxes(xAxis.x, xAxis.y, xAxis.z, yAxis.x, yAxis.y, yAxis.z, zAxis.x, zAxis.y, zAxis.z)
     }
 
@@ -344,7 +344,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun fromAxes(xx: Double, xy: Double, xz: Double, yx: Double, yy: Double, yz: Double,
                  zx: Double, zy: Double, zz: Double): Quaternion {
         // The trace is the sum of the diagonal elements; see
@@ -395,8 +395,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun fromMatrix(@NonNull matrix: Matrix4): Quaternion {
+    /* @NonNull */
+    fun fromMatrix(/* @NonNull */ matrix: Matrix4): Quaternion {
         val value = DoubleArray(16)
         matrix.toArray(value)
         fromAxes(value[Matrix4.M00], value[Matrix4.M10], value[Matrix4.M20],
@@ -412,8 +412,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun fromMatrix(@NonNull @Size(min = 16) matrix: DoubleArray): Quaternion {
+    /* @NonNull */
+    fun fromMatrix(/* @NonNull */ @Size(min = 16) matrix: DoubleArray): Quaternion {
         fromAxes(matrix[Matrix4.M00], matrix[Matrix4.M10], matrix[Matrix4.M20],
                 matrix[Matrix4.M01], matrix[Matrix4.M11], matrix[Matrix4.M21],
                 matrix[Matrix4.M02], matrix[Matrix4.M12], matrix[Matrix4.M22])
@@ -429,7 +429,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun fromEuler(yawIn: Double, pitchIn: Double, rollIn: Double): Quaternion {
         var yaw = yawIn
         var pitch = pitchIn
@@ -467,8 +467,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun fromRotationBetween(@NonNull u: Vector3, @NonNull v: Vector3): Quaternion {
+    /* @NonNull */
+    fun fromRotationBetween(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Quaternion {
         val dot = u.dot(v)
         val dotError = 1.0 - abs(MathUtil.clamp(dot, -1.0, 1.0))
         if (dotError <= PARALLEL_TOLERANCE) {
@@ -510,7 +510,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun fromRotationBetween(x1: Double, y1: Double, z1: Double, x2: Double, y2: Double, z2: Double): Quaternion {
         mTmpVec1.setAll(x1, y1, z1).normalize()
         mTmpVec2.setAll(x2, y2, z2).normalize()
@@ -524,8 +524,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun add(@NonNull quat: Quaternion): Quaternion {
+    /* @NonNull */
+    fun add(/* @NonNull */ quat: Quaternion): Quaternion {
         w += quat.w
         x += quat.x
         y += quat.y
@@ -540,8 +540,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun subtract(@NonNull quat: Quaternion): Quaternion {
+    /* @NonNull */
+    fun subtract(/* @NonNull */ quat: Quaternion): Quaternion {
         w -= quat.w
         x -= quat.x
         y -= quat.y
@@ -557,7 +557,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun multiply(scalar: Double): Quaternion {
         w *= scalar
         x *= scalar
@@ -573,8 +573,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun multiply(@NonNull quat: Quaternion): Quaternion {
+    /* @NonNull */
+    fun multiply(/* @NonNull */ quat: Quaternion): Quaternion {
         val tW = w
         val tX = x
         val tY = y
@@ -599,8 +599,8 @@ class Quaternion : Cloneable {
      *
      * @return [Vector3] The result of the multiplication.
      */
-    @NonNull
-    fun multiply(@NonNull vector: Vector3): Vector3 {
+    /* @NonNull */
+    fun multiply(/* @NonNull */ vector: Vector3): Vector3 {
         mTmpVec3.setAll(x, y, z)
         mTmpVec1.crossAndSet(mTmpVec3, vector)
         mTmpVec2.crossAndSet(mTmpVec3, mTmpVec1)
@@ -620,8 +620,8 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
-    fun multiplyLeft(@NonNull quat: Quaternion): Quaternion {
+    /* @NonNull */
+    fun multiplyLeft(/* @NonNull */ quat: Quaternion): Quaternion {
         val newW = quat.w * w - quat.x * x - quat.y * y - quat.z * z
         val newX = quat.w * x + quat.x * w + quat.y * z - quat.z * y
         val newY = quat.w * y + quat.y * w + quat.z * x - quat.x * z
@@ -648,7 +648,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun conjugate(): Quaternion {
         x = -x
         y = -y
@@ -661,7 +661,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun inverse(): Quaternion {
         val norm = length2()
         val invNorm = 1.0 / norm
@@ -673,7 +673,7 @@ class Quaternion : Cloneable {
      *
      * @return [Quaternion] The new inverted [Quaternion].
      */
-    @NonNull
+    /* @NonNull */
     fun invertAndCreate(): Quaternion {
         val norm = length2()
         val invNorm = 1.0 / norm
@@ -686,7 +686,7 @@ class Quaternion : Cloneable {
      *
      * @return A reference to this [Quaternion] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun computeW(): Quaternion {
         val t = 1.0 - x * x - y * y - z * z
         if (t < 0.0) {
@@ -705,7 +705,7 @@ class Quaternion : Cloneable {
      *
      * @return [Vector3] The z axis of this [Quaternion].
      */
-    @NonNull
+    /* @NonNull */
     fun getAxis(@NonNull axis: Axis): Vector3 {
         return when {
             axis === Axis.X -> xAxis

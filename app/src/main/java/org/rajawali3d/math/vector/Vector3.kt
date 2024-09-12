@@ -97,7 +97,7 @@ class Vector3 : Cloneable {
      *
      * @param from [Vector3] to initialize the components with.
      */
-    constructor(@NonNull from: Vector3) {
+    constructor(/* /* @NonNull */ */ from: Vector3) {
         x = from.x
         y = from.y
         z = from.z
@@ -112,7 +112,7 @@ class Vector3 : Cloneable {
      * @throws NumberFormatException if there is a problem parsing the [String] values into doubles.
      */
     @Throws(IllegalArgumentException::class, NumberFormatException::class)
-    constructor(@NonNull @Size(min = 3) values: Array<String>)
+    constructor(/* /* @NonNull */ */ @Size(min = 3) values: Array<String>)
             : this(java.lang.Float.parseFloat(values[0]).toDouble(),
             java.lang.Float.parseFloat(values[1]).toDouble(),
             java.lang.Float.parseFloat(values[2]).toDouble())
@@ -125,7 +125,7 @@ class Vector3 : Cloneable {
      * @throws IllegalArgumentException if there are fewer than 3 values in the array.
      */
     @Throws(IllegalArgumentException::class)
-    constructor(@NonNull @Size(min = 3) values: DoubleArray) {
+    constructor(/* /* @NonNull */ */ @Size(min = 3) values: DoubleArray) {
         if (values.size < 3)
             throw IllegalArgumentException("Vector3 must be initialized with an array length of at least 3.")
         x = values[0]
@@ -170,8 +170,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun setAll(@NonNull other: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun setAll(/* /* @NonNull */ */ other: Vector3): Vector3 {
         x = other.x
         y = other.y
         z = other.z
@@ -186,8 +186,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun setAll(@NonNull axis: Axis): Vector3 {
+    /* /* @NonNull */ */
+    fun setAll(/* /* @NonNull */ */ axis: Axis): Vector3 {
         return setAll(getAxisVector(axis))
     }
 
@@ -198,8 +198,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun add(@NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun add(/* /* @NonNull */ */ v: Vector3): Vector3 {
         x += v.x
         y += v.y
         z += v.z
@@ -215,7 +215,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* /* @NonNull */ */
     fun add(x: Double, y: Double, z: Double): Vector3 {
         this.x += x
         this.y += y
@@ -230,7 +230,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* /* @NonNull */ */
     fun add(value: Double): Vector3 {
         x += value
         y += value
@@ -246,8 +246,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun addAndSet(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun addAndSet(/* /* @NonNull */ */ u: Vector3, /* /* @NonNull */ */ v: Vector3): Vector3 {
         x = u.x + v.x
         y = u.y + v.y
         z = u.z + v.z
@@ -261,8 +261,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun subtract(@NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun subtract(/* /* @NonNull */ */ v: Vector3): Vector3 {
         x -= v.x
         y -= v.y
         z -= v.z
@@ -278,7 +278,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* /* @NonNull */ */
     fun subtract(x: Double, y: Double, z: Double): Vector3 {
         this.x -= x
         this.y -= y
@@ -293,7 +293,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* /* @NonNull */ */
     fun subtract(value: Double): Vector3 {
         x -= value
         y -= value
@@ -309,8 +309,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun subtractAndSet(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun subtractAndSet(/* /* @NonNull */ */ u: Vector3, /* /* @NonNull */ */ v: Vector3): Vector3 {
         x = u.x - v.x
         y = u.y - v.y
         z = u.z - v.z
@@ -324,7 +324,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* /* @NonNull */ */
     fun multiply(value: Double): Vector3 {
         x *= value
         y *= value
@@ -340,8 +340,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun multiply(@NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun multiply(/* /* @NonNull */ */ v: Vector3): Vector3 {
         x *= v.x
         y *= v.y
         z *= v.z
@@ -355,8 +355,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun multiply(@NonNull @Size(min = 16) matrix: DoubleArray): Vector3 {
+    /* /* @NonNull */ */
+    fun multiply(/* /* @NonNull */ */ @Size(min = 16) matrix: DoubleArray): Vector3 {
         val vx = x
         val vy = y
         val vz = z
@@ -373,8 +373,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun multiply(@NonNull matrix: Matrix4): Vector3 {
+    /* /* @NonNull */ */
+    fun multiply(/* /* @NonNull */ */ matrix: Matrix4): Vector3 {
         return multiply(matrix.doubleValues)
     }
 
@@ -386,8 +386,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun multiplyAndSet(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun multiplyAndSet(/* /* @NonNull */ */ u: Vector3, /* /* @NonNull */ */ v: Vector3): Vector3 {
         x = u.x * v.x
         y = u.y * v.y
         z = u.z * v.z
@@ -401,7 +401,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* /* @NonNull */ */
     fun divide(value: Double): Vector3 {
         x /= value
         y /= value
@@ -417,8 +417,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun divide(@NonNull v: Vector3): Vector3 {
+    /* /* @NonNull */ */
+    fun divide(/* @NonNull */ v: Vector3): Vector3 {
         x /= v.x
         y /= v.y
         z /= v.z
@@ -433,8 +433,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun divideAndSet(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+    /* @NonNull */
+    fun divideAndSet(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
         x = u.x / v.x
         y = u.y / v.y
         z = u.z / v.z
@@ -449,8 +449,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun scaleAndSet(@NonNull v: Vector3, b: Double): Vector3 {
+    /* @NonNull */
+    fun scaleAndSet(/* @NonNull */ v: Vector3, b: Double): Vector3 {
         x = v.x * b
         y = v.y * b
         z = v.z * b
@@ -464,8 +464,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun rotateBy(@NonNull quaternion: Quaternion): Vector3 {
+    /* @NonNull */
+    fun rotateBy(/* @NonNull */ quaternion: Quaternion): Vector3 {
         return setAll(quaternion.multiply(this))
     }
 
@@ -476,7 +476,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun rotateX(angle: Double): Vector3 {
         val cosRY = cos(angle)
         val sinRY = sin(angle)
@@ -497,7 +497,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun rotateY(angle: Double): Vector3 {
         val cosRY = cos(angle)
         val sinRY = sin(angle)
@@ -518,7 +518,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun rotateZ(angle: Double): Vector3 {
         val cosRY = cos(angle)
         val sinRY = sin(angle)
@@ -553,7 +553,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun inverse(): Vector3 {
         x = -x
         y = -y
@@ -566,7 +566,7 @@ class Vector3 : Cloneable {
      *
      * @return [Vector3] The resulting [Vector3].
      */
-    @NonNull
+    /* @NonNull */
     fun invertAndCreate(): Vector3 {
         return Vector3(-x, -y, -z)
     }
@@ -596,7 +596,7 @@ class Vector3 : Cloneable {
      *
      * @return double The Euclidean distance.
      */
-    fun distanceTo(@NonNull v: Vector3): Double {
+    fun distanceTo(/* @NonNull */ v: Vector3): Double {
         val a = x - v.x
         val b = y - v.y
         val c = z - v.z
@@ -626,7 +626,7 @@ class Vector3 : Cloneable {
      *
      * @return double The squared Euclidean distance.
      */
-    fun distanceTo2(@NonNull v: Vector3): Double {
+    fun distanceTo2(/* @NonNull */ v: Vector3): Double {
         val a = x - v.x
         val b = y - v.y
         val c = z - v.z
@@ -654,7 +654,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun absoluteValue(): Vector3 {
         x = abs(x)
         y = abs(y)
@@ -670,8 +670,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun project(@NonNull v: Vector3): Vector3 {
+    /* @NonNull */
+    fun project(/* @NonNull */ v: Vector3): Vector3 {
         val d = dot(v)
         val d_div = d / length2()
         return multiply(d_div)
@@ -685,8 +685,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun project(@NonNull @Size(min = 16) matrix: DoubleArray): Vector3 {
+    /* @NonNull */
+    fun project(/* @NonNull */ @Size(min = 16) matrix: DoubleArray): Vector3 {
         if (mTmpMatrix4 == null) {
             mTmpMatrix4 = Matrix4(matrix)
         } else {
@@ -703,8 +703,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun project(@NonNull matrix: Matrix4): Vector3 {
+    /* @NonNull */
+    fun project(/* @NonNull */ matrix: Matrix4): Vector3 {
         return matrix.projectVector(this)
     }
 
@@ -715,7 +715,7 @@ class Vector3 : Cloneable {
      *
      * @return `double` The calculated angle, in degrees.
      */
-    fun angle(@NonNull v: Vector3): Double {
+    fun angle(/* @NonNull */ v: Vector3): Double {
         var dot = dot(v)
         dot /= length() * v.length()
         return Math.toDegrees(acos(dot))
@@ -728,7 +728,7 @@ class Vector3 : Cloneable {
      *
      * @return double The dot product.
      */
-    fun dot(@NonNull v: Vector3): Double {
+    fun dot(/* @NonNull */ v: Vector3): Double {
         return x * v.x + y * v.y + z * v.z
     }
 
@@ -753,8 +753,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun cross(@NonNull v: Vector3): Vector3 {
+    /* @NonNull */
+    fun cross(/* @NonNull */ v: Vector3): Vector3 {
         if (mTmpVector3 == null) {
             mTmpVector3 = Vector3(this)
         } else {
@@ -776,7 +776,7 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
+    /* @NonNull */
     fun cross(x: Double, y: Double, z: Double): Vector3 {
         if (mTmpVector3 == null) {
             mTmpVector3 = Vector3(this)
@@ -798,8 +798,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun crossAndSet(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+    /* @NonNull */
+    fun crossAndSet(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
         return setAll(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x)
     }
 
@@ -811,8 +811,8 @@ class Vector3 : Cloneable {
      *
      * @return [Quaternion] The [Quaternion] representing the rotation.
      */
-    @NonNull
-    fun getRotationTo(@NonNull direction: Vector3): Quaternion {
+    /* @NonNull */
+    fun getRotationTo(/* @NonNull */ direction: Vector3): Quaternion {
         return Quaternion.createFromRotationBetween(this, direction)
     }
 
@@ -826,8 +826,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun lerp(@NonNull target: Vector3, t: Double): Vector3 {
+    /* @NonNull */
+    fun lerp(/* @NonNull */ target: Vector3, t: Double): Vector3 {
         return multiply(1.0 - t).add(target.x * t, target.y * t, target.z * t)
     }
 
@@ -842,8 +842,8 @@ class Vector3 : Cloneable {
      *
      * @return A reference to this [Vector3] to facilitate chaining.
      */
-    @NonNull
-    fun lerpAndSet(@NonNull from: Vector3, @NonNull to: Vector3, amount: Double): Vector3 {
+    /* @NonNull */
+    fun lerpAndSet(/* @NonNull */ from: Vector3, /* @NonNull */ to: Vector3, amount: Double): Vector3 {
         x = from.x + (to.x - from.x) * amount
         y = from.y + (to.y - from.y) * amount
         z = from.z + (to.z - from.z) * amount
@@ -855,7 +855,7 @@ class Vector3 : Cloneable {
      *
      * @return [Vector3] A copy of this [Vector3].
      */
-    @NonNull
+    /* @NonNull */
     public override fun clone(): Vector3 {
         return Vector3(x, y, z)
     }
@@ -913,7 +913,7 @@ class Vector3 : Cloneable {
      *
      * @return boolean True if this [Vector3]'s components match with the components of the input.
      */
-    fun equals(@NonNull obj: Vector3, error: Double): Boolean {
+    fun equals(/* @NonNull */ obj: Vector3, error: Double): Boolean {
         return abs(obj.x - x) <= error && abs(obj.y - y) <= error && abs(obj.z - z) <= error
     }
 
@@ -926,7 +926,7 @@ class Vector3 : Cloneable {
      *
      * @return The passed array with the xyz values inserted
      */
-    @NonNull
+    /* @NonNull */
     @Size(min = 3)
     fun toArray(@Size(min = 3) array: DoubleArray?): DoubleArray? {
         if (array != null && array.size >= 3) {
@@ -943,13 +943,13 @@ class Vector3 : Cloneable {
      *
      * @return An array containing this Vector3's xyz values.
      */
-    @NonNull
+    /* @NonNull */
     @Size(3)
     fun toArray(): DoubleArray? {
         return toArray(DoubleArray(3))
     }
 
-    @NonNull
+    /* @NonNull */
     override fun toString(): String {
         val sb = StringBuffer()
         sb.append("Vector3 <x, y, z>: <")
@@ -969,42 +969,42 @@ class Vector3 : Cloneable {
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val X = Vector3(1.0, 0.0, 0.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val Y = Vector3(0.0, 1.0, 0.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val Z = Vector3(0.0, 0.0, 1.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val NEG_X = Vector3(-1.0, 0.0, 0.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val NEG_Y = Vector3(0.0, -1.0, 0.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val NEG_Z = Vector3(0.0, 0.0, -1.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val ZERO = Vector3(0.0, 0.0, 0.0)
         /**
          * DO NOT EVER MODIFY THE VALUES OF THIS VECTOR
          */
-        @NonNull
+        /* @NonNull */
         val ONE = Vector3(1.0, 1.0, 1.0)
 
         /**
@@ -1015,8 +1015,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The resulting [Vector3].
          */
-        @NonNull
-        fun addAndCreate(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+        /* @NonNull */
+        fun addAndCreate(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
             return Vector3(u.x + v.x, u.y + v.y, u.z + v.z)
         }
 
@@ -1028,8 +1028,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The resulting [Vector3].
          */
-        @NonNull
-        fun subtractAndCreate(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+        /* @NonNull */
+        fun subtractAndCreate(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
             return Vector3(u.x - v.x, u.y - v.y, u.z - v.z)
         }
 
@@ -1041,8 +1041,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The resulting [Vector3].
          */
-        @NonNull
-        fun multiplyAndCreate(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+        /* @NonNull */
+        fun multiplyAndCreate(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
             return Vector3(u.x * v.x, u.y * v.y, u.z * v.z)
         }
 
@@ -1054,8 +1054,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The resulting [Vector3].
          */
-        @NonNull
-        fun multiplyAndCreate(@NonNull v: Vector3, value: Double): Vector3 {
+        /* @NonNull */
+        fun multiplyAndCreate(/* @NonNull */ v: Vector3, value: Double): Vector3 {
             return Vector3(v.x * value, v.y * value, v.z * value)
         }
 
@@ -1067,8 +1067,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The resulting [Vector3].
          */
-        @NonNull
-        fun scaleAndCreate(@NonNull u: Vector3, v: Double): Vector3 {
+        /* @NonNull */
+        fun scaleAndCreate(/* @NonNull */ u: Vector3, v: Double): Vector3 {
             return Vector3(u.x * v, u.y * v, u.z * v)
         }
 
@@ -1077,7 +1077,7 @@ class Vector3 : Cloneable {
          *
          * @param vecs Array of [Vector3] objects to be ortho-normalized.
          */
-        fun orthoNormalize(@NonNull @Size(min = 2) vecs: Array<Vector3>) {
+        fun orthoNormalize(/* @NonNull */ @Size(min = 2) vecs: Array<Vector3>) {
             for (i in vecs.indices) {
                 vecs[i].normalize()
                 for (j in i + 1 until vecs.size) {
@@ -1092,7 +1092,7 @@ class Vector3 : Cloneable {
          * @param v1 The first [Vector3] object to be ortho-normalized.
          * @param v2 The second [Vector3]. [Vector3] object to be ortho-normalized.
          */
-        fun orthoNormalize(@NonNull v1: Vector3, @NonNull v2: Vector3) {
+        fun orthoNormalize(/* @NonNull */ v1: Vector3, /* @NonNull */ v2: Vector3) {
             v1.normalize()
             v2.subtract(projectAndCreate(v2, v1))
             v2.normalize()
@@ -1118,7 +1118,7 @@ class Vector3 : Cloneable {
          *
          * @return double The Euclidean length.
          */
-        fun length(@NonNull v: Vector3): Double {
+        fun length(/* @NonNull */ v: Vector3): Double {
             return length(v.x, v.y, v.z)
         }
 
@@ -1129,7 +1129,7 @@ class Vector3 : Cloneable {
          *
          * @return double The squared Euclidean length.
          */
-        fun length2(@NonNull v: Vector3): Double {
+        fun length2(/* @NonNull */ v: Vector3): Double {
             return length2(v.x, v.y, v.z)
         }
 
@@ -1154,7 +1154,7 @@ class Vector3 : Cloneable {
          *
          * @return double The Euclidean distance.
          */
-        fun distanceTo(@NonNull u: Vector3, @NonNull v: Vector3): Double {
+        fun distanceTo(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Double {
             val a = u.x - v.x
             val b = u.y - v.y
             val c = u.z - v.z
@@ -1181,7 +1181,7 @@ class Vector3 : Cloneable {
          *
          * @return double The squared Euclidean distance.
          */
-        fun distanceTo2(@NonNull u: Vector3, @NonNull v: Vector3): Double {
+        fun distanceTo2(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Double {
             val a = u.x - v.x
             val b = u.y - v.y
             val c = u.z - v.z
@@ -1209,8 +1209,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The result of the projection.
          */
-        @NonNull
-        fun projectAndCreate(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+        /* @NonNull */
+        fun projectAndCreate(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
             val d = u.dot(v)
             val d_div = d / v.length2()
             return v.clone().multiply(d_div)
@@ -1224,7 +1224,7 @@ class Vector3 : Cloneable {
          *
          * @return double The dot product.
          */
-        fun dot(@NonNull u: Vector3, @NonNull v: Vector3): Double {
+        fun dot(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Double {
             return u.x * v.x + u.y * v.y + u.z * v.z
         }
 
@@ -1254,8 +1254,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The computed cross product.
          */
-        @NonNull
-        fun crossAndCreate(@NonNull u: Vector3, @NonNull v: Vector3): Vector3 {
+        /* @NonNull */
+        fun crossAndCreate(/* @NonNull */ u: Vector3, /* @NonNull */ v: Vector3): Vector3 {
             return Vector3(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x)
         }
 
@@ -1269,8 +1269,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] The interpolated value.
          */
-        @NonNull
-        fun lerpAndCreate(@NonNull from: Vector3, @NonNull to: Vector3, amount: Double): Vector3 {
+        /* @NonNull */
+        fun lerpAndCreate(/* @NonNull */ from: Vector3, /* @NonNull */ to: Vector3, amount: Double): Vector3 {
             val out = Vector3()
             out.x = from.x + (to.x - from.x) * amount
             out.y = from.y + (to.y - from.y) * amount
@@ -1288,8 +1288,8 @@ class Vector3 : Cloneable {
          *
          * @return [Vector3] the [Vector3] representing the requested axis.
          */
-        @NonNull
-        fun getAxisVector(@NonNull axis: Axis): Vector3 {
+        /* @NonNull */
+        fun getAxisVector(/* @NonNull */ axis: Axis): Vector3 {
             when (axis) {
                 Axis.X -> return X
                 Axis.Y -> return Y

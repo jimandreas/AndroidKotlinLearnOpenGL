@@ -23,12 +23,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-
+    compileSdkVersion 35
     defaultConfig {
         applicationId "com.androidkotlin.opengl"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -50,6 +49,8 @@ android {
         viewBinding true
         dataBinding = true
     }
+    buildToolsVersion '35.0.0'
+    namespace 'com.androidkotlin.opengl.ui'
 }
 
 
@@ -66,18 +67,20 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
+    implementation "androidx.navigation:navigation-runtime-ktx:2.8.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.8.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.8.0"
+
 
     // Fragment in AndroidX
-    implementation "androidx.fragment:fragment-ktx:1.2.4"
+    implementation "androidx.fragment:fragment-ktx:1.8.3"
 
     // Core with Ktx
     implementation "androidx.core:core-ktx:$version_core"
 
     // Appcompat: FMI (for more information):
     // https://developer.android.com/jetpack/androidx/releases/appcompat
-    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.appcompat:appcompat:1.7.0"
 
     // Timber FMI: https://github.com/JakeWharton/timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
