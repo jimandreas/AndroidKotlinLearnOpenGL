@@ -5,7 +5,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
-import com.androidkotlin.opengl.ui.databinding.ActivityMainBinding
+import com.androidkotlin.opengl.R
+import com.androidkotlin.opengl.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,19 +21,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
-    }
-
-    /*
-     * this override handles the back button in the menu bar.
-     * The system back button is handled by the navigation system.
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (item.itemId == android.R.id.home) {
-            Navigation.findNavController(this, R.id.myNavHostFragment)
-                //.navigateUp())
-                .navigate(ExerciseFragmentDirections.actionExerciseFragmentToSelectorFragment())
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

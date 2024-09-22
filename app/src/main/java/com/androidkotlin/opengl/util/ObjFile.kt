@@ -88,10 +88,6 @@ class ObjFile(val context: Context) {
         var line: String? = null
         try {
             inputStream = assetManager.open(objFileName, AssetManager.ACCESS_BUFFER)
-            if (inputStream == null) {
-                Timber.i("cannot open$objFileName, returning")
-                return
-            }
 
             reader = BufferedReader(InputStreamReader(inputStream))
 
@@ -165,10 +161,6 @@ class ObjFile(val context: Context) {
         var line: String? = null
         try {
             inputStream = assetManager.open(objFileName, AssetManager.ACCESS_BUFFER)
-            if (inputStream == null) {
-                Timber.e("cannot open$objFileName, returning")
-                return
-            }
 
             val reader = BufferedReader(InputStreamReader(inputStream))
             line = reader.readLine()

@@ -45,3 +45,5 @@ _sandbox
 
 # overrides
 #/gradle.properties
+
+.kotlin

@@ -70,11 +70,14 @@ dependencies {
     implementation(libs.androidx.fragment)
 
     implementation(libs.constraintlayout)
+    implementation(libs.appcompat)
 
     // lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.service)
+
+    implementation(libs.timber)
 
     debugImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.junit)
