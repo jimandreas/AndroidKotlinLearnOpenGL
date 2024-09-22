@@ -19,7 +19,6 @@
         android:id="@+id/openGlConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".MainActivity"
         tools:showIn="@layout/activity_main">
 
@@ -28,8 +27,7 @@
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
             android:onClick="@{() -> viewModel1.onButton(@string/b1)}"
             android:text="@string/b1"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +37,6 @@
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
             android:onClick="@{() -> viewModel1.onButton(@string/b2)}"
             android:text="@string/b2"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +46,6 @@
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:onClick="@{() -> viewModel1.onButton(@string/b3)}"
             android:text="@string/b3"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,8 +55,6 @@
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:onClick="@{() -> viewModel1.onButton(@string/b4)}"
             android:text="@string/b4"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,8 +64,6 @@
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:onClick="@{() -> viewModel1.onButton(@string/b5)}"
             android:text="@string/b5"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,55 +73,45 @@
             android:id="@+id/button6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:onClick="@{() -> viewModel1.onButton(@string/b6)}"
             android:text="@string/b6"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button1"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/b7"
             android:onClick="@{() -> viewModel1.onButton(@string/b7)}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/b7"
+            app:layout_constraintStart_toEndOf="@+id/button2"
             app:layout_constraintTop_toBottomOf="@+id/button6" />
 
         <Button
             android:id="@+id/button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/b8"
             android:onClick="@{() -> viewModel1.onButton(@string/b8)}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/b8"
+            app:layout_constraintStart_toEndOf="@+id/button3"
             app:layout_constraintTop_toBottomOf="@+id/button7" />
 
         <Button
             android:id="@+id/button9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/b9"
             android:onClick="@{() -> viewModel1.onButton(@string/b9)}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/b9"
+            app:layout_constraintStart_toEndOf="@+id/button4"
             app:layout_constraintTop_toBottomOf="@+id/button8" />
 
         <Button
             android:id="@+id/button10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/b10"
             android:onClick="@{() -> viewModel1.onButton(@string/b10)}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/b10"
+            app:layout_constraintStart_toEndOf="@+id/button5"
             app:layout_constraintTop_toBottomOf="@+id/button9" />
 
 
