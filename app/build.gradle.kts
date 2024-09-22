@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.navigation.safeargs)
+    alias(libs.plugins.kapt)
 }
 
 android {
@@ -38,6 +40,7 @@ android {
         dataBinding = true
     }
 }
+
 
 // https://github.com/sauravjha/kotlin-application-multiple-test-config/blob/master/build.gradle.kts
 tasks.withType<Test> {

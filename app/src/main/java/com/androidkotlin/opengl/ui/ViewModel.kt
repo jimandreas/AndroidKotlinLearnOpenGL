@@ -47,14 +47,6 @@ class ViewModel : ViewModel() {
     fun clickProcessed() {
         _buttonClicked.value = ""
     }
-    init {
-//        _wireFrameModeOn.value = false
-//        _shaderToggle.value = false
-//        _nextModel.value = 0
-//        _renderModelFromBuffer.value = false
-//        _lowResViewAdjuster.value = 5
-//        _buttonClicked.value = "none"
-    }
 
     private fun toggleWireFrameMode() {
         _wireFrameModeOn.value = _wireFrameModeOn.value != true
@@ -79,9 +71,6 @@ class ViewModel : ViewModel() {
         Timber.i("Button click id %s", str)
         _buttonClicked.value = str
     }
-
-//    private val _seekbarValue: MutableLiveData<Int> = MutableLiveData()
-//    val seeekBarValue : LiveData<Int> = _seekbarValue
 
     fun onProgressChangedHere(seekbar: SeekBar, p: Int, fromUser: Boolean) {
         Timber.i("Seekbar set to %d", p+3)

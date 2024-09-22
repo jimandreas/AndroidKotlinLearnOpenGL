@@ -1,10 +1,5 @@
 @file:Suppress(
     "unused",
-    "unused_variable",
-    "unused_parameter",
-    "deprecation",
-    "UNUSED_ANONYMOUS_PARAMETER",
-    "UNUSED_EXPRESSION",
     "MemberVisibilityCanBePrivate", "FunctionWithLambdaExpressionBody",
     "UnusedMainParameter")
 package com.androidkotlin.opengl

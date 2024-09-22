@@ -41,3 +41,4 @@ navigation-safeargs = { id = "androidx.navigation.safeargs", version.ref = "navi
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 
+

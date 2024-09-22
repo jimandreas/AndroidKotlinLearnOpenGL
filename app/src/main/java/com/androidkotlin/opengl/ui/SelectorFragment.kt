@@ -23,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-
 import androidx.navigation.fragment.findNavController
 import com.androidkotlin.opengl.databinding.FragmentSelectorBinding
 import timber.log.Timber
@@ -31,7 +30,6 @@ import timber.log.Timber
 class SelectorFragment : Fragment() {
 
     private val viewModel: ViewModel by viewModels()
-    //private lateinit var glSurfaceView: SurfaceViewInstance
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -45,6 +43,8 @@ class SelectorFragment : Fragment() {
             if (it.isNotEmpty()) {
                 viewModel.clickProcessed()
                 Timber.i("Button click: String: %s", it)
+
+                findNavController().navigate(SelectorFragmentDirections.actionShowExercise(it))
             }
 
         })
