@@ -4,8 +4,8 @@ AndroidKotlinLearnOpenGL
 Building
 --------------------
 This repo is set up to build using Android Studio 3.5 or greater.   It is written
-in Kotlin.  It is important to build the project before looking at the code closely 
-in Android Studio.  Both the Data Binding and the Navigator frameworks generate code
+in Kotlin.  **It is important to build the project before looking at the code closely 
+in Android Studio.**  Both the Data Binding and the Navigator frameworks generate code
 that is called directly by the project.   <b>These calls will show as undefined before the
 project is built!!</b>
 
@@ -27,11 +27,11 @@ The camera movement leverages the Quaternion implementation of Rajawali.
 
 Architecture diagram
 --------------------
-<img src="Screenshots/OpenGLwithLiveDataArchitecture.png" width = 582>
+<img src="Screenshots/OpenGLwithLiveDataArchitecture.png"  alt="arch">
 
 Sample Screenshot
 -----------------
-<img src="Screenshots/CameraExercise.png" width = 385>
+<img src="Screenshots/CameraExercise.png"  alt="camera">
 
 Exercise Descriptions
 =============
@@ -133,17 +133,6 @@ comparisons to code styling to the learnopengl methodology.
 
 Project notes
 =============
-
-Android Framework
------------------
-The Android application framework is one Activity and multiple Fragments - one for each major section
-in the learnopengl "coursework".  The framework also includes modern Android techniques - more
-can be learned about these techniques in the excellent Udacity course:
-
-https://classroom.udacity.com/courses/ud9012
-
-- Databinding
-- ViewModel with LiveData controls
 
 Imported content
 ----------------

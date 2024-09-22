@@ -1,7 +1,3 @@
-@file:Suppress(
-    "unused",
-    "MemberVisibilityCanBePrivate", "FunctionWithLambdaExpressionBody",
-    "UnusedMainParameter")
 package com.androidkotlin.opengl
 
 import android.app.Application

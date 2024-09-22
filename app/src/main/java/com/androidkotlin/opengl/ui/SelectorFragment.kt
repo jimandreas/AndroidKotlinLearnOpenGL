@@ -34,6 +34,7 @@ class SelectorFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        // the *Binding is generated - it will not be valid until after a build
         val binding = FragmentSelectorBinding.inflate(inflater)
         binding.lifecycleOwner = this
         viewModel.setLocalLifecycleOwner(this)
@@ -44,6 +45,8 @@ class SelectorFragment : Fragment() {
                 viewModel.clickProcessed()
                 Timber.i("Button click: String: %s", it)
 
+                // the *Directions is generated, see:
+                //  build/generated/source/navigation-args/debug/com/androidkotlin/opengl/ui/SelectorFragmentDirections.java
                 findNavController().navigate(SelectorFragmentDirections.actionShowExercise(it))
             }
 
