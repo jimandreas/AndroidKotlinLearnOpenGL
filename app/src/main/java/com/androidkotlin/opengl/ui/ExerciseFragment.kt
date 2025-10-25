@@ -86,7 +86,7 @@ class ExerciseFragment : Fragment() {
         glSurfaceView.setEGLContextClientVersion(3)
         glSurfaceView.setRenderer(renderer)
 
-        val displayMetrics = DisplayMetrics()
+        val displayMetrics = requireContext().resources.displayMetrics
         //requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
         glSurfaceView.setRendererInInstance(rendererIn, displayMetrics.density, viewModel)
 
