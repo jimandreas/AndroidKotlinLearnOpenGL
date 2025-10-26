@@ -1294,7 +1294,6 @@ class Vector3 : Cloneable {
                 Axis.X -> return X
                 Axis.Y -> return Y
                 Axis.Z -> return Z
-                else -> throw IllegalArgumentException("The specified Axis is not a valid choice.")
             }
         }
     }
