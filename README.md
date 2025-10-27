@@ -1,6 +1,10 @@
 AndroidKotlinLearnOpenGL
 ==========================
 
+updated to:
+
+<b>Android Studio Narwhal 4 Feature Drop | 2025.1.4
+
 Building
 --------------------
 This repo is set up to build using Android Studio 3.5 or greater.   It is written
