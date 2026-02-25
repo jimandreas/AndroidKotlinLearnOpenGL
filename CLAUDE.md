@@ -15,15 +15,21 @@ Android Kotlin app implementing [learnopengl.com](https://learnopengl.com) tutor
 # Run unit tests (JUnit 5 via useJUnitPlatform)
 ./gradlew test
 
-# Run a specific test class
+# Run a specific unit test class
 ./gradlew test --tests "org.rajawali3d.math.Matrix4Test"
 
-# Run instrumented (on-device) tests
+# Run instrumented tests (requires a connected device or emulator)
 ./gradlew connectedAndroidTest
+
+# Run a specific instrumented test class
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.rajawali3d.math.QuaternionTest
 
 # Run lint
 ./gradlew lint
 ```
+
+Unit tests (`src/test`): `Matrix4Test`, `Vector3Test` — use JUnit 5 Jupiter annotations.
+Instrumented tests (`src/androidTest`): `QuaternionTest` — runs on-device via `AndroidJUnitRunner`.
 
 **Important:** Build the project before reading code closely in Android Studio. Data Binding and Navigation SafeArgs generate code at build time — generated classes like `*Binding`, `*Directions`, `*Args`, and `*FragmentArgs` will show as unresolved until after a build.
 
