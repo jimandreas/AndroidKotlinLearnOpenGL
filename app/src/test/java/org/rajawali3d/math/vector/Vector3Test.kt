@@ -1,16 +1,17 @@
 package org.rajawali3d.math.vector
 
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.rajawali3d.math.Matrix4
 import org.rajawali3d.math.Quaternion
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertSame
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertTrue
 
 
 /**
@@ -18,12 +19,12 @@ import org.junit.Assert.assertTrue
  */
 class Vector3Test {
 
-    @Before
+    @BeforeEach
     fun setUp() {
 
     }
 
-    @After
+    @AfterEach
     fun tearDown() {
 
     }
@@ -94,10 +95,12 @@ class Vector3Test {
         assertEquals(3.0, v.z, 0.0)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun testConstructorFromShortDoubleArray() {
-        val values = doubleArrayOf(1.0, 2.0)
-        Vector3(values)
+        assertThrows<IllegalArgumentException> {
+            val values = doubleArrayOf(1.0, 2.0)
+            Vector3(values)
+        }
     }
 
     @Test
@@ -420,18 +423,18 @@ class Vector3Test {
             val v = Vector3(0.0, 0.0, 1.0)
             v.rotateBy(q)
 
-            assertEquals("X", 0.0, v.x, 1e-14)
-            assertEquals("Y", 0.0, v.y, 1e-14)
-            assertEquals("Z", 1.0, v.z, 1e-14)
+            assertEquals(0.0, v.x, 1e-14, "X")
+            assertEquals(0.0, v.y, 1e-14, "Y")
+            assertEquals(1.0, v.z, 1e-14, "Z")
         }
         run {
             val q = Quaternion(0.5, 0.5, 0.5, 0.5)
             val v = Vector3(0.0, 0.0, 1.0)
             v.rotateBy(q)
 
-            assertEquals("X", 1.0, v.x, 1e-14)
-            assertEquals("Y", 0.0, v.y, 1e-14)
-            assertEquals("Z", 0.0, v.z, 1e-14)
+            assertEquals(1.0, v.x, 1e-14, "X")
+            assertEquals(0.0, v.y, 1e-14, "Y")
+            assertEquals(0.0, v.z, 1e-14, "Z")
         }
     }
 
@@ -563,7 +566,7 @@ class Vector3Test {
         v1.setAll(1.0, 1.0, 0.0)
         v2.setAll(0.0, 1.0, 1.0)
         Vector3.orthoNormalize(v1, v2)
-        assertEquals("v1: $v1 v2: $v2", 0.7071067811865475, v1.x, 1e-14)
+        assertEquals(0.7071067811865475, v1.x, 1e-14, "v1: $v1 v2: $v2")
         assertEquals(0.7071067811865475, v1.y, 1e-14)
         assertEquals(0.0, v1.z, 1e-14)
         assertEquals(-0.4082482904638631, v2.x, 1e-14)

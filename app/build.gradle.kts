@@ -91,6 +91,7 @@ dependencies {
     debugImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.junit)
     testImplementation(libs.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     debugImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.espresso.core)
 }

@@ -1,17 +1,17 @@
 package org.rajawali3d.math
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.rajawali3d.math.vector.Vector3
 import org.rajawali3d.math.vector.Vector3.Axis
 
 import java.util.Arrays
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertSame
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertTrue
 
 /**
  * @author Jared Woolston (jwoolston@keywcorp.com)
@@ -85,7 +85,7 @@ class Matrix4Test {
         val result = m.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -187,7 +187,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -205,7 +205,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -287,12 +287,12 @@ class Matrix4Test {
 
         val result1 = charm.clone().multiply(strange).doubleValues
         for (i in expected.indices) {
-            assertEquals("matrix times inverse", expected[i], result1[i], 1e-14)
+            assertEquals(expected[i], result1[i], 1e-14, "matrix times inverse")
         }
 
         val result2 = strange.clone().multiply(charm).doubleValues
         for (i in expected.indices) {
-            assertEquals("inverse times matrix", expected[i], result2[i], 1e-14)
+            assertEquals(expected[i], result2[i], 1e-14, "inverse times matrix")
         }
     }
 
@@ -357,7 +357,7 @@ class Matrix4Test {
         val result = fromM.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Index " + i + " Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Index " + i + " Result: " + Arrays.toString(result))
         }
     }
 
@@ -374,7 +374,7 @@ class Matrix4Test {
         val result = fromM.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Index " + i + " Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Index " + i + " Result: " + Arrays.toString(result))
         }
     }
 
@@ -509,8 +509,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.X, 20.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Y
         m.identity()
@@ -520,8 +519,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Y, 30.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Z
         m.identity()
@@ -531,8 +529,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Z, 40.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -549,8 +546,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.X, 20.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Y
         m.identity()
@@ -560,8 +556,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Y, 30.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Z
         m.identity()
@@ -571,8 +566,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Z, 40.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -589,8 +583,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.X, 20.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Y
         m.identity()
@@ -600,8 +593,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Y, 30.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Z
         m.identity()
@@ -611,8 +603,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Z, 40.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -629,8 +620,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.X, 20.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "X - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Y
         m.identity()
@@ -640,8 +630,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Y, 30.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Y - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
         // Test Z
         m.identity()
@@ -651,8 +640,7 @@ class Matrix4Test {
         e.setAll(Quaternion(Vector3.Z, 40.0))
         expected = e.doubleValues
         for (i in expected.indices) {
-            assertEquals("Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Z - Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -666,8 +654,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -786,8 +773,7 @@ class Matrix4Test {
         val result = m.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -801,8 +787,7 @@ class Matrix4Test {
         val result = m.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -816,8 +801,7 @@ class Matrix4Test {
         val result = m.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -831,8 +815,7 @@ class Matrix4Test {
         val result = m.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -846,8 +829,7 @@ class Matrix4Test {
         val result = m.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected),
-                    expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result) + " Expected: " + Arrays.toString(expected))
         }
     }
 
@@ -962,7 +944,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -975,7 +957,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -988,7 +970,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1003,7 +985,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1016,7 +998,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1029,7 +1011,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1046,7 +1028,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1063,7 +1045,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1080,7 +1062,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1130,7 +1112,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1142,7 +1124,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1154,7 +1136,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1166,7 +1148,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 
@@ -1178,7 +1160,7 @@ class Matrix4Test {
         val result = out.doubleValues
         assertNotNull(result)
         for (i in expected.indices) {
-            assertEquals("Result: " + Arrays.toString(result), expected[i], result[i], 1e-14)
+            assertEquals(expected[i], result[i], 1e-14, "Result: " + Arrays.toString(result))
         }
     }
 

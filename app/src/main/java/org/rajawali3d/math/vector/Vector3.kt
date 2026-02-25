@@ -891,14 +891,14 @@ class Vector3 : Cloneable {
      *
      * @return boolean True if this [Vector3]'s components match with the components of the input.
      */
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (o == null || javaClass != o.javaClass) {
+        if (other == null || javaClass != other.javaClass) {
             return false
         }
-        val vector3 = o as Vector3?
+        val vector3 = other as Vector3?
         return (vector3!!.x == x
                 && vector3.y == y
                 && vector3.z == z)
