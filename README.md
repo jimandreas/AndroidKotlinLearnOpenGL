@@ -1,151 +1,111 @@
-AndroidKotlinLearnOpenGL
-==========================
+# AndroidKotlinLearnOpenGL
 
-updated to:
+Updated to: Android Studio Otter 3 Feature Drop | 2025.2.3
 
-<b>Android Studio Narwhal 4 Feature Drop | 2025.1.4
+## Building
 
-Building
---------------------
-This repo is set up to build using Android Studio 3.5 or greater.   It is written
-in Kotlin.  **It is important to build the project before looking at the code closely 
-in Android Studio.**  Both the Data Binding and the Navigator frameworks generate code
-that is called directly by the project.   <b>These calls will show as undefined before the
-project is built!!</b>
+Written in Kotlin. **Build the project before looking at the code closely in Android Studio.** Both the Data Binding and Navigator frameworks generate code that is called directly by the project — these calls will show as undefined before the project is built.
 
-Emulators and devices
-----------------------
-When displaying in an emulator - enable the higher level of OpenGL ES.
+## Emulators and Devices
 
+When displaying in an emulator, enable the higher level of OpenGL ES by adding the following to `~/.android/advancedFeatures.ini`:
+
+```
 GLESDynamicVersion = on
-
-to ~/.android/advancedFeatures.ini 
+```
 
 For more information on this emulator configuration see the MISC.md file.
 
-Current Status
----------------
-Exercises are operational through Instancing.  Basic camera manipulation is 
-included and is implemented only for movement in the x and z direction.
-The camera movement leverages the Quaternion implementation of Rajawali.
+## Current Status
 
-Architecture diagram
---------------------
-<img src="Screenshots/OpenGLwithLiveDataArchitecture.png"  alt="arch">
+Exercises are operational through Instancing. Basic camera manipulation is included and is implemented only for movement in the x and z direction. The camera movement leverages the Quaternion implementation of Rajawali.
 
-Sample Screenshot
------------------
-<img src="Screenshots/CameraExercise.png"  alt="camera">
+## Architecture Diagram
 
-Exercise Descriptions
-=============
+![Architecture](Screenshots/OpenGLwithLiveDataArchitecture.png)
 
-The project implements the following exercises in descending complexity.  The exercises are adapted 
-for Android, OpenGL ES3+, and are implemented in Kotlin.
+## Sample Screenshot
 
-It also borrows from 
-the camera.h located at:
+![Camera Exercise](Screenshots/CameraExercise.png)
 
-https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
+## Exercise Descriptions
 
-Renderer4103AdvancedAsteroidsInstanced
---------------------------------------
-Tutorial URL: https://learnopengl.com/Advanced-OpenGL/Instancing
+The project implements the following exercises in descending complexity, adapted for Android, OpenGL ES 3+, and implemented in Kotlin. It also borrows from [camera.h](https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h).
 
-Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/10.3.asteroids_instanced/asteroids_instanced.cpp
+### Renderer4103AdvancedAsteroidsInstanced
 
-Uses a Matrix4 instance array and the associated hacks to set up 4 vector4 attributes to import the 
-Matrix4 into the shader.  TODO:  replace this ugly hack with a modern buffer if that works 
-in the emulator and phone.
+- Tutorial: https://learnopengl.com/Advanced-OpenGL/Instancing
+- Code: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/10.3.asteroids_instanced/asteroids_instanced.cpp
 
-Renderer4102InstancingHacking
------------------------------
-No tutorial for this - this was a variation on "Renderer4101InstancingQuads" to add an OBJ based 
-rendering with an instanced based renderer and work through the shader mechanics.
+Uses a Matrix4 instance array and the associated hacks to set up 4 vector4 attributes to import the Matrix4 into the shader. TODO: replace this with a modern buffer if that works in the emulator and phone.
+
+### Renderer4102InstancingHacking
+
+No tutorial — this is a variation on `Renderer4101InstancingQuads` to add OBJ-based rendering with an instanced renderer and work through the shader mechanics.
 
 This works for hacking the patches based on instance:
 
-    void main()
-    {
-        fColor = aColor;
-        float myfloat = float(gl_InstanceID+1);
-        vec2 pos = aPos * myfloat;
-        gl_Position = vec4(pos + aOffset, 0.0, 1.0);
-    }
+```glsl
+void main()
+{
+    fColor = aColor;
+    float myfloat = float(gl_InstanceID+1);
+    vec2 pos = aPos * myfloat;
+    gl_Position = vec4(pos + aOffset, 0.0, 1.0);
+}
+```
 
-Renderer480AdvancedGlslUBO
---------------------------
-Tutorial URL: https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL
+### Renderer480AdvancedGlslUBO
 
-Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/8.advanced_glsl_ubo/advanced_glsl_ubo.cpp
+- Tutorial: https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL
+- Code: https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/8.advanced_glsl_ubo/advanced_glsl_ubo.cpp
 
-Use of simple Uniform Buffer Object  - in this case to pass in the
-projection and view matrices to the common shader.
+Use of a simple Uniform Buffer Object to pass the projection and view matrices to a common shader:
 
-    layout (std140) uniform Matrices
-    {
-        mat4 projection;
-        mat4 view;
-    };
+```glsl
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+};
+```
 
-Notes:  code needs further cleanup as I left parts of the instancing project in the
-original for use in debugging.   This should get stripped out at some point.
+### Renderer242LightingMapsPlusCubeObject
 
-Renderer242LightingMapsPlusCubeObject
----------------------------
-No tutorial for this.  It is a variation on Renderer242LightingMapsSpecular 
-and adds in an OBJ based cube to test integration of OBJ rendering into the scene.
+No tutorial — a variation on `Renderer242LightingMapsSpecular` that adds an OBJ-based cube to test integration of OBJ rendering into the scene.
 
-Renderer242LightingMapsSpecular
----------------------------
-Tutorial URL: https://learnopengl.com/Lighting/Lighting-maps
+### Renderer242LightingMapsSpecular
 
-Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/2.lighting/4.2.lighting_maps_specular_map/lighting_maps_specular.cpp
+- Tutorial: https://learnopengl.com/Lighting/Lighting-maps
+- Code: https://learnopengl.com/code_viewer_gh.php?code=src/2.lighting/4.2.lighting_maps_specular_map/lighting_maps_specular.cpp
 
-Excellent tutorial on lighting combined with textures.
+Lighting combined with textures.
 
-Renderer174Camera
--------------------
-Tutorial URL: https://learnopengl.com/Getting-started/Camera
+### Renderer174Camera
 
-Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
+- Tutorial: https://learnopengl.com/Getting-started/Camera
+- Code: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
 
-Renderer163CoordinateSystems
-----------------------------
-Tutorial URL: https://learnopengl.com/Getting-started/Coordinate-Systems
+### Renderer163CoordinateSystems
 
-Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/6.3.coordinate_systems_multiple/coordinate_systems_multiple.cpp
+- Tutorial: https://learnopengl.com/Getting-started/Coordinate-Systems
+- Code: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/6.3.coordinate_systems_multiple/coordinate_systems_multiple.cpp
 
-Renderer121HelloTriangle
--------------------------
-Tutorial URL: https://learnopengl.com/Getting-started/Hello-Triangle
+### Renderer121HelloTriangle
 
-Code link URL: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/2.1.hello_triangle/hello_triangle.cpp
+- Tutorial: https://learnopengl.com/Getting-started/Hello-Triangle
+- Code: https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/2.1.hello_triangle/hello_triangle.cpp
 
-The "hello world" basics in the learnopengl.com style.   But adapted to Android and 
-OpenGL ES and Kotlin instead of a PC and a GPU and C++.
+The "hello world" basics adapted for Android, OpenGL ES, and Kotlin.
 
-GoogleSampleRenderer
----------------------
+### GoogleSampleRenderer
 
-Android OpenGL Triangle and Square sample
+- Tutorial: https://developer.android.com/training/graphics/opengl
 
-Tutorial URL:  https://developer.android.com/training/graphics/opengl
+Android OpenGL triangle and square sample — the basic "Hello OpenGL" introduction, included for comparison to the learnopengl.com code style.
 
-This is the basic "Hello Opengl" introduction - just the basics.   It is included for
-comparisons to code styling to the learnopengl methodology.
+## Project Notes
 
-Project notes
-=============
+### Imported Content
 
-Imported content
-----------------
-The project does not use any supporting graphics libraries aside what is built into the 
-Android Framework.  The math support is provided by the Rajawali Math modules. 
-The modules are converted to kotlin and are located in the java/org/rejawali3d subtree.
-    
-See also the Github repo:
-
-https://github.com/Rajawali/Rajawali
-
-- updating - 
+The project does not use any supporting graphics libraries aside from what is built into the Android Framework. Math support is provided by the Rajawali Math modules, converted to Kotlin and located in the `java/org/rajawali3d` subtree. See also the [Rajawali GitHub repo](https://github.com/Rajawali/Rajawali).
