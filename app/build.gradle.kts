@@ -33,9 +33,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-    }
 
     buildFeatures {
         viewBinding = true
@@ -44,6 +41,12 @@ android {
     }
 }
 
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
 
 // https://github.com/sauravjha/kotlin-application-multiple-test-config/blob/master/build.gradle.kts
 tasks.withType<Test> {
